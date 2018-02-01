@@ -1,0 +1,33 @@
+@color-primary : #59488d;//#55acee;//#4e69a2; //#59488d;
+@color-primary-dark: darken(@color-primary ,8%); //#3b5998 ; //#3e2d70;
+@topbar-height: 46px;
+
+@color-warning : #feb424;
+@color-danger  : #FA5555;
+@color-success : #67C23A;
+@color-black   : #4d4d4d;
+
+/*页面主体*/
+
+html,body, .cp-all,.cp-main-body,.cp-modal-body,#app, .page-view ,.page-view-index { height: 100%}
+body {color:@color-black}
+body {background: #fafafa;}
+.blank(@height){
+  display: block; line-height: 0; overflow: hidden; height:@height;
+}
+.blank10 { .blank(10px)}
+.blank15 { .blank(15px)}
+.blank20 { .blank(20px)}
+.blank60 { .blank(60px)}
+
+
+//毛玻璃效果
+.mix-blur(@blur){
+  -webkit-filter: blur(@blur); /* Chrome, Opera */
+     -moz-filter: blur(@blur);
+      -ms-filter: blur(@blur);
+          filter: blur(@blur);
+}
+.cp-blur-2 {.mix-blur(2px)}
+.cp-blur-5 {.mix-blur(5px)}
+.cp-blur {.mix-blur(10px)}

@@ -1,0 +1,222 @@
+<template>
+  <div class="page-view cp-overhide">
+    <title-bar  :left-options="{showBack: true, preventGoBack:true}" @onClickBack="goHome">
+      <span v-show="isShowSearchBox==0">约车需求</span>
+      <div slot="rightContent">
+        <div class="cp-search-box" v-show="isShowSearchBox"><input name="keyword" class="form-control form-control-line" placeholder="请输入关键字查找"  v-model="keyword" @keyup="doSearch" autocomplete="false" ></div>
+        <div class="cp-btn-wrapper">
+          <button class="cp-btn-search" v-show="isShowSearchBox==0" @click="showSearchBox(1)"><i class="fa fa-search"></i></button>
+          <button class="cp-btn-close" v-show="isShowSearchBox" @click="showSearchBox(0)"><i class="fa fa-times"></i></button>
+        </div>
+      </div>
+    </title-bar>
+    <div class="page-view-main"   >
+      <cp-scroller :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
+
+         <cp-route-card
+          v-for="(item,index) in listDatas"
+           :id="item.id"
+           :name="item.passenger_info.name"
+           :avatar="item.passenger_info.imgpath"
+           :phone="item.passenger_info.phone"
+           :department="item.passenger_info.Department"
+           :carnumber="item.passenger_info.carnumber"
+           :start_name="item.start_info.addressname"
+           :end_name="item.end_info.addressname"
+           :date = "item.time.split(' ')[0]"
+           :time = "item.time.split(' ')[1]"
+           :class="[{'cancel':item.status > 0},('item-'+item.id)]"
+           :ref = "'item-'+item.id"
+           data-from="info"
+           typeLabel="乘客"
+         >
+           <div slot="btnbar" class="cp-btns-wrapper">
+             <a class="cp-btn cp-btn-accept" @click="acceptRequest(item.id,index)">接受</a>
+           </div>
+         </cp-route-card>
+
+       <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
+       <div class="text-center">
+         <div class="cp-nodata-tips" v-show="noData">
+           暂时没有数据 ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
+         </div>
+         <spinner type="dots" size="60px" v-show="page==1 && isLoading"></spinner>
+       </div>
+      </cp-scroller>
+    </div>
+  </div>
+</template>
+
+<script>
+import config from '../configs/index'
+
+import CpRouteCard from '../components/CpRouteCard'
+import CpScroller from '../components/CpScroller'
+export default {
+  components: {
+    CpRouteCard,CpScroller
+  },
+  data () {
+    return {
+      keyword : '',
+      page    : 1,
+      pageCount:1,
+      isLoading : 0,
+      listDatas :{},
+      noData:0,
+      isShowSearchBox:0,
+      scrollData: {
+          noFlag: false //暂无更多数据显示
+      },
+      enableInfinite:false,
+      // msg      : 'Welcome to Your Vue.js App'
+    }
+  },
+  methods :{
+    init (){
+
+      this.keyword = this.$route.params.keyword ? this.$route.params.keyword : '';
+      this.page    = this.$route.params.page ? this.$route.params.page : 1;
+    },
+    /**
+     * [goHome 返回首页]
+     */
+    goHome (){
+      console.log(1)
+      this.$router.push({name:'carpool'})
+    },
+    /**
+     * [showSearchBox 显示或关闭搜索输入]
+     */
+    showSearchBox (show){
+      this.isShowSearchBox = show ? 1 : 0;
+      if(show==0){
+        this.keyword = '';
+        this.getList(1);
+      }
+    },
+    /**
+     * [doSearch 执行搜索]
+     */
+    doSearch (){
+      this.getList(1)
+    },
+    /**
+     * [acceptRequest 接受约车需求]
+     * @param  {[type]} id    [需求列表行id (infoid)]
+     * @param  {[type]} index [需求列表行的索引 ]
+     * @return {[type]}       [description]
+     */
+    acceptRequest (id,index){
+      var _this = this;
+      event.stopPropagation();
+      _this.$el.querySelector('.load-more').style.display = 'none';
+      // _this.listDatas[index].status = 1
+      // setTimeout(function(){
+      //   _this.$el.querySelector('.item-'+id).style.display = 'none';
+      // },600)
+      _this.$store.commit('setLoading',{isShow:true,text:"提交中"});
+
+      // return false;
+
+      this.$tokenAxios.post(config.urls.acceptRequest,{id:id}).then(res => {
+        _this.$store.commit('setLoading',{isShow:false});
+        if(res.data.code === 0) {
+          _this.listDatas[index].status = 1
+          _this.$vux.toast.text('搭载成功');
+          setTimeout(function(){
+            // this.listDatas.splice(index, 1);
+            _this.listDatas = _this.listDatas.filter(t => t.infoid != id);
+          },600)
+        }else{
+          _this.$vux.toast.text('网络好像不太畅通');
+        }
+      })
+      .catch(error => {
+        _this.$store.commit('setLoading',{isShow:false});
+        _this.$vux.toast.text('网络好像不太畅通');
+
+        console.log(error)
+      })
+
+
+    },
+    getList (page,success){
+      var _this = this;
+      // console.log(config.urls.checkLogin)
+      // alert(1)
+      let params = {keyword:this.keyword,page:page};
+
+      _this.isLoading = 1;
+      _this.noData = 0;
+      _this.$tokenAxios.get(config.urls.getInfoLists,{params:params}).then(res => {
+        let data = res.data.data;
+          _this.isLoading = 0;
+          if(res.data.code === 0) {
+
+            _this.page = data.page.currentPage + 1;
+            _this.pageCount = data.page.pageCount;
+
+            if(_this.page > 1 ){
+              var list = _this.listDatas;
+              list = list.concat(data.lists);
+              _this.listDatas = list;
+
+            }else{
+              if(data.lists.length === 0){
+                _this.noData = 1 ;
+              }
+              _this.listDatas = data.lists;
+            }
+            _this.enableInfinite = _this.listDatas.length < 4 || _this.pageCount ==1  ? false : true;
+          }else{
+
+          }
+          if(typeof(success)==="function"){
+            success(res);
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+
+    onRefresh(done) {
+      this.getList(this.page);
+      done(); // call done
+
+    },
+    onInfinite(done) {
+      var _this = this;
+      if(this.page < this.pageCount){
+        this.getList(this.page+1,function(res){
+          _this.$el.querySelector('.load-more').style.display = 'none';
+        });
+      }else{
+        this.scrollData.noFlag = true;
+        _this.$el.querySelector('.load-more').style.display = 'none';
+      }
+      done();
+    }
+  },
+  mounted () {
+
+  },
+  created () {
+    this.init();
+    this.getList(this.page);
+    // this.$nextTick(function () {
+    //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
+    // })
+  },
+  activated (){
+    this.$el.querySelector('.load-more').style.display = 'none';
+  }
+}
+
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+
+</style>

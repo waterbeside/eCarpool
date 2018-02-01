@@ -1,0 +1,82 @@
+<template>
+  <div class="cp-routeCard-item col-sm-6 col-md-4 " :data-id="id" :data-from="dataFrom">
+    <div class="cp-routeCard-item-inner" @click="goDetail">
+      <div class="cp-avatar-wrap">
+        <img class="cp-avatar " :src="avatarPath"  ref="img" @error="setErrorImg">
+      </div>
+      <div class="cp-user-wrapper">
+        <div class="cp-name-bar">
+          <h4>{{name}}</h4>
+          <span class="cp-phone"><a :href="'tel:'+phone" onclick="event.stopPropagation();"><i class="fa fa-phone"></i></a></span>
+          <span class="h8">{{typeLabel}}</span>
+        </div>
+        <div class="cp-userInfo-bar">
+          <span class="cp-dept">{{department}}</span>
+          <b class="cp-carnumber">{{carnumber}}</b>
+        </div>
+      </div>
+      <div class="cp-body">
+
+        <cp-route-box :start_name="start_name" :end_name="end_name">
+            <div slot="route-middle" class="cp-date-wrap"><b class="cp-time">{{time}}</b><span class="cp-date">{{date}}</span></div>
+        </cp-route-box>
+        <slot name="btnbar"></slot>
+      </div>
+    </div>
+  </div>
+
+</template>
+
+<script>
+import config from '../configs'
+
+import CpRouteBox from './CpRouteBox'
+export default {
+  components: {
+    CpRouteBox,
+  },
+  data () {
+    return {
+      defaultAvatar:config.defaultAvatar
+    }
+  },
+  props: {
+    id : {},
+    dataFrom : {},
+    name : String,
+    avatar : String,
+    phone : String,
+    typeLabel : String,
+    department : String,
+    carnumber : String,
+    start_name : String,
+    end_name : String,
+    date: String,
+    time: String
+
+  },
+  computed:{
+    avatarPath (){
+      return  typeof(this.avatar)!='undefined' && this.avatar.trim()!='' ?  config.avatarBasePath + this.avatar : this.defaultAvatar;
+    }
+  },
+
+  methods: {
+    setErrorImg (){
+      this.avatar = this.defaultAvatar;return false;
+    },
+    goDetail (){
+      let goName = this.dataFrom =="info" ? 'carpool_requests_detail' : "carpool_rides_detail"
+      this.$router.push({name:goName,params: { id: this.id ,from:this.dataFrom}});
+
+    }
+  },
+  mounted () {
+
+ }
+}
+</script>
+
+<style scoped>
+
+</style>
