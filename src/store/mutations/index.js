@@ -9,9 +9,9 @@ import config from '../../configs'
 export default {
 
   //设置用户基础数据
-  setUserBaseData(state,datas){
+/*  setUserBaseData(state,datas){
     state.userBaseData = datas;
-  },
+  },*/
   //设置用户详细数据
   setUserData(state,datas){
     state.userData = datas;
@@ -34,6 +34,10 @@ export default {
     }
     var obj = Object.assign(defaults, datas);
     state.loading = obj ;
+  },
+
+  setRouteFormData(state,datas){
+    state.routeFormData = datas ? datas : {}
   },
 
 }
