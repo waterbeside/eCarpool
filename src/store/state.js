@@ -19,13 +19,13 @@ export default {
   transitionName: 'forward',
 
   //用户基本信息
-  userBaseData:{},
+  // userBaseData:{},
   //用户详细信息
   userData:{},
   //用户完整头像地址
   userAvatar:'',
   //发布行程时填写的表单内容
-  addRouteData:{},
+  routeFormData:{},
 
 }
 /*GB_VAR['userBaseInfo'] = '';
