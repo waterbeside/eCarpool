@@ -87,6 +87,61 @@ var cFuns = {
   },
 
 
+  //添加标注点
+  amap:{
+    showMap (target){
+      var map = new AMap.Map(target, {
+      // resizeEnable: true,
+      //zoom:11,
+      // center: [112.903921, 22.884658]
+      });
+
+      return map;
+    },
+    addMarker (position,mapObj) {
+      // console.log(position);
+      mapObj.setZoomAndCenter(14, position);
+      marker = new AMap.Marker({
+        icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+        // position: [116.405467, 39.907761]
+        position: position,
+      });
+      marker.setMap(mapObj);
+    },
+    //至中心点
+    setCenter (position,mapObj) {
+      // console.log(position);
+      mapObj.setZoomAndCenter(14, position);
+    },
+    //画线
+    drawRouteLine(start,end,mapObj,callBack){
+      console.log(mapObj)
+      // mapObj.clearMap();
+      AMap.service('AMap.Driving',function(){//回调函数
+      //实例化Driving
+      let map_draw = new AMap.Driving({
+            map: mapObj,
+            // panel: "panel"
+        });
+        console.log(map_draw);
+
+      //TODO: 使用driving对象调用驾车路径规划相关的功能
+      //传经纬度
+      //  driving.search(new AMap.LngLat(116.379028, 39.865042), new AMap.LngLat(116.427281, 39.903719));
+      map_draw.search(start, end, function(status, result) {
+           //TODO 解析返回结果，自己生成操作界面和地图展示界面
+           if(typeof(callBack)=='function'){
+						 callBack(status,result);
+					 }
+           console.log(result)
+      });
+  })
+}
+  }
+
+
+
+
 
 }
 
