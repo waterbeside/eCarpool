@@ -78,13 +78,15 @@ export default {
   methods :{
     init () {
       const that = this ;
-      this.$tokenAxios.get(config.urls.checkLogin,{}).then(res => {
+      this.$tokenAxios.get(config.urls.checkLogin,{params:{more:1}}).then(res => {
         // console.log(res)
          // 登录成功
           if(res.data.code === 0 ) {
             let userDatas = res.data.data;
             userDatas.loginname = userDatas.loginname.toLowerCase()
-            that.$store.commit('setUserBaseData',userDatas);
+            localStorage.setItem('CP_loginname',userDatas.loginname);
+            // that.$store.commit('setUserBaseData',userDatas);
+            that.$store.commit('setUserData',userDatas);
             // console.log(config.avatarBasePath + userDatas.avatar)
             if(userDatas.avatar.trim()!=''){
               that.$store.commit('setUserAvatar',config.avatarBasePath + userDatas.avatar);

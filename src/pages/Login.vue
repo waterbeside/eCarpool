@@ -80,8 +80,11 @@ export default {
 
             let data = res.data.data;
             localStorage.setItem('CP_U_TOKEN',data.token);
+            localStorage.setItem('CP_loginname',data.user.loginname);
             data.user.loginname = data.user.loginname.toLowerCase();
-            that.$store.commit('setUserBaseData',data.user);
+            // console.log(data.user)
+            // that.$store.commit('setUserBaseData',data.user);
+            that.$store.commit('setUserData',data.user);
             // console.log(config.avatarBasePath + data.user.imgpath)
             if(data.user.avatar.trim()!=''){
               that.$store.commit('setUserAvatar',config.avatarBasePath + data.user.avatar);
