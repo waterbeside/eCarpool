@@ -83,10 +83,18 @@ const routes = [
   },
   // 选地址
   {
-    path: '/carpool/addroute/address/:type',
+    path: '/carpool/address/:to',
     name: 'carpool_address',
     component (resolve) {
       require(['../pages/Carpool_address'], resolve)
+    }
+  },
+  // 选地址
+  {
+    path: '/carpool/address/add/:to/:keyword',
+    name: 'carpool_address_create',
+    component (resolve) {
+      require(['../pages/carpool_address_create'], resolve)
     }
   },
   // 我的
@@ -97,6 +105,7 @@ const routes = [
       require(['../pages/User'], resolve)
     }
   },
+
 
 ]
 
