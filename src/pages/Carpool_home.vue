@@ -64,6 +64,10 @@ export default {
     goRouteAdd (type){
       this.$router.push({name:'carpool_addroute',params: {type:type}});
     }
+  },
+  activated (){
+    this.$store.commit('setRouteFormData',{});
+
   }
 }
 </script>
