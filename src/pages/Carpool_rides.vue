@@ -71,6 +71,7 @@ export default {
     return {
       doLikeId:null,
       keyword : '',
+      keyword_o : '',
       page    : 1,
       pageCount:1,
       isLoading : 0,
@@ -101,7 +102,7 @@ export default {
      */
     showSearchBox (show){
       this.isShowSearchBox = show ? 1 : 0;
-      if(show==0){
+      if(show==0  && this.keyword != "" ){
         this.keyword = '';
         this.getList(1);
       }
@@ -110,7 +111,11 @@ export default {
      * [doSearch 执行搜索]
      */
     doSearch (){
-      this.getList(1)
+      if(this.keyword_o !==  this.keyword ){
+        this.keyword_o =  this.keyword
+        this.getList(1)
+      }
+
     },
     /**
      * [clickLike 点赞]
@@ -204,7 +209,7 @@ export default {
   },
   created () {
     this.init();
-    this.getList(this.page);
+    this.getList(1);
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })

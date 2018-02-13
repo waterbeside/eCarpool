@@ -59,12 +59,13 @@ export default {
   data () {
     return {
       keyword : '',
+      keyword_o : '',
+      isShowSearchBox:0,
       page    : 1,
       pageCount:1,
       isLoading : 0,
       listDatas :{},
       noData:0,
-      isShowSearchBox:0,
       scrollData: {
           noFlag: false //暂无更多数据显示
       },
@@ -90,7 +91,7 @@ export default {
      */
     showSearchBox (show){
       this.isShowSearchBox = show ? 1 : 0;
-      if(show==0){
+      if( show==0 && this.keyword != "" ){
         this.keyword = '';
         this.getList(1);
       }
@@ -99,7 +100,10 @@ export default {
      * [doSearch 执行搜索]
      */
     doSearch (){
-      this.getList(1)
+      if(this.keyword_o !==  this.keyword ){
+        this.keyword_o =  this.keyword
+        this.getList(1)
+      }
     },
     /**
      * [acceptRequest 接受约车需求]
@@ -204,7 +208,7 @@ export default {
   },
   created () {
     this.init();
-    this.getList(this.page);
+    this.getList(1);
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
