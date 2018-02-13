@@ -58,7 +58,8 @@ export default {
          console.log(res)
          if(res.data.code === 0) {
            let data = res.data.data;
-           that.$store.commit('setUserData',res.data.data);
+           data.avatar = data.imgpath;
+           that.$store.commit('setUserData',data);
            if(data.imgpath.trim()!=''){
              that.$store.commit('setUserAvatar',config.avatarBasePath + data.imgpath);
              this.avatar = config.avatarBasePath + data.imgpath
@@ -99,10 +100,10 @@ export default {
 
   },
   activated (){
-    if(typeof(this.$store.state.userBaseData.name)!="undefined"){
+    if(typeof(this.$store.state.userData.name)!="undefined"){
       this.avatar = this.$store.state.userAvatar;
-      this.userName = this.$store.state.userBaseData.name;
-      this.loginName = this.$store.state.userBaseData.loginname;
+      this.userName = this.$store.state.userData.name;
+      this.loginName = this.$store.state.userData.loginname;
     }else{
       this.loadUserInfo()
     }
