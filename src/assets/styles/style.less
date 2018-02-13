@@ -1,4 +1,4 @@
-//out:style.css, sourcemap: false, compress: true
+
 
 @import "cp_base.less";
 
@@ -195,25 +195,6 @@
 }
 
 
-//导航栏相关
-#navbar {
-  z-index: 999; position: relative;
-  .navbar { border-radius: 0; padding: 5px 15px 5px 5px;
-    .cp-topbar-title {
-      display: none;
-    }
-    .cp-btn-goback { display: inline-block; float: left;font-size: 20px;  color:#fff; padding: 0 12px; margin-right: 5px;line-height: 50px;}
-  }
-}
-@media (max-width: 768px){
-  #navbar .navbar  {
-    .cp-topbar-title {
-      display: inline;
-      line-height: 50px;
-    }
-  }
-}
-
 
 
 /*page-view*/
@@ -303,8 +284,8 @@
   // background-image:url("../images/carpool_title_bg.jpg"); background-repeat: repeat; background-position: center; background-size: cover;
   color: @color-text;z-index: 100; border-bottom: 1px solid darken(@color-bg,5%); border-top:2px solid @color-primary;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  .cp-btn-goback { position: absolute; left:0; top:0;   display: inline-block; width: 40px; height: 40px;  color:@color-text ; padding: 0 12px; margin-right: 5px;
-    svg { margin-top: 14px;}
+  .cp-btn-goback { position: absolute; left:0; top:0;   display: inline-block; width: 40px; height: 40px;  color:@color-text ; padding: 0 12px; margin-right: 5px; overflow: hidden;
+    svg { margin-top: 14px; width: 30px; height: 30px}
   }
   .cp-title  {	min-height:@topbar-height; font-weight: 400; 	position: absolute;	margin: 0;	text-align: center;	white-space: nowrap;	right: 80px;	left: 80px;	width: auto;	overflow: hidden;	text-overflow: ellipsis;	z-index: 2;}
   .cp-btn-wrapper { position: absolute; right:10px; top:-1px; z-index: 4;
@@ -312,7 +293,7 @@
   }
   .cp-search-box { position: absolute; top:0; left:36px; right:15px;  padding-top: 6px; z-index: 3;
     .form-control-line {
-      @placeholderColor : lighten(@color-primary,20%);
+      @placeholderColor : lighten(@color-primary,35%);
       @lineColor : lighten(@color-primary,40%);
       padding-right: 40px; color:@color-text;
       background-image:linear-gradient(@placeholderColor, @placeholderColor),linear-gradient(@placeholderColor, @placeholderColor);
@@ -334,6 +315,11 @@
   position: relative; z-index: 1000;
 }
 
+.cp-btn-goback-wrapper { position: fixed; left:12px; top:12px; z-index: 1000;
+  .cp-btn-goback { @btnSize :32px;  background: rgba(0,0,0,0.7); display: inline-block; width: @btnSize; height: @btnSize; line-height:@btnSize; border-radius: 50%;text-align: center;   overflow: hidden;
+    svg { margin: (@btnSize - 23)auto 0; width: 16px; height: 16px; fill:#FFF}
+  }
+}
 
 
 /*路线盒*/
@@ -687,10 +673,22 @@
     // width: 200px;
   }
 }
-.cp-map-wap { position: absolute; top:-200px; left: 0; bottom: 0; right: 0;  width: 100%; overflow: hidden; z-index: 1;
+.cp-map-wapper { position: absolute; top:0; left: 0; bottom: 0; right: 0;  width: 100%; overflow: hidden; z-index: 1;
   .amap-logo,.amap-copyright { display: none!important;}
+
 }
-.cp-map-addAddress-wap { top:34px;}
+
+.cp-map-wrapper-addroute {top:-100px;
+  .amap-toolbar-geo {width: 32px; height: 32px;opacity: .7;}
+  .amap-zoomcontrol {
+    width: 32px; opacity: .7;
+    /*.amap-zoom-touch-plus ,.amap-zoom-touch-minus { background-color:rgba(0,0,0,.6);
+      &>div {color:#FFF}
+    }*/
+  }
+}
+
+.cp-map-addAddress-wapper { top:34px;}
 
 .cp-map-content { width: 100%; height: 100%; }
 
@@ -722,55 +720,117 @@
   }
 }
 
+@keyframes exchange_s {
+  0% {
+    transform: translate(0,0) ;
+    -webkit-transform:translate(0,0) ;
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(0,50px) ;
+    -webkit-transform:translate(0,50px) ;
+    opacity: 0;
+  }
+}
+@keyframes exchange_e {
+  0% {
+    transform: translate(0,0) ;
+    -webkit-transform:translate(0,0) ;
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(0,-50px) ;
+    -webkit-transform:translate(0,-50px) ;
+    opacity: 0;
+  }
+}
 // 表单
 .cp-map-form {
   @margin:0;
-   position: fixed; bottom:@margin; left:@margin; right:@margin; z-index: 2;box-shadow: 0 2px 18px rgba(0,0,0,0.2);
-  .cp-map-form-inner {background: rgba(255,255,255,0.9);border-top:4px solid lighten(@color-primary,12%); border-radius: 0; padding: 6px 10px 2px ; }
+  @btn-height : 44px;
+  position: fixed; bottom:@margin; left:@margin; right:@margin; z-index: 2;box-shadow: 0 2px 18px rgba(0,0,0,0.2);
+  .cp-userbar { height: 20px; position: relative; background: lighten(@color-primary,12%); color:lighten(@color-primary,42%); padding-left: 60px; font-size: 12px; line-height: 20px; text-align: left;
+    .cp-avatar-wrap {position: absolute; bottom:-9px; left:8px;text-align: center;}
+    .cp-avatar { width: 44px; height:44px; border-radius: 50%; border:3px solid lighten(@color-primary,12%);}
+  }
+  .cp-map-form-inner {background: rgba(255,255,255,0.9); border-radius: 0; padding: 12px 10px 2px ; }
   .form-group { margin-top: 8px;  }
   .form-control  { padding: 3px 0; }
 
   .cp-selectbtn-wrap {
-    margin-bottom: 5px; border-bottom: 1px solid #eaeaea;
-    .vux-cell-box {padding: 8px 4px}
+
+    border-bottom: 1px solid #eaeaea; clear: both;
+    .weui-cell {padding: 0;}
+    .vux-cell-box {padding: 0 4px}
     .vux-cell-box:before { border:none; }
     .weui-cell__hd { float: left; color: #888;
-      i { margin-right: 5px; font-size:12px }
+      i {   }
     }
-    .btn { display: block; font-size: 14px; color: #444; padding:8px 10px 8px 4px; text-align: left; background: none; box-shadow: none;  margin: 0;
-      i { margin-right: 5px; font-size:12px }
-      .cp-ph { color: #888}
+    .vux-popup-picker-value { font-size: 16px}
+    .vux-number-selector {
+      width: 26px; height: 26px; line-height: 0; text-align: center; border-color:#FF9900; margin-top: -2px; margin-right: 0;
+      svg {fill:#FF9900}
+    }
+    .vux-number-input {
+      font-size: 16px
+    }
+    .vux-number-round { margin-top: -10px}
+    .cp-selectbtn { display: block;   color: #444; height: @btn-height; line-height: @btn-height; padding:0 10px 0 4px; text-align: left; background: none; box-shadow: none;  margin: 0;
+
+    }
+    &.isNull .cp-selectbtn {
+      .cp-text {color: #999}
+    }
+    .cp-label { font-size:14px;
+      i {display: inline-block;width: 26px; text-align: center;   }
+      .cp-title { color: #888; vertical-align:middle; text-align: left}
     }
   }
-  .datetime-picker-btn , .seat-picker-btn {
+
+
+
+  .cp-route-wrapper { position: relative;
+    .cp-btn-change {
+      @exTop : @btn-height - 8;
+      position: absolute; top:@exTop; left:74px;width: 20px; height: 22px; line-height: 22px;  fill:#888;
+        background: #FFF; border-radius: 13px; text-align: center;
+    }
+    .cp-text { float: right; font-size: 16px;}
+    &.exchanging {
+      .cp-startp-wrap {
+        .cp-text {animation: exchange_s .4s linear 1}
+      }
+      .cp-endp-wrap {
+        .cp-text {animation: exchange_e .4s linear 1}
+      }
+    }
+  }
+  .cp-needTime-sWrap , .cp-seatCount-sWrap {
     .fa {color: #779dc2;}
   }
-  .seat-picker-btn{
-    &:not(.btn-just-icon):not(.btn-fab) { .fa {font-size: 16px; } }
-  }
+  .cp-seatCount-sWrap { }
+
   .cp-startp-wrap , .cp-endp-wrap { clear: both ;.btn{font-size:14px} }
   .cp-startp-wrap .fa-map-marker { color: rgb(94,155,248); /*desaturate(#00f,50%)*/}
-  .cp-endp-wrap {  margin-bottom: 15px;
+  .cp-endp-wrap {
     .fa-map-marker { color: rgb(215,61,67);}
   }
 
-  .cp-btn-submit { margin-top: 12px; margin-bottom: 0; padding: 12px;box-shadow: 0 5px 10px rgba(0,0,0,0.1);display: none;
-    &.in { display: block;}
-  }
+  .cp-btn-submit { margin-top: 20px;  }
+
 }
 
-@media (min-width: 358px){
-  .cp-modal-add-wall {
-    .cp-needTime-sWrap { float: left; min-width: 200px;}
-    .cp-seatCount-sWrap { float: right; min-width: 100px}
-  }
-}
 
 
 // 选择站点模态框设置
-.cp-modal-points , .cp-page-points {
-  .cp-searchbar-wrap { position:fixed; top:0; left:0; right:0;  z-index: 2;}
-  .modal-dialog { overflow: hidden;}
+ .cp-page-points {
+  .cp-search-wrapper { position: fixed; width: 100%;top:45px;
+    .weui-search-bar__label { top:3px;}
+    .weui-search-bar__cancel-btn { color: #666}
+  }
+
   .cp-list-wrap { height: 100%; }
   .modal-scroll-wrap { position: absolute; top: 46px;bottom: 0; right: 0; left: 0; }
   b.name { font-weight: normal;}
@@ -854,7 +914,7 @@
 /* 列表加载更多loading样式 */
 .cp-loading-l {
     @point-width:12px;
-    clear:both;width: 150px;  height: @point-width;     margin: 80px auto ;   text-align: center;
+    clear:both;width: 150px;  height: @point-width;   margin: 80px auto ;   text-align: center;
     span{
         display: inline-block;  width: @point-width;  height: 100%;  margin-right: 5px; background: @color-primary;   animation: loadingMore 1.04s ease infinite;
     }
@@ -1018,7 +1078,9 @@
 /* 用户个人资料页 */
 .page-view-header {
   position: relative; height: 180px; background-color:lighten(@color-primary,16%); background-image: url(../images/carpool_bg.jpg); background-position: center ; background-size: cover;
-  .cp-btn-goback { display: inline-block; float: left; font-size: 20px;  color:#fff; padding: 0 12px; margin-right: 5px;line-height: 50px;}
+  .cp-btn-goback { display: inline-block; float: left; font-size: 20px;  color:#fff; padding: 0 12px; margin-right: 5px;line-height: 50px; overflow: hidden;
+    svg { width: 40px; height: 20px;}
+  }
   .cp-btn-close { position: fixed; right: 12px; top:12px;font-size: 20px;  color:#fff; line-height: 1; opacity: .9}
 }
 
