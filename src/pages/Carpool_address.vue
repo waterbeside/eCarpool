@@ -182,7 +182,6 @@ export default {
     getCity(){
       var _this =this;
       var map = new AMap.Map("cp-map-hidden",{
-        resizeEnable: true,
 
       });
       map.getCity(function(data) {
@@ -232,6 +231,7 @@ export default {
               value.is_show = true;
               return value;
             })
+
 
             //通高德地图以地坐标取得地址信息，并写入本地数据库
               AMap.plugin('AMap.Geocoder',function(){
@@ -349,8 +349,6 @@ export default {
 
     goCreateAddress (){
       this.$router.push({name:'carpool_address_create',params: {to:this.to,keyword:this.keyword}})
-
-
     }
 
   },
@@ -364,8 +362,10 @@ export default {
     // })
   },
   activated (){
+    if(!this.$store.state.localCity){
+      this.getCity();
+    }
     this.to = this.$route.params.to;
-    this.getCity();
   }
 }
 </script>
