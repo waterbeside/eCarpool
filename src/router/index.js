@@ -23,6 +23,7 @@ const routes = [
     component (resolve) {
       require(['../pages/Login'], resolve)
     },
+    meta: {keepAlive: true }
   },
   // 免责声明
   {
@@ -31,6 +32,7 @@ const routes = [
     component (resolve) {
       require(['../pages/Disclaimer'], resolve)
     },
+    meta: {keepAlive: true }
   },
   // 拼车首页
   {
@@ -39,6 +41,7 @@ const routes = [
     component (resolve) {
       require(['../pages/Carpool_home'], resolve)
     },
+    meta: {keepAlive: true }
   },
 
   // 乘客约车需求
@@ -47,7 +50,8 @@ const routes = [
     name: 'carpool_requests',
     component (resolve) {
       require(['../pages/Carpool_requests'], resolve)
-    }
+    },
+    meta: {keepAlive: true }
   },
   // 墙上空座位
   {
@@ -55,7 +59,8 @@ const routes = [
     name: 'carpool_rides',
     component (resolve) {
       require(['../pages/Carpool_rides'], resolve)
-    }
+    },
+    meta: {keepAlive: true }
   },
   // 行程细览
   {
@@ -63,7 +68,8 @@ const routes = [
     name: 'carpool_requests_detail',
     component (resolve) {
       require(['../pages/Carpool_detail'], resolve)
-    }
+    },
+    meta: {keepAlive: false }
   },
   // 行程细览
   {
@@ -71,7 +77,8 @@ const routes = [
     name: 'carpool_rides_detail',
     component (resolve) {
       require(['../pages/Carpool_detail'], resolve)
-    }
+    },
+    meta: {keepAlive: false }
   },
   // 加行程
   {
@@ -79,7 +86,17 @@ const routes = [
     name: 'carpool_addroute',
     component (resolve) {
       require(['../pages/Carpool_addroute'], resolve)
-    }
+    },
+    meta: {keepAlive: false }
+  },
+  // 历史行程
+  {
+    path: '/carpool/addroute/history/:type',
+    name: 'carpool_addroute_history',
+    component (resolve) {
+      require(['../pages/carpool_addroute_history'], resolve)
+    },
+    meta: {keepAlive: true }
   },
   // 选地址
   {
@@ -87,15 +104,17 @@ const routes = [
     name: 'carpool_address',
     component (resolve) {
       require(['../pages/Carpool_address'], resolve)
-    }
+    },
+    meta: {keepAlive: true }
   },
-  // 选地址
+  // 加地址
   {
     path: '/carpool/address/add/:to/:keyword',
     name: 'carpool_address_create',
     component (resolve) {
       require(['../pages/carpool_address_create'], resolve)
-    }
+    },
+    meta: {keepAlive: false }
   },
   // 我的
   {
@@ -103,7 +122,9 @@ const routes = [
     name: 'user',
     component (resolve) {
       require(['../pages/User'], resolve)
-    }
+    },
+    meta: {keepAlive: true }
+
   },
 
 

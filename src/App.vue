@@ -2,9 +2,14 @@
   <div class="cp-all">
     <div id="app">
       <transition :name="transitionName">
-        <keep-alive>
-          <router-view/>
-        </keep-alive>
+        <template v-if="$route.meta.keepAlive">
+          <keep-alive>
+              <router-view ></router-view>
+          </keep-alive>
+        </template>
+        <template v-else>
+          <router-view v-if="!$route.meta.keepAlive"></router-view>
+        </template>
       </transition>
       <loading :show="isLoading" :text="loadingText"></loading>
     </div>
@@ -66,6 +71,7 @@ export default {
       }
     }*/
     '$route' (to, from) {
+      console.log()
       const toDepth = to.path.split('/').length
       const fromDepth = from.path.split('/').length
       if(to.path=="/"){
