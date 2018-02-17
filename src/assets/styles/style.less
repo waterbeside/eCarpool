@@ -3,6 +3,8 @@
 @import "cp_base.less";
 
 .cp-all { position: relative; z-index: 0}
+.cp-pull-right { float: right}
+.cp-pull-left { float: left}
 .dp-container {position: relative; z-index: 1}
 //水波纹效果按钮
 .btn-ripple {
@@ -678,7 +680,8 @@
 
 }
 
-.cp-map-wrapper-addroute {top:-100px;
+.cp-map-wrapper-addroute {
+  top:-100px;
   .amap-toolbar-geo {width: 32px; height: 32px;opacity: .7;}
   .amap-zoomcontrol {
     width: 32px; opacity: .7;
@@ -686,6 +689,7 @@
       &>div {color:#FFF}
     }*/
   }
+
 }
 
 .cp-map-addAddress-wapper { top:34px;}
@@ -751,11 +755,11 @@
   @margin:0;
   @btn-height : 44px;
   position: fixed; bottom:@margin; left:@margin; right:@margin; z-index: 2;box-shadow: 0 2px 18px rgba(0,0,0,0.2);
-  .cp-userbar { height: 20px; position: relative; background: lighten(@color-primary,12%); color:lighten(@color-primary,42%); padding-left: 60px; font-size: 12px; line-height: 20px; text-align: left;
+  .cp-userbar { height: 20px; position: relative; background: lighten(@color-primary,12%); color:lighten(@color-primary,42%); padding:0 12px 0 60px; font-size: 12px; line-height: 20px; text-align: left;
     .cp-avatar-wrap {position: absolute; bottom:-9px; left:8px;text-align: center;}
     .cp-avatar { width: 44px; height:44px; border-radius: 50%; border:3px solid lighten(@color-primary,12%);}
   }
-  .cp-map-form-inner {background: rgba(255,255,255,0.9); border-radius: 0; padding: 12px 10px 2px ; }
+  .cp-map-form-inner {background: rgba(255,255,255,0.8); border-radius: 0; padding: 12px 10px 2px ; }
   .form-group { margin-top: 8px;  }
   .form-control  { padding: 3px 0; }
 
@@ -781,11 +785,11 @@
 
     }
     &.isNull .cp-selectbtn {
-      .cp-text {color: #999}
+      .cp-text {color: #777}
     }
     .cp-label { font-size:14px;
       i {display: inline-block;width: 26px; text-align: center;   }
-      .cp-title { color: #888; vertical-align:middle; text-align: left}
+      .cp-title { color: #777; vertical-align:middle; text-align: left}
     }
   }
 
@@ -793,9 +797,10 @@
 
   .cp-route-wrapper { position: relative;
     .cp-btn-change {
-      @exTop : @btn-height - 8;
-      position: absolute; top:@exTop; left:74px;width: 20px; height: 22px; line-height: 22px;  fill:#888;
-        background: #FFF; border-radius: 13px; text-align: center;
+      @exTop : @btn-height - 12;
+      position: absolute; top:@exTop; left:70px;width: 26px; height: 26px; padding-top: 2px; line-height: 26px;
+        background: #FFF; border-radius: 50%; text-align: center;/* border: 1px solid lighten(@color-primary,20%);*/
+        svg {height: 20px;width: 20px; fill: lighten(@color-primary,15%)}
     }
     .cp-text { float: right; font-size: 16px;}
     &.exchanging {
@@ -821,7 +826,12 @@
   .cp-btn-submit { margin-top: 20px;  }
 
 }
-
+#Page-route-add {
+  .cp-tools-wrapper { position: absolute; z-index: 100;right:12px; top:14px;  width: 32px; height: 32px;
+    line-height: 34px;text-align: center; background: rgba(0,0,0,.75); border-radius: 4px;
+    svg { margin: 5px auto 0;width: 20px; height: 20px; fill:#fff}
+  }
+}
 
 
 // 选择站点模态框设置
@@ -837,13 +847,13 @@
   // .modal-body { overflow-y: auto; padding: 0; height: 100%;}
 }
 
-//
+/*//
 .cp-modal-infos , .cp-modal-wall {
   z-index: 10000;
   .modal-content {
      background: #f0f0f0;
   }
-}
+}*/
 
 // 地点选择列表
 .cp-list-points {
@@ -879,15 +889,18 @@
 }
 
 /*添加站点页的信息弹窗*/
+// .cp-markInfo-box-wrapper { background: #FFF; padding: 12px;}
+.cp-map-wapper-addroute .amap-info-close { display: none}
 .cp-markInfo-box {
   font-size: 14px;
   .cp-form-group { position: relative; margin-bottom: 12px;
-    label.control-label { bottom: 4px;font-size: 14px;   color:#e6887f;
+    label.control-label { bottom: 2px;font-size: 14px;   color:#e6887f;
       i.fa { margin-right: 5px}
     }
-    input.form-control {  padding-left: 80px; }
+    input.form-control {  padding-left: 80px; font-size: 16px;}
   }
-  .btn-submit { margin-top: 12px}
+  .cp-search-btn { position: absolute; right:10px; top:8px;}
+  .btn-submit { margin-top: 12px; height: 34px; line-height: 34px; font-size: 16px}
 }
 
 /*添加站点页的提示*/

@@ -1,5 +1,5 @@
 <template>
-  <div class="page-view" :class="'cp-modal-add-'+type" id="Page-route-add">
+  <div class="page-view"  id="Page-route-add">
     <div class="page-view-inner" >
       <!-- <title-bar  :left-options="{showBack: true}">{{type=="info"?"发布约车需求":"发布空座位"}}</title-bar> -->
       <cp-goback-btn></cp-goback-btn>
