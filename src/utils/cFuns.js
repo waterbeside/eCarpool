@@ -20,11 +20,46 @@ var cFuns = {
     }
   },
 
+  /**
+   * 页面跳转
+   * @param  string url URL
+   * @param  object win 窗口对像
+   */
+  redirect (url,win){
+    var lct = typeof(win)!="undefined" ? win.location : location;
+    //console.log(lct);
+    lct.href = url;
+  },
+
+  /**
+   * 验证反回码是否未登入
+   * @param  int code      [返回码]
+   * @param  object vueObj    [VUE对像]
+   * @param  boolean showToast [是否显示吐司]
+   */
+  checkLoginByCode (code,vueObj,showToast){
+  	showToast = showToast || 1
+  	if(code===10004){
+
+  		if(showToast && vueObj){
+  			vueObj.$vux.toast.text('请先登入');
+  		}
+      if(vueObj){
+        vueObj.$router.push({ name: 'login'});
+      }else{
+        this.redirect("/#/login");
+      }
+  		return false;
+  	}
+  	return true;
+  },
+
   //个位数补充0
    fixZero (num){
     num = num >= 0 && num <= 9 ?   "0" + num : num;
     return num;
   },
+
   //格式化日期数据
    formatDayItemData (date,text){
     text = text || '';
@@ -36,6 +71,11 @@ var cFuns = {
     return {"value":(date.getFullYear()+'-'+month+'-'+day),"name":text}
   },
 
+  /**
+   * 取得日期时间列表数据
+   * @param  boolean type      1 日期 2 时 3 分
+   * @param  boolean onlyNow   取现时
+   */
   returnNeedTimeDatas (type,onlyNow){
     type = type || 0;
     onlyNow = onlyNow || 0;
@@ -87,7 +127,7 @@ var cFuns = {
   },
 
 
-  //添加标注点
+  //地图类方法
   amap:{
     showMap (target){
       var map = new AMap.Map(target, {
@@ -109,9 +149,10 @@ var cFuns = {
       marker.setMap(mapObj);
     },
     //至中心点
-    setCenter (position,mapObj) {
+    setCenter (position,mapObj,zoom) {
+      zoom = zoom || 14
       // console.log(position);
-      mapObj.setZoomAndCenter(14, position);
+      mapObj.setZoomAndCenter(zoom, position);
     },
     //画线
     drawRouteLine(start,end,mapObj,callBack){
@@ -119,30 +160,24 @@ var cFuns = {
       // mapObj.clearMap();
       AMap.service('AMap.Driving',function(){//回调函数
       //实例化Driving
-      let map_draw = new AMap.Driving({
-            map: mapObj,
-            // panel: "panel"
+        let map_draw = new AMap.Driving({
+              map: mapObj,
+              // panel: "panel"
         });
-        console.log(map_draw);
 
-      //TODO: 使用driving对象调用驾车路径规划相关的功能
-      //传经纬度
-      //  driving.search(new AMap.LngLat(116.379028, 39.865042), new AMap.LngLat(116.427281, 39.903719));
-      map_draw.search(start, end, function(status, result) {
+        //TODO: 使用driving对象调用驾车路径规划相关的功能
+        //传经纬度
+        //  driving.search(new AMap.LngLat(116.379028, 39.865042), new AMap.LngLat(116.427281, 39.903719));
+        map_draw.search(start, end, function(status, result) {
            //TODO 解析返回结果，自己生成操作界面和地图展示界面
            if(typeof(callBack)=='function'){
-						 callBack(status,result);
-					 }
-           console.log(result)
-      });
-  })
-}
+  					 callBack(status,result);
+  				 }
+          console.log(result)
+        });
+      })
+    }
   }
-
-
-
-
-
 }
 
 export default cFuns;
