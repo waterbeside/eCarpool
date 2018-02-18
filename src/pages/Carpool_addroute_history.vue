@@ -1,18 +1,21 @@
 <template>
-  <div class="page-view cp-overhide">
+  <div class="page-view cp-page-history-select">
     <title-bar  :left-options="{showBack: true}" >
-      <span >历史行程</span>
-
+      <span >选择历史路线</span>
     </title-bar>
     <div class="page-view-main"   >
       <cp-scroller :on-refresh="onRefresh"  :dataList="scrollData" :enableInfinite="false">
-
-        <div v-for="(item,index) in listDatas">
-          <cp-route-box :start_name="item.start_info.addressname" :end_name="item.end_info.addressname">
-          </cp-route-box>
-        </div>
-
-
+        <ul>
+          <li v-for="(item,index) in listDatas" class="cp-item btn-ripple" @click="onSelect(index)">
+            <i class="cp-icon fa fa-history"></i>
+            <span class="cp-time">{{item.time.split(' ')[1]}}</span>
+            <span class="cp-point">{{item.start_info.addressname}}</span>
+            <span class="cp-arrow"><i class="fa fa-long-arrow-right"></i></span>
+            <span class="cp-point">{{item.end_info.addressname}}</span>
+            <!-- <cp-route-box :start_name="item.start_info.addressname" :end_name="item.end_info.addressname">
+            </cp-route-box> -->
+          </li>
+        </ul>
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
        <div class="text-center">
          <div class="cp-nodata-tips" v-show="noData">
@@ -27,6 +30,7 @@
 
 <script>
 import config from '../configs/index'
+import cFuns from '../utils/cFuns'
 
 import CpRouteCard from '../components/CpRouteCard'
 import CpScroller from '../components/CpScroller'
@@ -66,30 +70,18 @@ export default {
       var _this = this;
       // console.log(config.urls.checkLogin)
       // alert(1)
-      let params = {page:page};
+      let params = {limit:20};
 
       _this.isLoading = 1;
       _this.noData = 0;
-      _this.$tokenAxios.get(config.urls.getInfoLists,{params:params}).then(res => {
+      _this.$tokenAxios.get(config.urls.getMyroute,{params:params}).then(res => {
         let data = res.data.data;
           _this.isLoading = 0;
           if(res.data.code === 0) {
 
-            _this.page = data.page.currentPage + 1;
-            _this.pageCount = data.page.pageCount;
 
-            if(_this.page > 1 ){
-              var list = _this.listDatas;
-              list = list.concat(data.lists);
-              _this.listDatas = list;
-
-            }else{
-              if(data.lists.length === 0){
-                _this.noData = 1 ;
-              }
               _this.listDatas = data.lists;
-            }
-            _this.enableInfinite = _this.listDatas.length < 4 || _this.pageCount ==1  ? false : true;
+
           }else{
 
           }
@@ -105,8 +97,24 @@ export default {
     onRefresh(done) {
       this.getList(this.page);
       done(); // call done
-
     },
+
+    onSelect (index){
+      let data =  this.listDatas[index]
+
+      let formData = this.$store.state.routeFormData;
+      let today = cFuns.formatDayItemData(new Date).value;
+      let hm = data.time.split(' ')[1]
+      formData.start = data.start_info;
+      formData.end = data.end_info;
+    
+      formData.seat_count = parseInt(data.seat_count);
+      formData.time = [  today ,hm.split(':')[0] ,hm.split(':')[1] ];
+        // console.log(formData);
+        this.$store.commit('setRouteFormData',formData);
+        this.$router.back();
+
+    }
 
   },
   mounted () {
