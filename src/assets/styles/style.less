@@ -183,10 +183,10 @@
 .cp-footer {position: fixed;	top: auto;	bottom: 0; border-top: 1px solid #DDD}
 
 
-
+/* 按钮 */
 .cp-btn {
   @btn-height : 44px;
-   display: block; position: relative; margin-bottom: 10px; height: @btn-height; line-height: @btn-height;
+   display: block; position: relative; margin-bottom: 10px; height: @btn-height; min-width: 30px;line-height: @btn-height;
   font-size: 16px; text-align: center; text-decoration: none;
   border:1px solid lighten(@color-primary,30%); color: lighten(@color-primary,20%); background: #FFF;border-radius: @btn-height;
   .cp-icon { position: absolute; left: 0;height: @btn-height; width: 22px; text-align: center;line-height:@btn-height; margin-left: 20px;   font-size: 20px; }
@@ -627,6 +627,7 @@
   }
   .cp-btns-wrapper { padding: 0 10px; text-align: center;
     .cp-fabBtn-wrap  {margin: -4px 0 8px;}
+    .cp-btns .cp-btn { width: 36px; height: 36px; line-height: 36px; margin:-8px 0 8px 12px;}
     // .cp-btn {  margin:0 10px; border-radius: 50%; border:1px solid @color-primary ; color: @color-primary; font-size: 22px; width:36px; height: 36px; line-height: 34px; text-align: center;}
   }
   .cp-btn-accept {   margin: -5px auto 10px; width: 180px;height: 34px; line-height: 34px;box-shadow: 0 0 2px rgba(0,0,0,0.2); background-color: @color-warning; border-color: @color-warning; color: #FFF}

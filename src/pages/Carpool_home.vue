@@ -9,7 +9,7 @@
             <dl class="cp-index-btn-item">
               <dt>行程</dt>
               <dd>
-                <router-link  class="btn btn-ripple" to="/carpool/myroutes">
+                <router-link  class="btn btn-ripple" to="/carpool/myroute">
                   <i class="fa fa-map"></i>我的行程
                 </router-link>
                 <!-- <a class="btn btn-ripple" href="javascript:void(0);" on-click="pageMethods.goPage(\'#/myRoute\')"><i class="fa fa-map"></i>我的行程</a> -->

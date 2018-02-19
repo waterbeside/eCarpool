@@ -62,6 +62,15 @@ const routes = [
     },
     meta: {keepAlive: true }
   },
+  // 我的行程
+  {
+    path: '/carpool/myroute',
+    name: 'carpool_myroute',
+    component (resolve) {
+      require(['../pages/Carpool_myroute'], resolve)
+    },
+    meta: {keepAlive: true }
+  },
   // 行程细览
   {
     path: '/carpool/requests/detail/:id',
