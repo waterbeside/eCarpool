@@ -29,6 +29,8 @@
            :ref = "'item-'+item.id"
            data-from="info"
            typeLabel="乘客"
+           @click.native="goDetail(index)"
+
          >
            <div slot="btnbar" class="cp-btns-wrapper">
              <a class="cp-btn cp-btn-accept" @click="acceptRequest(item.id,index)">接受</a>
@@ -85,6 +87,13 @@ export default {
     goHome (){
       console.log(1)
       this.$router.push({name:'carpool'})
+    },
+    /**
+     * [goDetail 跳到详细页]
+     */
+    goDetail (index){
+      let _this = this;
+      this.$router.push({name:'carpool_requests_detail',params: { id: this.listDatas[index].id ,from:"info"}});
     },
     /**
      * [showSearchBox 显示或关闭搜索输入]

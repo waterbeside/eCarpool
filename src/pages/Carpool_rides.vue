@@ -29,6 +29,7 @@
            :ref = "'item-'+item.id"
            typeLabel="司机"
            data-from="wall"
+           @click.native="goDetail(index)"
          >
            <div slot="btnbar" class="cp-btns-wrapper">
               <div class="cp-fabBtn-wrap " :class="[{'hasLike':item.hasLike===1,'doLike':item.id === doLikeId}]">
@@ -96,6 +97,13 @@ export default {
     goHome (){
       console.log(1)
       this.$router.push({name:'carpool'})
+    },
+    /**
+     * [goDetail 跳到详细页]
+     */
+    goDetail (index){
+      let _this = this;
+      this.$router.push({name:'carpool_rides_detail',params: { id: _this.listDatas[index].id ,from:"wall"}});
     },
     /**
      * [showSearchBox 显示或关闭搜索输入]
