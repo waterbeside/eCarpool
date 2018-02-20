@@ -16,6 +16,15 @@
               <!-- <svg class="icon"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M938.666667 448V192.042667A42.666667 42.666667 0 0 0 896.042667 149.333333H768v42.666667l128 0.042667V405.333333H128V192.042667L256 192V149.333333H127.957333A42.56 42.56 0 0 0 85.333333 192.042667v703.914666A42.666667 42.666667 0 0 0 127.936 938.666667H490.666667v-42.688l-362.666667-0.021334V448h810.666667zM298.666667 85.333333h42.666666v170.666667h-42.666666V85.333333z m384 0h42.666666v170.666667h-42.666666V85.333333zM384 149.333333h256v42.666667H384V149.333333z"  /><path d="M746.666667 917.333333a170.666667 170.666667 0 1 0 0-341.333333 170.666667 170.666667 0 0 0 0 341.333333z m0 42.666667c-117.824 0-213.333333-95.509333-213.333334-213.333333s95.509333-213.333333 213.333334-213.333334 213.333333 95.509333 213.333333 213.333334-95.509333 213.333333-213.333333 213.333333z" /><path d="M768 759.232v-119.296c0-11.605333-9.557333-21.269333-21.333333-21.269333-11.861333 0-21.333333 9.514667-21.333334 21.269333v128.128a20.992 20.992 0 0 0 6.101334 14.933333l60.629333 60.629334a21.184 21.184 0 0 0 30.016-0.149334 21.333333 21.333333 0 0 0 0.149333-30.016L768 759.232z" /></svg> -->
             </router-link>
           </div>
+          <div class="cp-computebox-wrapper" v-show="isShowComputebox">
+            <div class="cp-computebox-inner">
+              <h5>预计</h5>
+              <div class="cp-content">
+                <div class="cp-item"><i class="fa fa-map-signs"></i><b>{{computeBoxData.distance}}</b></div>
+                <div class="cp-item"><i class="fa fa-clock-o"></i><b>{{computeBoxData.time}}</b></div>
+              </div>
+            </div>
+          </div>
 
           <div class="cp-map-form">
             <form   method="post" onsubmit="return false;">
@@ -51,7 +60,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="cp-selectbtn-wrap cp-needTime-sWrap" id="J-needTime" v-if="type=='wall'">
+                <div class="cp-selectbtn-wrap cp-needTime-sWrap" id="J-needTime" >
 
                   <popup-picker class="cp-selectbtn"    v-model="formData.time" :data="timeDataArray" :display-format="formatDateDisplay"  >
                     <template slot="title" slot-scope="props">
@@ -62,7 +71,7 @@
                   </popup-picker>
                 </div>
 
-                <div class="cp-selectbtn-wrap cp-seatCount-sWrap" id="J-pick-seatCount">
+                <div class="cp-selectbtn-wrap cp-seatCount-sWrap" id="J-pick-seatCount" v-if="type=='wall'">
                   <div class="cp-selectbtn" >
                     <x-number :title="'<span class=\'cp-label\'><i class=\'fa fa-users\'></i><span class=\'cp-title\' style=\'vertical-align:middle;\'>空座位数</span></span>'"    v-model="formData.seat_count" button-style="round" :min="1" :max="10" fillable ></x-number>
                   </div>
@@ -78,7 +87,7 @@
                 </div>
 
 
-                <x-button class="cp-btn cp-btn-submit" type="primary" :disabled="disableSubmitBtn" style="border-radius:99px;"><i class="cp-icon fa fa-paper-plane"></i>发布</x-button>
+                <x-button class="cp-btn cp-btn-submit" type="primary" :disabled="disableSubmitBtn" style="border-radius:99px;" @click.native="doSubmit"><i class="cp-icon fa fa-paper-plane"></i>发布</x-button>
 
 
               </div>
@@ -179,15 +188,15 @@ export default {
         position:[112.861513, 22.885635]
       },*/
       disableSubmitBtn:true,
-      time:[],
-      formatDemoValue: "请输入时间",
       formatDateDisplay: function (value, name) {
         return name.split(" ")[0]+" "+`${value[1]}`+":"+`${value[2]}`
       },
       // avatar: config.defaultAvatar,
       defaultAvatar: config.defaultAvatar,
+      computeBoxData:{distance:"",time:""},
       city:"",
       exChangeAddressing : false,
+      isShowComputebox:false,
     }
   },
   computed:{
@@ -298,10 +307,13 @@ export default {
       // }
       _this.getDataFormStore();
 
-
       setTimeout(function(){_this.exChangeAddressing = false},500)
     },
 
+    /**
+     * 标记并画线
+     * @param  object formData_s 起终点的座标数据
+     */
     markerAndDraw (formData_s){
       var _this = this;
       if(formData_s.start && formData_s.start.latitude ){
@@ -321,8 +333,81 @@ export default {
         var start = new AMap.LngLat(parseFloat(formData_s.start.longtitude), parseFloat(formData_s.start.latitude));
         var end = new AMap.LngLat(parseFloat(formData_s.end.longtitude), parseFloat(formData_s.end.latitude));
 
-        cFuns.amap.drawRouteLine(start, end,this.mapObj);
+        cFuns.amap.drawRouteLine(start, end,this.mapObj,function(status,result){
+
+          if(status == 'complete'){
+            _this.isShowComputebox = true;
+            var distance = result.routes[0].distance; //计出的距离
+            var distanceStr = cFuns.amap.formatDistance(distance);
+            var dtTime = result.routes[0].time;
+            var dtTimeStr = cFuns.amap.formatRouteTime(dtTime);
+            _this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
+            _this.formData.distance = distance;
+          }else{
+            var data= '路线过长，无法预测行程时间';
+            _this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
+
+            _this.formData.distance = 0;
+          }
+        });
       }
+    },
+    /**
+     * 提交数据
+     */
+    doSubmit (){
+      let _this = this;
+      let startData = _this.formData.start;
+      let endData = _this.formData.end;
+      let postData = {
+        datetime:_this.formData.time[0]+" "+_this.formData.time[1]+":"+_this.formData.time[2],
+        startpid:_this.formData.start.addressid,
+        endpid:_this.formData.end.addressid ,
+        start:_this.formData.start,
+        /*{
+          addressid:startData.addressid ? startData.addressid : 0,
+          addressname: startData.addressname,
+          longtitude: startData.longtitude,
+          latitude: startData.latitude,
+          addressname: startData.addressname,
+          address: startData.address ? startData.address : '',
+        },*/
+        end:_this.formData.end,
+      /*  {
+          addressid:endData.addressid ? endData.addressid : 0,
+          addressname: endData.addressname,
+          longtitude: endData.longtitude,
+          latitude: endData.latitude,
+          addressname: endData.addressname,
+          address: endData.address ? endData.address : '',
+        },*/
+        distance : _this.formData.distance,
+        from:this.type,
+      }
+      postData.start['addressid'] = startData.addressid ? startData.addressid : 0
+      if(_this.type == "wall"){
+        postData.seat_count = _this.formData.seat_count
+      }
+
+      this.$tokenAxios.post(config.urls.addRoute,postData).then(res => {
+        if(res.status!==200){
+          this.$vux.toast.text('网络不畅，请稍候再试');
+          return false;
+        }
+        var resData = res.data.data
+        if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
+        if(res.data.code === 0) {
+          _this.$vux.toast.text("发布成功");
+          _this.$store.commit('setJumpTo',{name:"carpool_myroute"});
+          _this.$router.push({name:'carpool'});
+        }else{
+          _this.$vux.toast.text(res.data.desc);
+
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
     }
 
 

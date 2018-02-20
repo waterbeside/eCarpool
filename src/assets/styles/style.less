@@ -626,6 +626,7 @@
     }
   }
   .cp-btns-wrapper { padding: 0 10px; text-align: center;
+    .tips-text { float: left; padding-left: 12px;}
     .cp-fabBtn-wrap  {margin: -4px 0 8px;}
     .cp-btns .cp-btn { width: 36px; height: 36px; line-height: 36px; margin:-8px 0 8px 12px;}
     // .cp-btn {  margin:0 10px; border-radius: 50%; border:1px solid @color-primary ; color: @color-primary; font-size: 22px; width:36px; height: 36px; line-height: 34px; text-align: center;}
@@ -714,10 +715,11 @@
 }
 
 .cp-computebox-inner {
-  .mix-map-topbox; height: 38px; animation: mapBox_come_in .5s ease;
+  .mix-map-topbox; top:10px; height: 34px; animation: mapBox_come_in .5s ease;
+  margin: 0 50px;
   h4 { font-size: 12px;text-align: center; }
   h5 { font-size: 12px; text-align: center; margin: 0; }
-  .cp-content { display:  flex;  justify-content: space-around; width: 100%; margin-top: -5px;}
+  .cp-content { display:  flex;  justify-content: space-around; width: 100%; margin-top: -5px; font-size: 13px;}
   .cp-item { flex:1; text-align: center; color:rgb(241, 146, 2);
     &:first-child {  border-right: 1px solid #DDD}
     i.fa { margin-right: 7px; color:@color-primary;}
@@ -828,7 +830,7 @@
 
 }
 #Page-route-add {
-  .cp-tools-wrapper { position: absolute; z-index: 100;right:12px; top:14px;  width: 32px; height: 32px;
+  .cp-tools-wrapper { position: absolute; z-index: 100;right:12px; top:12px;  width: 32px; height: 32px;
     line-height: 34px;text-align: center; background: rgba(0,0,0,.75); border-radius: 4px;
     svg { margin: 5px auto 0;width: 20px; height: 20px; fill:#fff}
   }
