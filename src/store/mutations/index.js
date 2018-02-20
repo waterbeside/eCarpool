@@ -7,7 +7,10 @@ import cookie from '../../utils/cookie'
 import config from '../../configs'
 
 export default {
-
+  //设置用户详细数据
+  setJumpTo(state,datas){
+    state.jumpTo = datas;
+  },
   //设置用户基础数据
 /*  setUserBaseData(state,datas){
     state.userBaseData = datas;

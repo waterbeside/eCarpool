@@ -1,6 +1,10 @@
 
 /* 内存数据状态 */
 export default {
+
+  //要从首页跳转去的页面
+  jumpTo: {},
+
   // 正在加载中
   loading: {
     isShow:false,

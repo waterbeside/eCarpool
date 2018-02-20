@@ -63,10 +63,19 @@ export default {
     },
     goRouteAdd (type){
       this.$router.push({name:'carpool_addroute',params: {type:type}});
+    },
+    jumpTo (){
+      let jumpToSetting = this.$store.state.jumpTo;
+      if(jumpToSetting.path || jumpToSetting.name){
+        this.$store.commit('setJumpTo',{});
+        this.$router.push(jumpToSetting);
+      }
+
     }
   },
   activated (){
     this.$store.commit('setRouteFormData',{});
+    this.jumpTo();
 
   }
 }
