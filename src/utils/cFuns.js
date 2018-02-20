@@ -176,6 +176,36 @@ var cFuns = {
           console.log(result)
         });
       })
+    },
+
+    // 格式化行程距离
+    formatDistance (distance,returnType){
+    	returnType = returnType || 0
+    	var distanceStr = distance + '米';
+    	var unit = 'M';
+    	var dtTimeStr = '';
+    	if(distance > 1000){
+    		distance = (distance/1000).toFixed(1);
+    		unit = 'KM'
+    		distanceStr = distance + '公里';
+    	}
+    	if(returnType){
+    		return {unit:unit,distance:distance};
+    	}else{
+    		return distanceStr;
+    	}
+
+    },
+
+    // 格式化行程用时
+   formatRouteTime (dtTime){
+    	var dtTimeStr = '';
+    	if(dtTime > 3600){
+    		dtTimeStr = Math.floor(dtTime/3600)+'小时' + Math.floor((dtTime%3600)/60)+'分钟';
+    	}else if(dtTime > 60){
+    		dtTimeStr =  Math.floor((dtTime)/60)+'分钟';
+    	}
+    	return dtTimeStr;
     }
   }
 }
