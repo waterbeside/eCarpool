@@ -25,7 +25,7 @@
            :end_name="item.end_info.addressname"
            :date = "item.time.split(' ')[0]"
            :time = "item.time.split(' ')[1]"
-           :class="[{'cancel':item.status != 1},('item-'+item.id)]"
+           :class="[{'cancel':item.status > 1},('item-'+item.id)]"
            :ref = "'item-'+item.id"
            typeLabel="司机"
            data-from="wall"
