@@ -42,13 +42,19 @@
            </div>
 
            <div slot="btnbar" class="cp-btns-wrapper" v-if="item.from=='info'">
-             <div class="cp-btns">
+             <div class="cp-btns" v-if="item.status ==1">
                <a href="javascript:void(0);" onclick="pageMethods.cencelRoute('+data.id+',\''+data.from+'\',this)"  data-loading-text="..." class="cp-btn  btn-ripple  pull-right"><i class="fa fa-times"></i></a>
                <a href="javascript:void(0);" onclick="pageMethods.finishRoute('+data.id+',\''+data.from+'\',this)"  data-loading-text="..." class="cp-btn   btn-ripple pull-right"><i class="fa fa-check"></i></a>
                <a href="tel:'+ (data.show_owner == 1 ? data.owner_info.phone : data.passenger_info.phone)+'" onclick="event.stopPropagation();"  class="cp-btn  btn-ripple pull-right"><i class="fa fa-phone"></i></a>
                <div class="cp-clear"></div>
              </div>
+             <div class="cp-btns" v-if="item.status ==0">
+               <a href="javascript:void(0);" onclick="pageMethods.cencelRoute('+data.id+',\''+data.from+'\',this)"  data-loading-text="..." class="cp-btn  btn-ripple   pull-right"><i class="fa fa-times"></i></a>
+               <span class="tips-text">等待车主接受</span>
+               <div class="cp-clear"></div>
+             </div>
            </div>
+
 
          </cp-route-card>
 
@@ -57,7 +63,7 @@
          <div class="cp-nodata-tips" v-show="noData">
            暂时没有数据 ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
          </div>
-         <spinner type="dots" size="60px" v-show="page==1 && isLoading"></spinner>
+         <spinner type="dots" size="60px" v-show="isLoading"></spinner>
        </div>
       </cp-scroller>
     </div>
@@ -104,7 +110,10 @@ export default {
       console.log(1)
       this.$router.push({name:'carpool'})
     },
-
+    /**
+     * 跳到详细页
+     * @param  {integer} index 数据索引
+     */
     goDetail (index){
       let _this = this;
 
@@ -113,13 +122,15 @@ export default {
       this.$router.push({name:goName,params: { id: this.listDatas[index].id ,from:_this.listDatas[index].from}});
 
     },
-
-
-    getList (page,success){
+    /**
+     * 取得列表
+     * @param  {function} success 取得列表成功后执行。
+     */
+    getList (success){
       var _this = this;
       // console.log(config.urls.checkLogin)
       // alert(1)
-      let params = {page:page};
+      let params = {};
 
       _this.isLoading = 1;
       _this.noData = 0;
@@ -127,7 +138,7 @@ export default {
         let data = res.data.data;
           _this.isLoading = 0;
           if(res.data.code === 0) {
-
+            _this.listDatas = [];
             _this.listDatas_o = data.lists;
             _this.listDatas_o.forEach(function(value,index,arr){
               _this.listDatas.push({
@@ -137,8 +148,11 @@ export default {
                 time:value.time,
                 start_info:value.start_info,
                 end_info:value.end_info,
-                user : value.show_owner ? value.owner_info : value.passenger_info,
-                typeLabel : value.from == "wall" || value.show_owner ? "司机" : "乘客"
+                user : value.from == "wall" || value.show_owner ? value.owner_info : value.passenger_info,
+                typeLabel : value.from == "wall" || value.show_owner ? "司机" : "乘客",
+                like_count:value.like_count,
+                took_count:value.took_count,
+                seat_count:value.seat_count
               })
             })
 
@@ -153,9 +167,11 @@ export default {
           console.log(error)
         })
     },
-
+    /**
+     * 下接刷新
+     */
     onRefresh(done) {
-      this.getList(this.page);
+      this.getList();
       done(); // call done
 
     },
@@ -166,7 +182,7 @@ export default {
   },
   created () {
     this.init();
-    this.getList(1);
+    this.getList();
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
