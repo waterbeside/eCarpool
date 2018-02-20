@@ -25,7 +25,7 @@
            :end_name="item.end_info.addressname"
            :date = "item.time.split(' ')[0]"
            :time = "item.time.split(' ')[1]"
-           :class="[{'cancel':item.status > 0},('item-'+item.id)]"
+           :class="[{'cancel':item.status != 1},('item-'+item.id)]"
            :ref = "'item-'+item.id"
            typeLabel="司机"
            data-from="wall"
@@ -127,8 +127,8 @@ export default {
     },
     /**
      * [clickLike 点赞]
-     * @param  {int} id    [需求列表行id (infoid)]
-     * @param  {int} index [需求列表行的索引 ]
+     * @param  {integer} id    [需求列表行id (infoid)]
+     * @param  {integer} index [需求列表行的索引 ]
      */
     likeRoute (id,index){
       var _this = this;
@@ -154,6 +154,11 @@ export default {
 
 
     },
+    /**
+     * 取得列表
+     * @param  {integer} page    页码
+     * @param  {function} success 取得列表成功后执行。
+     */
     getList (page,success){
       var _this = this;
       // console.log(config.urls.checkLogin)
@@ -193,12 +198,17 @@ export default {
           console.log(error)
         })
     },
-
+    /**
+     * 下接刷新
+     */
     onRefresh(done) {
       this.getList(this.page);
       done(); // call done
 
     },
+    /**
+     * 列表加载更多
+     */
     onInfinite(done) {
       var _this = this;
       if(this.page < this.pageCount){

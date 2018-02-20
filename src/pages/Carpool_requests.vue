@@ -116,9 +116,8 @@ export default {
     },
     /**
      * [acceptRequest 接受约车需求]
-     * @param  {[type]} id    [需求列表行id (infoid)]
-     * @param  {[type]} index [需求列表行的索引 ]
-     * @return {[type]}       [description]
+     * @param  {integer} id    [需求列表行id (infoid)]
+     * @param  {integer} index [需求列表行的索引 ]
      */
     acceptRequest (id,index){
       var _this = this;
@@ -151,9 +150,12 @@ export default {
 
         console.log(error)
       })
-
-
     },
+    /**
+     * 取得列表
+     * @param  {integer} page    页码
+     * @param  {function} success 取得列表成功后执行。
+     */
     getList (page,success){
       var _this = this;
       // console.log(config.urls.checkLogin)
@@ -193,12 +195,17 @@ export default {
           console.log(error)
         })
     },
-
+    /**
+     * 下接刷新
+     */
     onRefresh(done) {
       this.getList(this.page);
       done(); // call done
 
     },
+    /**
+     * 列表加载更多
+     */
     onInfinite(done) {
       var _this = this;
       if(this.page < this.pageCount){

@@ -41,7 +41,6 @@ export default {
   },
   data () {
     return {
-
       page    : 1,
       pageCount:1,
       isLoading : 0,
@@ -65,8 +64,11 @@ export default {
       this.$router.push({name:'carpool'})
     },
 
-
-    getList (page,success){
+    /**
+     * 取得列表
+     * @param  {function} success 取得列表成功后执行。
+     */
+    getList (success){
       var _this = this;
       // console.log(config.urls.checkLogin)
       // alert(1)
@@ -78,10 +80,7 @@ export default {
         let data = res.data.data;
           _this.isLoading = 0;
           if(res.data.code === 0) {
-
-
               _this.listDatas = data.lists;
-
           }else{
 
           }
@@ -93,9 +92,11 @@ export default {
           console.log(error)
         })
     },
-
+    /**
+     * 下接刷新
+     */
     onRefresh(done) {
-      this.getList(this.page);
+      this.getList();
       done(); // call done
     },
 
@@ -107,7 +108,7 @@ export default {
       let hm = data.time.split(' ')[1]
       formData.start = data.start_info;
       formData.end = data.end_info;
-    
+
       formData.seat_count = parseInt(data.seat_count);
       formData.time = [  today ,hm.split(':')[0] ,hm.split(':')[1] ];
         // console.log(formData);
@@ -122,7 +123,7 @@ export default {
   },
   created () {
     this.init();
-    this.getList(1);
+    this.getList();
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
