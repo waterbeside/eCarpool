@@ -201,67 +201,87 @@
 
 /*page-view*/
 /* 进入切页动画，可根据开发这需要自由开发 */
-  .forward-enter-active, .forward-leave-active {
-    position: absolute;
-    left: 0;
-    top: 0;
-    -webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    transition: all 0.5s;
-    z-index: 0;
-  }
-  .forward-leave {
-    -webkit-transform: translate3d(0, 0, 0);
-       -moz-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-  }
-  .forward-leave-to {
-    -webkit-transform: translate3d(-100%, 0, 0);
-       -moz-transform: translate3d(-100%, 0, 0);
-            transform: translate3d(-100%, 0, 0);
-  }
-  .forward-enter {
-    -webkit-transform: translate3d(100%, 0, 0);
-       -moz-transform: translate3d(100%, 0, 0);
-            transform: translate3d(100%, 0, 0);
-  }
-  .forward-enter-to {
-    -webkit-transform: translate3d(0, 0, 0);
-       -moz-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-  }
+.forward-enter-active, .forward-leave-active {
+  position: absolute;
+  left: 0;
+  top: 0;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  transition: all 0.5s;
+  z-index: 0;
+}
+.forward-leave {
+  -webkit-transform: translate3d(0, 0, 0);
+     -moz-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+}
+.forward-leave-to {
+  -webkit-transform: translate3d(-100%, 0, 0);
+     -moz-transform: translate3d(-100%, 0, 0);
+          transform: translate3d(-100%, 0, 0);
+}
+.forward-enter {
+  -webkit-transform: translate3d(100%, 0, 0);
+     -moz-transform: translate3d(100%, 0, 0);
+          transform: translate3d(100%, 0, 0);
+}
+.forward-enter-to {
+  -webkit-transform: translate3d(0, 0, 0);
+     -moz-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+}
 
-  /* 离开切页动画，可根据开发这需要自由开发 */
-  .backward-enter-active, .backward-leave-active {
-    position: absolute;
-    left: 0;
-    top: 0;
-    -webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    transition: all 0.5s;
-    z-index: 0;
-  }
-  .backward-leave {
-    -webkit-transform: translate3d(0, 0, 0);
-       -moz-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-  }
-  .backward-leave-to {
-    -webkit-transform: translate3d(100%, 0, 0);
-       -moz-transform: translate3d(100%, 0, 0);
-            transform: translate3d(100%, 0, 0);
-  }
-  .backward-enter {
-    -webkit-transform: translate3d(-100%, 0, 0);
-       -moz-transform: translate3d(-100%, 0, 0);
-            transform: translate3d(-100%, 0, 0);
-  }
-  .backward-enter-to {
-    -webkit-transform: translate3d(0, 0, 0);
-       -moz-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-  }
+/* 离开切页动画，可根据开发这需要自由开发 */
+.backward-enter-active, .backward-leave-active {
+  position: absolute;
+  left: 0;
+  top: 0;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  transition: all 0.5s;
+  z-index: 0;
+}
+.backward-leave {
+  -webkit-transform: translate3d(0, 0, 0);
+     -moz-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+}
+.backward-leave-to {
+  -webkit-transform: translate3d(100%, 0, 0);
+     -moz-transform: translate3d(100%, 0, 0);
+          transform: translate3d(100%, 0, 0);
+}
+.backward-enter {
+  -webkit-transform: translate3d(-100%, 0, 0);
+     -moz-transform: translate3d(-100%, 0, 0);
+          transform: translate3d(-100%, 0, 0);
+}
+.backward-enter-to {
+  -webkit-transform: translate3d(0, 0, 0);
+     -moz-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+}
 
+
+.fade-enter-active, .fade-leave-active {
+  -webkit-transition: all 0.8s;
+  -moz-transition: all 0.8s;
+  transition: all 0.8s;
+  z-index: 0;
+  opacity: 1
+}
+.fade-leave {
+  opacity: 1
+}
+.fade-leave-to {
+  opacity: 0
+}
+.fade-enter {
+  opacity: 0
+}
+.fade-enter-to {
+  opacity: 1
+}
 
 .page-view {
   width: 100%; position: absolute; top: 0; left: 0;right:0;  height: 100%; background:#fafafa;/*animation: page_view_in .2s ease;*/ z-index: 1000;
@@ -677,13 +697,8 @@
     // width: 200px;
   }
 }
-.cp-map-wapper { position: absolute; top:0; left: 0; bottom: 0; right: 0;  width: 100%; overflow: hidden; z-index: 1;
+.cp-map-wapper , .map-box{ position: absolute; top:0; left: 0; bottom: 0; right: 0;  width: 100%; overflow: hidden; z-index: 1;
   .amap-logo,.amap-copyright { display: none!important;}
-
-}
-
-.cp-map-wrapper-addroute {
-  top:-100px;
   .amap-toolbar-geo {width: 32px; height: 32px;opacity: .7;}
   .amap-zoomcontrol {
     width: 32px; opacity: .7;
@@ -691,6 +706,11 @@
       &>div {color:#FFF}
     }*/
   }
+}
+
+.cp-map-wrapper-addroute {
+  top:-100px;
+
 
 }
 
@@ -1009,18 +1029,16 @@
 
 
 
-
-
 /* 数据统计项 */
 .cp-statis-item {
   display: inline-block; text-align: center;  padding: 10px 15px;
-  b { display: block; font-weight: normal;}
+  b {  font-weight: normal;}
   .cp-iconfont { font-size: 26px; color:@color-primary; }
-  .t { font-size: 12px; color:lighten(@color-primary,30%); }
+  .title { display: block;margin-bottom: 3px;font-size: 12px; color:lighten(@color-primary,30%); }
+  .unit {display: block; font-size: 12px; color:lighten(@color-primary,30%); }
   .num { font-size: 22px; padding-top: 5px; color:lighten(@color-primary,20%); display: block; }
   small { margin-left: 3px; font-size: 10px;  color: lighten(@color-primary,30%);}
-  &.cp-time .num { font-size: 16px; padding-top: 3px}
-  p.date { font-size: 10px; margin: 0; line-height: 1; color: lighten(@color-primary,20%);white-space:nowrap}
+
 }
 
 /* 选项列表 */
@@ -1032,13 +1050,101 @@
   }
 }
 
+
+
+
+#Page-route-detail {
+  .cp-map-content { position: fixed; top:0; height: 280px; width:100%; z-index: 1;
+
+  }
+  .cp-scroll-inner { z-index: 2 ; margin-top: 240px; }
+  .cp-content { position: relative; min-height: 500px; background: #FFF; height: 100%; box-shadow: 0 -4px 4px rgba(0,0,0,0.1)}
+   @avatar-width : 74px;
+  .cp-heading  {
+    position: absolute; top:  -@avatar-width/2 ;clear:both;
+    width: 100%; padding-bottom: 10px;  text-align: center; z-index: 2;
+    color:#FFF;
+    .cp-avatar { border: 2px solid #FFF; box-shadow: 0 -4px 4px rgba(0,0,0,0.2);width: @avatar-width; height: @avatar-width; border-radius: 50%; margin: 0 auto;}
+    label { position: absolute; right:50%; top: @avatar-width/2 - 18px ; margin-right: @avatar-width/2 + 5px; color: lighten(@color-primary,50%); font-size: 12px; font-weight: 300}
+    .cp-txt {
+      h3 { margin: 10px 0 5px; font-size: 22px;  }
+    }
+    h6 , .department{
+      position: absolute; top: @avatar-width/2 + 2px ; right:4px; margin: 0; line-height: 1.2;
+      color: lighten(@color-primary,40%); font-size: 12px;
+    }
+    .department {  left:4px; right: auto; }
+  }
+  .cp-heading-bg { margin-top:@avatar-width/2  ; border-top:20px solid @color-primary ;  height:84px; background: url(../images/carpool_bg.jpg); background-size: cover;}
+
+
+  .cp-tab-item {
+    .cp-inner {heigt:100%;border-left:1px solid #fafafa;}
+    .bage { margin-left:5px;   line-height: 1; display: inline-block;padding: 2px 5px; border-radius: 10px;color: #fff; background: red;}
+  }
+  .cp-tab-item:first-child .cp-inner{ border-left: none; }
+
+  .alert { margin: 10px 10px 12px;
+    .cp-avatar { width: 22px;height:22px; border-radius: 50%; border:1px solid #FFF; }
+  }
+
+
+  .cp-cell {
+     padding: 12px 10px 10px 0;border-bottom: 1px dotted #ddd;
+     font-size: 16px; color:lighten(@color-primary,25%); font-weight: 700; //text-align: right;
+    .la { float: left; display: inline-block;  min-width: 50px;color:#666; text-align: left;
+      i.fa { min-width: 30px; text-align: center; margin:0 0 0 10px;   color:lighten(@color-primary,30%)}
+    }
+    span {   }
+  }
+  .cp-cell-time { border-top:1px dotted #e6e6e6;}
+  .cp-btns-wrap { clear: both;padding: 10px;
+    @btn-height : 44px;
+    .cp-btn { display: block; position: relative; margin-bottom: 10px; height: @btn-height; line-height: @btn-height;
+      font-size: 16px; text-align: center; text-decoration: none;
+      border:1px solid lighten(@color-primary,30%); color: lighten(@color-primary,20%); background: #FFF;border-radius: @btn-height;
+      .cp-icon { position: absolute; left: 0;height: @btn-height; width: 22px; text-align: center;line-height:@btn-height; margin-left: 20px;   font-size: 20px; }
+      &:active { border-color:lighten(@color-primary,10%); color: lighten(@color-primary,10%); background: lighten(@color-primary,50%)}
+    }
+    .cp-btn-cancel { border-color: lighten(@color-danger,10%); background:lighten(@color-danger,10%);color:#FFF;}
+    .cp-btn-ok { border-color: lighten(@color-success,10%); background:lighten(@color-success,5%); color:#FFF;}
+    .cp-btn-pickup { border-color: lighten(@color-primary,10%); background:lighten(@color-primary,15%); color:#FFF; }
+    .cp-btn-riding { border-color: lighten(@color-primary,10%); background:lighten(@color-primary,15%); color:#FFF; }
+
+  }
+  .cp-statis-list { clear: both;
+    margin-bottom: 10px;
+    border-bottom:1px solid #eee;
+    background: lighten(@color-primary,56%);overflow: hidden;}
+  .cp-statis-item {
+    border-left:1px solid #eee;
+    &:first-child { border-left: none; }
+    .title {color:lighten(@color-primary,18%)}
+    .cp-iconfont {color:lighten(@color-primary,18%)}
+    .num_unit_wrapper { margin-top: 3px;}
+    .num { display: inline;  font-weight: 700; color:lighten(@color-primary,18%)}
+    &.cp-time .num { font-size: 18px; padding-top: 0px; line-height: 1; font-weight: 700}
+    .date { font-size: 11px; margin: 0; line-height: 1; font-weight: 400; color: lighten(@color-primary,20%);white-space:nowrap}
+    &.cp-distance {
+      .unit {display: inline;}
+    }
+    &.cp-status  {
+      .num {font-size: 16px;}
+      .num_unit_wrapper { margin-top: 10px;}
+     }
+  }
+
+
+}
 /* 乘客列表 */
 
 .cp-wallView-passenger {
+  list-style: none;margin: 0; padding: 0;
+  p {margin: 0}
   .cp-item { position: relative; list-style: none; padding: 10px 15px; border-bottom: 1px dotted #ddd;
     .cp-avatar { float: left;width: 46px; height: 46px; margin:-2px 15px 0 0;}
   }
-  .cp-btns-wrap { position: absolute; right:12px; top:10px}
+  .cp-btns-wrap { position: absolute; right:12px; top:0px}
   .btn-fab-mini {line-height: 40px; box-shadow: none; background-color:lighten(@color-primary,50%); color:lighten(@color-primary,10%)}
 }
 
