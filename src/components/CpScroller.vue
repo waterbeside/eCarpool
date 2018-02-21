@@ -1,7 +1,8 @@
 <template lang="html">
     <div class="cp-scroll" :class="{'down':(state===0),'up':(state==1),refresh:(state===2),touch:touching}" @touchstart="touchStart($event)" @touchmove="touchMove($event)" @touchend="touchEnd($event)">
-        <section class="inner" :style="{ transform: 'translate3d(0, ' + top + 'px, 0)' }">
-            <div class="pull-refresh">
+        <slot name="before-inner"></slot>
+        <section class="cp-scroll-inner" :style="{ transform: 'translate3d(0, ' + top + 'px, 0)' }">
+            <div class="pull-refresh" v-show="enableRefresh">
                 <slot name="pull-refresh">
                     <span class="down-tip">下拉更新</span>
                     <span class="up-tip">松开刷新数据</span>
@@ -16,7 +17,7 @@
                       <span v-show="downFlag === true"><slot name="loading-text">加载中……</slot></span>
               </div>
             </div>
-            <div class="nullData" v-show="dataList.noFlag">暂无更多数据</div>
+            <div class="nullData" v-show="enableInfinite   && dataList.noFlag">暂无更多数据</div>
         </section>
     </div>
 </template>
@@ -37,7 +38,7 @@
                 default: true
             },
             dataList: {
-                default: false,
+                default: function(){ return {noFlag:false}},
                 required: false
             },
             onRefresh: {
@@ -73,7 +74,8 @@
                 this.$el.querySelector('.load-more').style.display = 'block';
             },
             touchMove(e) {
-                if(!this.enableRefresh || this.dataList.noFlag || !this.touching) {
+
+                if(!this.enableRefresh ||  this.dataList.noFlag || !this.touching) {
                     return
                 }
                 let diff = e.targetTouches[0].pageY - this.startY - this.startScroll
@@ -132,7 +134,7 @@
                 }
 
                 let outerHeight = this.$el.clientHeight,
-                    innerHeight = this.$el.querySelector('.inner').clientHeight,
+                    innerHeight = this.$el.querySelector('.cp-scroll-inner').clientHeight,
                     scrollTop = this.$el.scrollTop,
                     ptrHeight = this.onRefresh ? this.$el.querySelector('.pull-refresh').clientHeight : 0,
                     bottom = innerHeight - outerHeight - scrollTop - ptrHeight;
@@ -186,7 +188,7 @@
   z-index: 100;
   height: auto;
   -webkit-overflow-scrolling: touch;
-  .inner {
+  .cp-scroll-inner {
       position: absolute;
       top: -30px;
       width: 100%;
@@ -248,7 +250,7 @@
   }
 }
 
-.cp-scroll.touch .inner {
+.cp-scroll.touch .cp-scroll-inner {
 transition-duration: 0;
 }
 
