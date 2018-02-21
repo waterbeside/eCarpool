@@ -71,11 +71,15 @@ export default {
       }
     }*/
     '$route' (to, from) {
-      console.log()
       const toDepth = to.path.split('/').length
       const fromDepth = from.path.split('/').length
       if(to.path=="/"){
         this.transitionName = 'backward'
+        return;
+      }
+      if(to.name == 'carpool_rides_detail' || to.name == 'carpool_requests_detail' || from.name== 'carpool_rides_detail' || from.name== 'carpool_requests_detail' ){
+        this.transitionName = 'fade'
+        return;
       }
 
       this.transitionName = toDepth < fromDepth ? 'backward' : toDepth == fromDepth ? '' :'forward'
