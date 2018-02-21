@@ -58,7 +58,7 @@ export default {
   },
   computed:{
     avatarPath (){
-      return  typeof(this.avatar)!='undefined' && this.avatar.trim()!='' ?  config.avatarBasePath + this.avatar : this.defaultAvatar;
+      return  this.avatar && this.avatar.trim()!='' ?  config.avatarBasePath + this.avatar : this.defaultAvatar;
     }
   },
 
