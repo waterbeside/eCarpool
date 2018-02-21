@@ -14,9 +14,9 @@ const tokenAxios = axios.create({
 tokenAxios.interceptors.request.use(config => {
   // config.headers['Content-Type'] = 'application/json;charset=UTF-8';
   // 在发送请求之前做某件事
+  console.log(config.method);
    if(config.method  === 'post'){
      config.data = qs.stringify(config.data);
-
     /*  // JSON 转换为 FormData
       const formData = new FormData()
       Object.keys(config.data).forEach(function(value,key,arr){
@@ -32,8 +32,7 @@ tokenAxios.interceptors.request.use(config => {
       config.data = formData
       */
    }
-
-   // config.headers['X-Requested-With'] = 'XMLHttpRequest'
+   config.headers['X-Requested-With'] = 'XMLHttpRequest'
    // config.withCredentials = false
   // 下面会说在什么时候存储 token
   if (localStorage.getItem('CP_U_TOKEN')) {
