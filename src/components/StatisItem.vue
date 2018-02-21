@@ -1,8 +1,14 @@
 <template>
   <div>
-     <i class="cp-iconfont" :class="icon"></i>
-     <countup :start-val="0" :end-val="num" :duration="duration" class="num"></countup>
-     <b class="t">'{{unit}}</b>
+     <b v-if="title" class="title">{{title}}</b>
+     <slot name="title"></slot>
+     <i class="cp-iconfont" :class="icon" v-if="icon"></i>
+     <div class="num_unit_wrapper">
+       <slot name="num"></slot>
+       <countup v-if="typeof(num)!='undefined'" :start-val="0" :end-val="num" :duration="duration" class="num"></countup>
+       <b class="unit"  v-if="unit">{{unit}}</b>
+     </div>
+
    </div>
 
 </template>
@@ -19,6 +25,7 @@ export default {
     }
   },
   props: {
+    title:String,
     num : {},
     icon : String,
     unit : String,
