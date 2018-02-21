@@ -7,7 +7,7 @@ import store from './store'
 import axios from 'axios';
 import tokenAxios from './utils/cTokenAxios';
 import VueAMap from 'vue-amap';
-import {Group, Cell, XInput, XButton,XNumber, XSwitch, PopupPicker,Datetime,DatetimePlugin, ViewBox, Search,Spinner, ButtonTab, ButtonTabItem, Divider, AlertPlugin, ConfirmPlugin,ToastPlugin,Loading,InlineLoading,Toast} from 'vux'
+import {Group, Cell, XInput, XButton,XNumber, XSwitch, PopupPicker,Datetime,DatetimePlugin, ViewBox, Search,Spinner, ButtonTab, ButtonTabItem, Divider, AlertPlugin, ConfirmPlugin,ToastPlugin,Loading,InlineLoading,Toast, Tab, TabItem} from 'vux'
 
 
 import config from './configs/index'
@@ -37,7 +37,9 @@ Vue.component('XButton', XButton)
 Vue.component('XNumber', XNumber)
 Vue.component('XSwitch', XSwitch)
 Vue.component('Loading', Loading)
-Vue.component('InlineLoading', InlineLoading)
+Vue.component('Tab', Tab)
+Vue.component('TabItem', TabItem)
+
 
 Vue.component('Toast', Toast)
 
