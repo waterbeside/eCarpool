@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import statisItem from '../components/StatisItem'
 import config from '../configs'
+import statisItem from '../components/StatisItem'
 
 export default {
   components: {
@@ -55,7 +55,12 @@ export default {
      loadUserInfo () {
        var that = this;
        this.$tokenAxios.get(config.urls.getUserInfo,{}).then(res => {
-         console.log(res)
+         if(res.status!==200){
+           _this.$vux.toast.text('网络不畅，请稍候再试');
+           return false;
+         }
+         if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
+
          if(res.data.code === 0) {
            let data = res.data.data;
            data.avatar = data.imgpath;

@@ -4,7 +4,7 @@
     <title-bar  :left-options="{showBack: false}">溢起拼车</title-bar>
     <div class="page-view-content"   style="padding-top:60px;" >
       <div class="cp-scroller-wrap" >
-        <div class="cp-scroller"   >
+        <div class="cp-scroller">
           <div class="container">
             <dl class="cp-index-btn-item">
               <dt>行程</dt>

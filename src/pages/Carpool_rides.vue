@@ -61,6 +61,7 @@
 
 <script>
 import config from '../configs/index'
+import cFuns from '../utils/cFuns'
 
 import CpRouteCard from '../components/CpRouteCard'
 import CpScroller from '../components/CpScroller'
@@ -168,35 +169,40 @@ export default {
       _this.isLoading = 1;
       _this.noData = 0;
       _this.$tokenAxios.get(config.urls.getWallLists,{params:params}).then(res => {
+        if(res.status!==200){
+          _this.$vux.toast.text('网络不畅，请稍候再试');
+          return false;
+        }
+        if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
         let data = res.data.data;
-          _this.isLoading = 0;
-          if(res.data.code === 0) {
+        _this.isLoading = 0;
+        if(res.data.code === 0) {
 
-            _this.page = data.page.currentPage + 1;
-            _this.pageCount = data.page.pageCount;
+          _this.page = data.page.currentPage + 1;
+          _this.pageCount = data.page.pageCount;
 
-            if(_this.page > 1 ){
-              var list = _this.listDatas;
-              list = list.concat(data.lists);
-              _this.listDatas = list;
+          if(_this.page > 1 ){
+            var list = _this.listDatas;
+            list = list.concat(data.lists);
+            _this.listDatas = list;
 
-            }else{
-              if(data.lists.length === 0){
-                _this.noData = 1 ;
-              }
-              _this.listDatas = data.lists;
-            }
-            _this.enableInfinite = _this.listDatas.length < 4 || _this.pageCount ==1  ? false : true;
           }else{
+            if(data.lists.length === 0){
+              _this.noData = 1 ;
+            }
+            _this.listDatas = data.lists;
+          }
+          _this.enableInfinite = _this.listDatas.length < 4 || _this.pageCount ==1  ? false : true;
+        }else{
 
-          }
-          if(typeof(success)==="function"){
-            success(res);
-          }
-        })
-        .catch(error => {
-          console.log(error)
-        })
+        }
+        if(typeof(success)==="function"){
+          success(res);
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
     },
     /**
      * 下接刷新

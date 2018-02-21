@@ -72,6 +72,7 @@
 
 <script>
 import config from '../configs/index'
+import cFuns from '../utils/cFuns'
 
 import CpRouteCard from '../components/CpRouteCard'
 import CpScroller from '../components/CpScroller'
@@ -135,37 +136,43 @@ export default {
       _this.isLoading = 1;
       _this.noData = 0;
       _this.$tokenAxios.get(config.urls.getMyroute,{params:params}).then(res => {
+        if(res.status!==200){
+          _this.$vux.toast.text('网络不畅，请稍候再试');
+          return false;
+        }
+        if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
+
         let data = res.data.data;
-          _this.isLoading = 0;
-          if(res.data.code === 0) {
-            _this.listDatas = [];
-            _this.listDatas_o = data.lists;
-            _this.listDatas_o.forEach(function(value,index,arr){
-              _this.listDatas.push({
-                from : value.from,
-                id : value.id,
-                status: value.status,
-                time:value.time,
-                start_info:value.start_info,
-                end_info:value.end_info,
-                user : value.from == "wall" || value.show_owner ? value.owner_info : value.passenger_info,
-                typeLabel : value.from == "wall" || value.show_owner ? "司机" : "乘客",
-                like_count:value.like_count,
-                took_count:value.took_count,
-                seat_count:value.seat_count
-              })
+        _this.isLoading = 0;
+        if(res.data.code === 0) {
+          _this.listDatas = [];
+          _this.listDatas_o = data.lists;
+          _this.listDatas_o.forEach(function(value,index,arr){
+            _this.listDatas.push({
+              from : value.from,
+              id : value.id,
+              status: value.status,
+              time:value.time,
+              start_info:value.start_info,
+              end_info:value.end_info,
+              user : value.from == "wall" || value.show_owner ? value.owner_info : value.passenger_info,
+              typeLabel : value.from == "wall" || value.show_owner ? "司机" : "乘客",
+              like_count:value.like_count,
+              took_count:value.took_count,
+              seat_count:value.seat_count
             })
+          })
 
-          }else{
+        }else{
 
-          }
-          if(typeof(success)==="function"){
-            success(res);
-          }
-        })
-        .catch(error => {
-          console.log(error)
-        })
+        }
+        if(typeof(success)==="function"){
+          success(res);
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
     },
     /**
      * 下接刷新

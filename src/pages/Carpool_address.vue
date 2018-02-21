@@ -59,8 +59,9 @@
 
 <script>
 import config from '../configs/index'
+import cFuns from '../utils/cFuns'
 import CpScroller from '../components/CpScroller'
-import cModel from '../utils/CModel'
+import cModel from '../utils/cModel'
 
 export default {
   components: {
@@ -208,9 +209,11 @@ export default {
       _this.noData = 0;
       _this.$tokenAxios.get(config.urls.getMyAddress,{params:params}).then(res => {
         // console.log(res)
-        if(res.status == 200){
-
+        if(res.status!==200){
+          _this.$vux.toast.text('网络不畅，请稍候再试');
+          return false;
         }
+        if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
           _this.isLoading = 0;
           if(res.data.code === 0) {
             let data = res.data.data;
