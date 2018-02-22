@@ -2,7 +2,7 @@
   <div class="cp-routeCard-item col-sm-6 col-md-4 " :data-id="id" :data-from="dataFrom">
     <div class="cp-routeCard-item-inner" >
       <div class="cp-avatar-wrap">
-        <img class="cp-avatar " :src="avatarPath"  ref="img" @error="setErrorImg">
+        <cp-avatar :src="avatarPath"></cp-avatar>
       </div>
       <div class="cp-user-wrapper">
         <div class="cp-name-bar">
@@ -31,13 +31,13 @@
 import config from '../configs'
 
 import CpRouteBox from './CpRouteBox'
+import CpAvatar from './CpAvatar'
 export default {
   components: {
-    CpRouteBox,
+    CpAvatar,CpRouteBox,
   },
   data () {
     return {
-      defaultAvatar:config.defaultAvatar
     }
   },
   props: {
@@ -58,14 +58,11 @@ export default {
   },
   computed:{
     avatarPath (){
-      return  this.avatar && this.avatar.trim()!='' ?  config.avatarBasePath + this.avatar : this.defaultAvatar;
+      return  this.avatar && this.avatar.trim()!='' ?  config.avatarBasePath + this.avatar : config.defaultAvatar;
     }
   },
 
   methods: {
-    setErrorImg (){
-      this.avatar = this.defaultAvatar;return false;
-    },
 
   },
   mounted () {
