@@ -7,9 +7,9 @@
       <cp-scroller :enableInfinite="false" :enableRefresh="false">
         <el-amap slot="before-inner" class="cp-map-content map-box" :vid="'amap-vue'" :events="mapEvents" :plugin="mapPlugin">  </el-amap>
 
-        <div class="cp-content">
+        <div class="cp-main">
           <div class="cp-heading " >
-              <img class="cp-avatar " :src="user.avatar" :onerror="'this.src=\''+defaultAvatar+'\';return false'">
+              <cp-avatar :src="user.avatar"></cp-avatar>
               <div class="cp-txt">
                 <h3>{{user.name}}</h3>
               </div>
@@ -20,62 +20,78 @@
           <!-- / heading -->
 
 
-          <tab class="cp-tab-wrapper" :line-width="2" active-color='#8877ba' v-model="tabIndex">
+          <tab class="cp-tab-wrapper" :line-width="2" active-color='#8877ba' v-model="tabIndex" v-if="type=='wall'">
             <tab-item class="cp-tab-item"  :key="0"><div class="cp-inner">详情</div></tab-item>
-            <tab-item class="cp-tab-item"  :key="1"><div class="cp-inner">留言</div></tab-item>
+            <tab-item class="cp-tab-item"  :key="1" @on-item-click="getCommentLists"><div class="cp-inner">留言<b class="bage" v-show="comments_total>0">{{comments_total}}</b></div></tab-item>
             <tab-item class="cp-tab-item"  :key="2" @on-item-click="onShowPassengers" ><div class="cp-inner">乘客列表<b class="bage" v-show="statis.took_count>0">{{statis.took_count}}</b></div></tab-item>
-
           </tab>
 
-            <div class="cp-content-item" :key="0" v-show="tabIndex == 0">
+          <div class="cp-content-item" :key="0" v-show="tabIndex == 0">
 
-                <div class="alert alert-info" v-show="isShowAlert" v-html="alertText">  </div>
-                <div class="cp-cell cp-cell-time">
-                    <div class="la"><i class="fa fa-clock-o"></i></div>
-                    <span class="cp-time">{{time}}</span>
+              <div class="alert alert-info" v-show="isShowAlert" v-html="alertText">  </div>
+              <div class="cp-cell cp-cell-time">
+                  <div class="la"><i class="fa fa-clock-o"></i></div>
+                  <span class="cp-time">{{time}}</span>
+              </div>
+              <cp-route-box :start_name="start.addressname" :end_name="end.addressname"></cp-route-box>
+              <div class="cp-statis-list">
+                <statis-item class="cp-statis-item col-xs-4 cp-time" title="出发时间" icon="fa fa-clock-o" :duration="1"><b slot="num"  class="num"><p class="date">{{time.split(' ')[0]}}</p>{{time.split(' ')[1]}}</b></statis-item>
+                <statis-item class="cp-statis-item col-xs-4 cp-distance" title="预计路程" :num="statis.distance" :unit="statis.distance_unit" icon="fa fa-map-signs" :duration="1"></statis-item>
+                <statis-item class="cp-statis-item col-xs-4" v-if="type=='wall'" title="剩余空位" :num="statis.surplus_count" icon="fa fa-car" :duration="1"></statis-item>
+                <statis-item class="cp-statis-item col-xs-4 cp-status" v-if="type=='info'" title="状态"   :icon="statusIcon" ><b slot="num"  class="num">{{statusText}}</b></b></statis-item>
+              </div>
+              <div class="cp-btns-wrap">
+                <a v-show="isShowBtn_phone"  class="cp-btn cp-btn-phone " :href="'tel:'+user.phone"><i class="cp-icon fa fa-phone"></i>电 话</a>
+                <a v-show="isShowBtn_goback" class="cp-btn cp-btn-back " onclick="cGoBack()"><i class="cp-icon fa fa-arrow-left"></i>返 回</a>
+                <a v-show="isShowBtn_pickup" class="cp-btn cp-btn-pickup " onclick="pageMethods.acceptDemand('+data.infoid+',this)"><i class="cp-icon fa fa-car"></i>接受请求</a>
+                <a v-show="isShowBtn_riding" class="cp-btn cp-btn-riding " onclick="pageMethods.acceptDemand('+data.infoid+',this)"><i class="cp-icon fa fa-car"></i>搭 车</a>
+                <a v-show="isShowBtn_cancel" class="cp-btn cp-btn-cancel "  onclick="pageMethods.cencelRoute('+data.infoid+',\'info\',this)"><i class="cp-icon fa fa-times"></i>取消行程</a>
+                <a v-show="isShowBtn_complete" class="cp-btn cp-btn-ok "  onclick="pageMethods.finishRoute('+data.infoid+',\'info\',this)"><i class="cp-icon fa fa-check"></i>结束行程</a>
+              </div>
+
+          </div>
+          <!-- /详情 -->
+          <div class="cp-content-item" :key="1" v-show="tabIndex == 1" >
+            <div class="text-center"  v-show="isLoading_comments">
+              <spinner type="dots" size="60px"></spinner>
+            </div>
+            <ul v-if="comments.length" class="cp-comment-list">
+              <li v-for="(item,index) in comments" class="cp-comment-item">
+                <div class="cp-avatarbox">
+                  <cp-avatar :src="item.avatar"></cp-avatar>
                 </div>
-                <cp-route-box :start_name="start.addressname" :end_name="end.addressname"></cp-route-box>
-                <div class="cp-statis-list">
-                  <statis-item class="cp-statis-item col-xs-4 cp-time" title="出发时间" icon="fa fa-clock-o" :duration="1"><b slot="num"  class="num"><p class="date">{{time.split(' ')[0]}}</p>{{time.split(' ')[1]}}</b></statis-item>
-                  <statis-item class="cp-statis-item col-xs-4 cp-distance" title="预计路程" :num="statis.distance" :unit="statis.distance_unit" icon="fa fa-map-signs" :duration="1"></statis-item>
-                  <statis-item class="cp-statis-item col-xs-4" v-if="type=='wall'" title="剩余空位" :num="statis.surplus_count" icon="fa fa-car" :duration="1"></statis-item>
-                  <statis-item class="cp-statis-item col-xs-4 cp-status" v-if="type=='info'" title="状态"   :icon="statusIcon" ><b slot="num"  class="num">{{statusText}}</b></b></statis-item>
+                <div class="cp-mainbox">
+                  <div class="cp-title">
+                    <b class="name">{{item.name}}</b>
+                    <span class="time">{{item.time}}</span>
+                  </div>
+                  <div class="cp-content">{{item.content}}</div>
+                </div>
+              </li>
+            </ul>
+            <p class="cp-nodata-tips" v-else v-show="!isLoading_comments">还未有人评论   (´°̥̥̥̥̥̥̥̥ω°̥̥̥̥̥̥̥̥｀)</p>
+            <div class="text-center"><a class="btn btn-default" href="javascript:void(0);" onclick="pageMethods.goCommentsPage()"><i class="fa fa-edit"></i> 我要评论</a></div>
+          </div>
+          <!-- /留言 -->
+          <div class="cp-content-item" :key="2" v-show="tabIndex == 2">
+            <div class="text-center"  v-show="isLoading_pss">
+              <spinner type="dots" size="60px"></spinner>
+            </div>
+            <ul class="cp-wallView-passenger" v-if="passengers.length">
+              <li class="cp-item " v-for="(item,index) in passengers ">
+                <cp-avatar :src="item.avatar" class="cp-avatar " ></cp-avatar>
+                <div class="cp-txt">
+                  <h4 class="media-heading">{{item.name}}</h4>
+                  <p>{{item.Department}}</p>
                 </div>
                 <div class="cp-btns-wrap">
-                  <a v-show="isShowBtn_phone"  class="cp-btn cp-btn-phone " :href="'tel:'+user.phone"><i class="cp-icon fa fa-phone"></i>电 话</a>
-                  <a v-show="isShowBtn_goback" class="cp-btn cp-btn-back " onclick="cGoBack()"><i class="cp-icon fa fa-arrow-left"></i>返 回</a>
-                  <a v-show="isShowBtn_pickup" class="cp-btn cp-btn-pickup " onclick="pageMethods.acceptDemand('+data.infoid+',this)"><i class="cp-icon fa fa-car"></i>接受请求</a>
-                  <a v-show="isShowBtn_riding" class="cp-btn cp-btn-riding " onclick="pageMethods.acceptDemand('+data.infoid+',this)"><i class="cp-icon fa fa-car"></i>搭 车</a>
-                  <a v-show="isShowBtn_cancel" class="cp-btn cp-btn-cancel "  onclick="pageMethods.cencelRoute('+data.infoid+',\'info\',this)"><i class="cp-icon fa fa-times"></i>取消行程</a>
-                  <a v-show="isShowBtn_complete" class="cp-btn cp-btn-ok "  onclick="pageMethods.finishRoute('+data.infoid+',\'info\',this)"><i class="cp-icon fa fa-check"></i>结束行程</a>
+                  <a :href="'tel:'+item.phone" class="btn  btn-fab btn-fab-mini"><i class="fa fa-phone"></i></a>
                 </div>
-
-            </div>
-            <!-- /详情 -->
-            <div class="cp-content-item" :key="1" v-show="tabIndex == 1">
-              1
-            </div>
-            <!-- /乘客 -->
-            <div class="cp-content-item" :key="2" v-show="tabIndex == 2">
-              <div class="text-center"  v-show="isLoading_pss">
-                <spinner type="dots" size="60px"></spinner>
-              </div>
-              <ul class="cp-wallView-passenger">
-                <li class="cp-item " v-for="(item,index) in passengers ">
-                  <img class="cp-avatar pull-left img-circle img-responsive " :src="user.avatar" :onerror="'this.src=\''+defaultAvatar+'\';return false'">
-                  <div class="cp-txt">
-                    <h4 class="media-heading">{{item.name}}</h4>
-                    <p>{{item.Department}}</p>
-                  </div>
-                  <div class="cp-btns-wrap">
-                    <a :href="'tel:'+item.phone" class="btn  btn-fab btn-fab-mini"><i class="fa fa-phone"></i></a>
-                  </div>
-               </li>
-
-              </ul>
-
-            </div>
-            <!-- /留言 -->
+             </li>
+            </ul>
+            <p class="cp-nodata-tips" v-else v-show="!isLoading_pss">未有乘客</p>
+          </div>
+          <!-- /乘客 -->
 
           <!-- /tab -->
 
@@ -90,6 +106,7 @@
 import config from '../configs/index'
 import cFuns from '../utils/cFuns'
 
+import CpAvatar from '../components/CpAvatar'
 import CpRouteBox from '../components/CpRouteBox'
 import CpScroller from '../components/CpScroller'
 import StatisItem from '../components/StatisItem'
@@ -97,7 +114,7 @@ import StatisItem from '../components/StatisItem'
 
 export default {
   components: {
-    CpRouteBox,CpScroller,StatisItem
+    CpAvatar,CpRouteBox,CpScroller,StatisItem
   },
   data () {
     return {
@@ -110,10 +127,19 @@ export default {
       isShowAlert       :false,
       alertText         :"",
 
+      //留言相关
+      isLoading_comments:true,
+      comments          :[],
+      comments_time   : 0,
+      comments_total    :0,
+
+      //乘客相关
+      isLoading_pss     :true,
+      passengers        :[],
+      passengers_time   : 0,
+
       //用户相关
       carowner          :{},
-      passengers        :[],
-      isLoading_pss     :true,
       user              :{avatar:"-",name:"-"},
       defaultAvatar     : config.defaultAvatar,
       typeLabel         : '',
@@ -191,7 +217,7 @@ export default {
       var _this = this;
       let url = this.type == "wall" ? config.urls.getRideDetail : config.urls.getRequestDetail;
       this.$tokenAxios.get(url,{params:{id:_this.id}}).then(res => {
-        console.log(res);
+        // console.log(res);
         if(res.status!==200){
           _this.$vux.toast.text('网络不畅，请稍候再试');
           return false;
@@ -241,12 +267,9 @@ export default {
 
                 break;
               default:
-
             }
-
           }else{
             _this.typeLabel = _this.carowner.carnumber
-
             _this.user =   _this.carowner
             _this.statis.seat_count = data.seat_count
             _this.statis.took_count = data.took_count
@@ -256,7 +279,6 @@ export default {
               case 0:
                   _this.isShowBtn_cancel = data.uid == _this.user.uid ? true : false;
                   _this.isShowBtn_riding = data.uid == _this.user.uid ? false : true;
-
                 break;
               case 1:
                   _this.alertText = "该乘客已被司机 【<img class='cp-avatar' src='"+_this.carowner.avatar+"' /> "+_this.carowner.name+" 】搭载";
@@ -276,18 +298,14 @@ export default {
             }
 
           }
-
-
           let start = [_this.start.longtitude,_this.start.latitude]
           let end = [_this.end.longtitude,_this.end.latitude]
-
           setTimeout(function(){
             cFuns.amap.drawRouteLine(start, end,_this.mapObj,function(status,result){
               if(status == 'complete'){
                 _this.isShowComputebox = true;
                 var distance = result.routes[0].distance; //计出的距离
                 var distanceObj = cFuns.amap.formatDistance(distance,1);
-
                 // var distanceStr = distanceObj.distance + distanceObj.unit;
                 var dtTime = result.routes[0].time;
                 var dtTimeStr = cFuns.amap.formatRouteTime(dtTime);
@@ -295,7 +313,6 @@ export default {
                 _this.statis.distance = parseFloat(distanceObj.distance);
                 _this.statis.distance_unit = distanceObj.unit;
               }else{
-
                 _this.statis.distance = 0;
               }
             });
@@ -309,7 +326,14 @@ export default {
         console.log(error)
       })
     },
+    /**
+     * 当显示乘客列表的tab时。
+     */
     onShowPassengers (){
+      var nowTimestamp = new Date().getTime();
+      if( nowTimestamp - this.passengers_time < 20*1000 ||(this.passengers.length > 0 && (nowTimestamp - this.passengers_time < 60*1000))){
+        return false
+      }
       this.loadPassengers();
     },
     /**
@@ -331,8 +355,9 @@ export default {
           data.lists.forEach(function(value,index,arr){
             value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : _this.defaultAvatar;
           })
-          _this.passengers = data.lists
-          console.log(_this.passengers)
+          _this.passengers = data.lists;
+          _this.took_count = _this.passengers.length;
+          _this.passengers_time = new Date().getTime();
         }else{
 
         }
@@ -340,8 +365,62 @@ export default {
       .catch(error => {
         console.log(error)
       })
-
     },
+
+    /**
+      * 取得评论总数
+      */
+     getCommentsCount (){
+       var _this = this;
+       let params = {wid:this.id,getcount:1}
+       _this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
+         if(res.status!==200){
+           _this.$vux.toast.text('网络不畅，请稍候再试');
+           return false;
+         }
+         if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
+         if(res.data.code == 0){
+           var data = res.data.data;
+           _this.comments_total = data.total;
+           console.log(_this.comments_total)
+         }
+       });
+     },
+
+     /**
+     * 取得评论列表数据
+     */
+     getCommentLists (){
+       var _this = this;
+       var nowTimestamp = new Date().getTime();
+       if(this.comments.length > 5  || nowTimestamp - _this.comments_time < 60*1000){
+         return false;
+       }
+       this.isLoading_comments = true;
+
+       let params = {wid:_this.id,num:5}
+       _this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
+         console.log(res);
+         this.isLoading_comments = false;
+         if(res.status!==200){
+           _this.$vux.toast.text('网络不畅，请稍候再试');
+           return false;
+         }
+         if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
+         if(res.data.code == 0){
+           var data = res.data.data;
+           data.lists.forEach(function(value,index,arr){
+             value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : _this.defaultAvatar;
+           })
+           _this.comments_total = data.total ? data.total : 0;
+           _this.comments = data.lists;
+           _this.comments_time = nowTimestamp;
+
+         }
+       });
+     },
+     /******* 按钮相关方法 *******/
+     
 
   },
   mounted () {
@@ -350,6 +429,9 @@ export default {
   created () {
     console.log(this.type)
     this.getDetail()
+    if(this.type=="wall"){
+      this.getCommentsCount();
+    }
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
