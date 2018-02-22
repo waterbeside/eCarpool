@@ -1,18 +1,12 @@
 <template>
   <div class="page-view cp-overhide">
     <title-bar  :left-options="{showBack: true, preventGoBack:true}" @onClickBack="goHome">
-      <span v-show="isShowSearchBox==0">约车需求</span>
-      <div slot="rightContent">
-        <div class="cp-search-box" v-show="isShowSearchBox"><input name="keyword" class="form-control form-control-line" placeholder="请输入关键字查找"  v-model="keyword" @keyup="doSearch" autocomplete="false" ></div>
-        <div class="cp-btn-wrapper">
-          <button class="cp-btn-search" v-show="isShowSearchBox==0" @click="showSearchBox(1)"><i class="fa fa-search"></i></button>
-          <button class="cp-btn-close" v-show="isShowSearchBox" @click="showSearchBox(0)"><i class="fa fa-times"></i></button>
-        </div>
-      </div>
+      <span v-show="!isShowSearchBox">约车需求</span>
+      <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)" @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch" ></cp-search-box>
+
     </title-bar>
     <div class="page-view-main"   >
       <cp-scroller :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
-
          <cp-route-card
           v-for="(item,index) in listDatas"
            :id="item.id"
@@ -36,6 +30,7 @@
              <a class="cp-btn cp-btn-accept" @click="acceptRequest(item.id,index)">接受</a>
            </div>
          </cp-route-card>
+         
 
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
        <div class="text-center">
@@ -52,12 +47,12 @@
 <script>
 import config from '../configs/index'
 import cFuns from '../utils/cFuns'
-
+import CpSearchBox from '../components/CpSearchBox'
 import CpRouteCard from '../components/CpRouteCard'
 import CpScroller from '../components/CpScroller'
 export default {
   components: {
-    CpRouteCard,CpScroller
+    CpSearchBox,CpRouteCard,CpScroller
   },
   data () {
     return {
