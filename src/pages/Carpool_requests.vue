@@ -27,10 +27,10 @@
 
          >
            <div slot="btnbar" class="cp-btns-wrapper">
-             <a class="cp-btn cp-btn-accept" @click="acceptRequest(item.id,index)">接受</a>
+             <a class="cp-btn cp-btn-accept" @click.prevent.stop="acceptRequest(item.id,index)">接受</a>
            </div>
          </cp-route-card>
-         
+
 
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
        <div class="text-center">
@@ -116,36 +116,46 @@ export default {
      * @param  {integer} index [需求列表行的索引 ]
      */
     acceptRequest (id,index){
+
       var _this = this;
-      event.stopPropagation();
-      _this.$el.querySelector('.load-more').style.display = 'none';
-      // _this.listDatas[index].status = 1
-      // setTimeout(function(){
-      //   _this.$el.querySelector('.item-'+id).style.display = 'none';
-      // },600)
-      _this.$store.commit('setLoading',{isShow:true,text:"提交中"});
+      var itemData = _this.listDatas[index];
+      // event.stopPropagation();
+      this.$vux.confirm.show({
+        title: '请确认',
+        content: '是否接受【'+itemData.passenger_info.name+'】的约车',
+        onConfirm () {
+          _this.$el.querySelector('.load-more').style.display = 'none';
+          _this.$store.commit('setLoading',{isShow:true,text:"提交中"});
+          // return false;
 
-      // return false;
+          _this.$tokenAxios.post(config.urls.acceptRequest,{id:id}).then(res => {
+            console.log()
+            _this.$store.commit('setLoading',{isShow:false});
+            if(res.status!==200){
+              _this.$vux.toast.text('网络不畅，请稍候再试');
+              return false;
+            }
+            if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
+            if(res.data.code === 0) {
+              _this.listDatas[index].status = 1
+              _this.$vux.toast.text('搭载成功');
+              setTimeout(function(){
+                // this.listDatas.splice(index, 1);
+                _this.listDatas = _this.listDatas.filter(t => t.infoid != id);
+              },600)
+            }else{
+              _this.$vux.toast.text('网络好像不太畅通');
+            }
+          })
+          .catch(error => {
+            _this.$store.commit('setLoading',{isShow:false});
+            _this.$vux.toast.text('网络好像不太畅通');
 
-      this.$tokenAxios.post(config.urls.acceptRequest,{id:id}).then(res => {
-        _this.$store.commit('setLoading',{isShow:false});
-        if(res.data.code === 0) {
-          _this.listDatas[index].status = 1
-          _this.$vux.toast.text('搭载成功');
-          setTimeout(function(){
-            // this.listDatas.splice(index, 1);
-            _this.listDatas = _this.listDatas.filter(t => t.infoid != id);
-          },600)
-        }else{
-          _this.$vux.toast.text('网络好像不太畅通');
+            console.log(error)
+          })
         }
       })
-      .catch(error => {
-        _this.$store.commit('setLoading',{isShow:false});
-        _this.$vux.toast.text('网络好像不太畅通');
 
-        console.log(error)
-      })
     },
     /**
      * 取得列表

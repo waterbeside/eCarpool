@@ -39,12 +39,12 @@ Vue.component('XSwitch', XSwitch)
 Vue.component('Loading', Loading)
 Vue.component('Tab', Tab)
 Vue.component('TabItem', TabItem)
-
-
 Vue.component('Toast', Toast)
 
 Vue.use(ToastPlugin, {position: 'top'});
 Vue.use(DatetimePlugin);
+Vue.use(ConfirmPlugin);
+
 Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
   key: config.aMapKey,
