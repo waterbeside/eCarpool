@@ -2,51 +2,53 @@
   <div class="page-view " id="Page-route-detail" >
     <!-- <title-bar  :left-options="{showBack: true}">详情</title-bar> -->
     <div class="page-view-main "   >
-      <cp-goback-btn></cp-goback-btn>
+      <cp-goback-btn :class="{'cp-sticky':isSticky}"></cp-goback-btn>
 
-      <cp-scroller :enableInfinite="false" :enableRefresh="false">
+      <cp-scroller :enableInfinite="false" :enableRefresh="false" id="cp-scroll-wrapper" @on-scroll="onScroll">
         <el-amap slot="before-inner" class="cp-map-content map-box" :vid="'amap-vue'" :events="mapEvents" :plugin="mapPlugin">  </el-amap>
 
-        <div class="cp-main">
-          <div class="cp-heading " >
-              <cp-avatar :src="user.avatar"></cp-avatar>
-              <div class="cp-txt">
-                <h3>{{user.name}}</h3>
-              </div>
-              <h6>{{typeLabel}}</h6>
-              <h4 class="department">{{user.Department}}</h4>
-          </div>
-          <div class="cp-heading-bg"></div>
-          <!-- / heading -->
+        <div class="cp-main" >
+          <sticky scroll-box="cp-scroll-wrapper" ref="sticky" :offset="0" >
+            <div class="cp-heading " :class="{'cp-sticky':isSticky}" >
+                <cp-avatar :src="user.avatar"></cp-avatar>
+                <div class="cp-txt">
+                  <h3>{{user.name}}</h3>
+                </div>
+                <h6>{{typeLabel}}</h6>
+                <h4 class="department">{{user.Department}}</h4>
+            </div>
+            <div class="cp-heading-bg" :class="{'cp-sticky':isSticky}"></div>
+
+            <!-- / heading -->
 
 
-          <tab class="cp-tab-wrapper" :line-width="2" active-color='#8877ba' v-model="tabIndex" v-if="type=='wall'">
-            <tab-item class="cp-tab-item"  :key="0"><div class="cp-inner">详情</div></tab-item>
-            <tab-item class="cp-tab-item"  :key="1" @on-item-click="getCommentLists"><div class="cp-inner">留言<b class="bage" v-show="comments_total>0">{{comments_total}}</b></div></tab-item>
-            <tab-item class="cp-tab-item"  :key="2" @on-item-click="onShowPassengers" ><div class="cp-inner">乘客列表<b class="bage" v-show="statis.took_count>0">{{statis.took_count}}</b></div></tab-item>
-          </tab>
-
+            <tab class="cp-tab-wrapper" :line-width="2" active-color='#8877ba' v-model="tabIndex" v-if="type=='wall'">
+              <tab-item class="cp-tab-item"  :key="0"><div class="cp-inner">详情</div></tab-item>
+              <tab-item class="cp-tab-item"  :key="1" @on-item-click="getCommentLists"><div class="cp-inner">留言<b class="bage" v-show="comments_total>0">{{comments_total}}</b></div></tab-item>
+              <tab-item class="cp-tab-item"  :key="2" @on-item-click="onShowPassengers" ><div class="cp-inner">乘客列表<b class="bage" v-show="statis.took_count>0">{{statis.took_count}}</b></div></tab-item>
+            </tab>
+          </sticky>
           <div class="cp-content-item" :key="0" v-show="tabIndex == 0">
 
-              <div class="alert alert-info" v-show="isShowAlert" v-html="alertText">  </div>
+              <div class="alert " :class="alertClass" v-show="isShowAlert" v-html="alertText">  </div>
               <div class="cp-cell cp-cell-time">
                   <div class="la"><i class="fa fa-clock-o"></i></div>
-                  <span class="cp-time">{{time}}</span>
+                  <span class="cp-time">{{detailData.time_format}}</span>
               </div>
-              <cp-route-box :start_name="start.addressname" :end_name="end.addressname"></cp-route-box>
+              <cp-route-box :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname"></cp-route-box>
               <div class="cp-statis-list">
-                <statis-item class="cp-statis-item col-xs-4 cp-time" title="出发时间" icon="fa fa-clock-o" :duration="1"><b slot="num"  class="num"><p class="date">{{time.split(' ')[0]}}</p>{{time.split(' ')[1]}}</b></statis-item>
+                <statis-item class="cp-statis-item col-xs-4 cp-time" title="出发时间" icon="fa fa-clock-o" :duration="1"><b slot="num"  class="num"><p class="date">{{detailData.time_format.split(' ')[0]}}</p>{{detailData.time_format.split(' ')[1]}}</b></statis-item>
                 <statis-item class="cp-statis-item col-xs-4 cp-distance" title="预计路程" :num="statis.distance" :unit="statis.distance_unit" icon="fa fa-map-signs" :duration="1"></statis-item>
                 <statis-item class="cp-statis-item col-xs-4" v-if="type=='wall'" title="剩余空位" :num="statis.surplus_count" icon="fa fa-car" :duration="1"></statis-item>
                 <statis-item class="cp-statis-item col-xs-4 cp-status" v-if="type=='info'" title="状态"   :icon="statusIcon" ><b slot="num"  class="num">{{statusText}}</b></b></statis-item>
               </div>
               <div class="cp-btns-wrap">
                 <a v-show="isShowBtn_phone"  class="cp-btn cp-btn-phone " :href="'tel:'+user.phone"><i class="cp-icon fa fa-phone"></i>电 话</a>
-                <a v-show="isShowBtn_goback" class="cp-btn cp-btn-back " onclick="cGoBack()"><i class="cp-icon fa fa-arrow-left"></i>返 回</a>
-                <a v-show="isShowBtn_pickup" class="cp-btn cp-btn-pickup " onclick="pageMethods.acceptDemand('+data.infoid+',this)"><i class="cp-icon fa fa-car"></i>接受请求</a>
-                <a v-show="isShowBtn_riding" class="cp-btn cp-btn-riding " onclick="pageMethods.acceptDemand('+data.infoid+',this)"><i class="cp-icon fa fa-car"></i>搭 车</a>
-                <a v-show="isShowBtn_cancel" class="cp-btn cp-btn-cancel "  onclick="pageMethods.cencelRoute('+data.infoid+',\'info\',this)"><i class="cp-icon fa fa-times"></i>取消行程</a>
-                <a v-show="isShowBtn_complete" class="cp-btn cp-btn-ok "  onclick="pageMethods.finishRoute('+data.infoid+',\'info\',this)"><i class="cp-icon fa fa-check"></i>结束行程</a>
+                <a v-show="isShowBtn_goback" class="cp-btn cp-btn-back " @click="goBack"><i class="cp-icon fa fa-arrow-left"></i>返 回</a>
+                <a v-show="isShowBtn_pickup" class="cp-btn cp-btn-pickup " @click="btnAction('pickup')"><i class="cp-icon fa fa-car"></i>接受请求</a>
+                <a v-show="isShowBtn_riding" class="cp-btn cp-btn-riding " @click="btnAction('riding')"><i class="cp-icon fa fa-car"></i>搭 车</a>
+                <a v-show="isShowBtn_cancel" class="cp-btn cp-btn-cancel "  @click="btnAction('cancel')"><i class="cp-icon fa fa-times"></i>取消行程</a>
+                <a v-show="isShowBtn_complete" class="cp-btn cp-btn-ok "  @click="btnAction('finish')"><i class="cp-icon fa fa-check"></i>结束行程</a>
               </div>
 
           </div>
@@ -90,6 +92,23 @@
              </li>
             </ul>
             <p class="cp-nodata-tips" v-else v-show="!isLoading_pss">未有乘客</p>
+            <p>
+              d
+            </p><p>
+              d
+            </p><p>
+              d
+            </p><p>
+              d
+            </p><p>
+              d
+            </p><p>
+              d
+            </p><p>
+              d
+            </p><p>
+              d
+            </p>
           </div>
           <!-- /乘客 -->
 
@@ -120,18 +139,28 @@ export default {
     return {
 
       id                : this.$route.params.id,
-      start             :{addressname:'-'},
-      end               :{addressname:'-'},
-      time              :"0000-00-00 00:00",
+      uid               : 0,
       tabIndex          : 0,
+      isSticky          : false,
+
+      detailData        : {
+        time_format    : "0000-00-00 00:00",
+        start_info      : {addressname:'-'},
+        end_info        :{addressname:'-'},
+        status          : 0,
+        hasTake         : 0,
+      },
+
+      //alert框相关
       isShowAlert       :false,
       alertText         :"",
+      alertClass         :"alert-info",
 
       //留言相关
       isLoading_comments:true,
-      comments          :[],
-      comments_time   : 0,
-      comments_total    :0,
+      comments          : [],
+      comments_time     : 0,
+      comments_total    : 0,
 
       //乘客相关
       isLoading_pss     :true,
@@ -139,7 +168,6 @@ export default {
       passengers_time   : 0,
 
       //用户相关
-      carowner          :{},
       user              :{avatar:"-",name:"-"},
       defaultAvatar     : config.defaultAvatar,
       typeLabel         : '',
@@ -203,11 +231,80 @@ export default {
       if(path.indexOf('rides')>1){
         return 'wall';
       }
+    },
 
+  },
+  watch :{
+    "detailData.status" (val,oldval){
+      this.changeStatus(val);
     }
   },
   methods :{
     init (){
+
+    },
+    goBack () {
+        this.$router ? this.$router.back() : window.history.back();
+    },
+    changeStatus(status){
+      let _this = this;
+      _this.isShowBtn_phone   = false;
+      _this.isShowBtn_goback  = false;
+      _this.isShowBtn_pickup  = false;
+      _this.isShowBtn_riding  = false;
+      _this.isShowBtn_cancel  = false;
+      _this.isShowBtn_complete= false;
+      _this.isShowBtn_phone = _this.uid == _this.user.uid ? false : true;
+      _this.isShowAlert = _this.type=="info" ? true : false
+      switch (parseInt(status)) {
+        case 0:
+            _this.alertText = "该乘客正等待被搭载"
+            _this.isShowBtn_cancel = _this.uid == _this.user.uid ? true : false;
+            if(_this.type=="wall"){
+              _this.isShowBtn_riding = _this.uid == _this.user.uid ? false : true;
+            }
+            if(_this.type=="info"){
+              _this.isShowBtn_pickup = _this.uid == _this.user.uid ? false : true;
+            }
+            _this.statusText  = "等车中";
+            _this.statusIcon  = "fa fa-user";
+          break;
+        case 1:
+            if(_this.type=="wall"){
+              if(_this.hasTake){
+                  _this.isShowAlert = true;
+                  _this.alertClass  = "alert-info"
+                  _this.alertText = "你已搭该司机的车<a style='margin-left:4px' class='btn btn-sm btn-info'>取消</a>";
+                  _this.isShowBtn_goback =  true;
+              }else{
+                _this.isShowBtn_riding = _this.uid == _this.user.uid ? false : true;
+              }
+
+            }
+            if(_this.type=="info"){
+              _this.alertText = "该乘客已被司机 【<img class='cp-avatar' src='"+_this.carowner.avatar+"' /> "+_this.carowner.name+" 】搭载";
+              _this.isShowBtn_cancel = _this.uid == _this.user.uid ? true : false;
+              _this.isShowBtn_complete = _this.uid == _this.user.uid ? true : false;
+            }
+
+            _this.statusText  = "已搭车";
+            _this.statusIcon  = "fa fa-car";
+          break;
+        case 2:
+            _this.alertText = "行程已取消"
+            _this.isShowBtn_goback =  true;
+            _this.statusText  = "已取消";
+            _this.statusIcon  = "fa fa-times";
+
+          break;
+        case 3:
+            _this.alertText = "行程已完成"
+            _this.isShowBtn_goback = true;
+            _this.statusText  = "已完成";
+            _this.statusIcon  = "fa fa-check";
+          break;
+        default:
+      }
 
     },
     /**
@@ -225,81 +322,27 @@ export default {
         if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
         if(res.data.code === 0) {
           let data = res.data.data;
-          _this.time = data.time_format;
-          _this.start = data.start_info;
-          _this.end = data.end_info;
-          _this.carowner = data.owner_info;
-          _this.carowner.avatar = data.owner_info.imgpath ? config.avatarBasePath + _this.carowner.imgpath : _this.defaultAvatar;
+          _this.detailData      = data;
+          _this.uid             = data.uid;
+          _this.detailData.owner_info.avatar = data.owner_info.imgpath ? config.avatarBasePath + data.owner_info.imgpath : _this.defaultAvatar;
           if( _this.type == "info"){
-            _this.typeLabel = "乘客"
-            _this.passengers[0] = data.passenger_info;
+            _this.typeLabel           = "乘客"
+            _this.passengers[0]       = data.passenger_info;
             _this.passengers[0].avatar = data.passenger_info.imgpath ? config.avatarBasePath + _this.passengers[0].imgpath :_this.defaultAvatar ;
-            _this.isShowAlert = true;
-            _this.user = data.passenger_info
-            _this.isShowBtn_phone = data.uid == _this.user.uid ? false : true;
-            switch (parseInt(data.status)) {
-              case 0:
-                  _this.alertText = "该乘客正等待被搭载"
-                  _this.isShowBtn_cancel = data.uid == _this.user.uid ? true : false;
-                  _this.isShowBtn_pickup = data.uid == _this.user.uid ? false : true;
-                  _this.statusText  = "等车中";
-                  _this.statusIcon  = "fa fa-user";
-                break;
-              case 1:
-                  _this.alertText = "该乘客已被司机 【<img class='cp-avatar' src='"+_this.carowner.avatar+"' /> "+_this.carowner.name+" 】搭载";
-                  _this.isShowBtn_cancel = data.uid == _this.user.uid ? true : false;
-                  _this.isShowBtn_complete = data.uid == _this.user.uid ? true : false;
-                  _this.statusText  = "已搭车";
-                  _this.statusIcon  = "fa fa-car";
-                break;
-              case 2:
-                  _this.alertText = "行程已取消"
-                  _this.isShowBtn_goback =  true;
-                  _this.statusText  = "已取消";
-                  _this.statusIcon  = "fa fa-times";
-
-                break;
-              case 3:
-                  _this.alertText = "行程已完成"
-                  _this.isShowBtn_goback = true;
-                  _this.statusText  = "已完成";
-                  _this.statusIcon  = "fa fa-check";
-
-                break;
-              default:
-            }
+            _this.isShowAlert          = true;
+            _this.user                 = data.passenger_info
           }else{
-            _this.typeLabel = _this.carowner.carnumber
-            _this.user =   _this.carowner
-            _this.statis.seat_count = data.seat_count
-            _this.statis.took_count = data.took_count
-            _this.statis.surplus_count = data.seat_count - data.took_count
-            _this.isShowBtn_phone = data.uid == _this.user.uid ? false : true;
-            switch (parseInt(data.status)) {
-              case 0:
-                  _this.isShowBtn_cancel = data.uid == _this.user.uid ? true : false;
-                  _this.isShowBtn_riding = data.uid == _this.user.uid ? false : true;
-                break;
-              case 1:
-                  _this.alertText = "该乘客已被司机 【<img class='cp-avatar' src='"+_this.carowner.avatar+"' /> "+_this.carowner.name+" 】搭载";
-                  _this.isShowBtn_cancel = data.uid == _this.user.uid ? true : false;
-                  _this.isShowBtn_complete = data.uid == _this.user.uid ? true : false;
-                break;
-              case 2:
-                  _this.alertText = "行程已取消"
-                  _this.isShowBtn_goback =  true;
-                break;
-              case 3:
-                  _this.alertText = "行程已完成"
-                  _this.isShowBtn_goback =  true;
-                break;
-              default:
-
-            }
-
+            _this.typeLabel            = data.owner_info.carnumber;
+            _this.user                 = data.owner_info;
+            _this.statis.seat_count    = data.seat_count;
+            _this.statis.took_count    = data.took_count;
+            _this.statis.surplus_count = data.seat_count - data.took_count;
+            _this.hasTake              = data.hasTake;
           }
-          let start = [_this.start.longtitude,_this.start.latitude]
-          let end = [_this.end.longtitude,_this.end.latitude]
+          _this.status = data.status;
+
+          let start = [data.start_info.longtitude,data.start_info.latitude]
+          let end = [data.end_info.longtitude,data.end_info.latitude]
           setTimeout(function(){
             cFuns.amap.drawRouteLine(start, end,_this.mapObj,function(status,result){
               if(status == 'complete'){
@@ -420,7 +463,99 @@ export default {
        });
      },
      /******* 按钮相关方法 *******/
-     
+     /**
+      * [btnAction]
+      */
+     btnAction (action){
+       var _this = this;
+       var url,postData,confirmText;
+       var successText = "成功"
+       var confirmTitle = "请确认"
+       var isJumpToMyroute = false;
+       switch (action) {
+         case 'pickup':
+           url = config.urls.acceptRequest;
+           postData = {id:_this.id};
+           confirmText = '是否接受【'+_this.user.name+'】的约车'
+           successText = "搭载成功"
+           isJumpToMyroute = true;
+           break;
+         case 'riding':
+           url = config.urls.riding;
+           postData = {wid:_this.id};
+           confirmText = '是否要坐【'+_this.user.name+'】的车'
+           successText = "搭车成功"
+           isJumpToMyroute = true;
+           break;
+         case 'finish':
+           url = config.urls.finishRoute;
+           postData = {id:_this.id,from:_this.type};
+           confirmText = '是否结束本次行程'
+           successText = "本次行程已完成"
+           isJumpToMyroute = false;
+           var success = function(rs){
+             _this.status = 3;
+           }
+           break;
+         case 'cancel':
+           url = config.urls.cancelRoute;
+           postData = {id:_this.id,from:_this.type};
+           confirmText = '您确定要取消本次行程吗？'
+           successText = "取消成功"
+           isJumpToMyroute = false;
+           var success = function(rs){
+             _this.status = 2;
+           }
+           break;
+       }
+       // event.stopPropagation();
+       this.$vux.confirm.show({
+         title  : confirmTitle,
+         content: confirmText,
+         onConfirm () {
+           _this.$store.commit('setLoading',{isShow:true,text:"提交中"});
+           // return false;
+           _this.$tokenAxios.post(url,postData).then(res => {
+             _this.$store.commit('setLoading',{isShow:false});
+             if(res.status!==200){
+               _this.$vux.toast.text('网络不畅，请稍候再试');
+               return false;
+             }
+             if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
+             if(res.data.code === 0) {
+               _this.$vux.toast.text(successText);
+               if(typeof(success)==="function"){
+                 success(res.data);
+               }
+               if(isJumpToMyroute){
+                 _this.$store.commit('setJumpTo',{name:"carpool_myroute"});
+                 _this.$router.push({name:'carpool'});
+               }
+
+             }else{
+               _this.$vux.toast.text(res.data.desc,'middle');
+             }
+           })
+           .catch(error => {
+             _this.$store.commit('setLoading',{isShow:false});
+             _this.$vux.toast.text('网络好像不太畅通');
+             console.log(error)
+           })
+         }
+       })
+     },
+
+     onScroll(e){
+       let sTop = e.target.scrollTop;
+       if(sTop > 300){
+         this.isSticky = true;
+       }else{
+         this.isSticky = false;
+       }
+     }
+
+
+
 
   },
   mounted () {
