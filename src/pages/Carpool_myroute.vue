@@ -117,10 +117,9 @@ export default {
      */
     goDetail (index){
       let _this = this;
-
-      let goName = this.listDatas[index].from =="info" ? 'carpool_requests_detail' : "carpool_rides_detail"
-      console.log(goName)
-      this.$router.push({name:goName,params: { id: this.listDatas[index].id ,from:_this.listDatas[index].from}});
+      let goName = this.listDatas[index].from =="wall" || this.listDatas[index].love_wall_ID ? "carpool_rides_detail" :'carpool_requests_detail' ;
+      let goId = this.listDatas[index].love_wall_ID ? this.listDatas[index].love_wall_ID : this.listDatas[index].id;
+      this.$router.push({name:goName,params: { id: goId ,from:_this.listDatas[index].from}});
 
     },
     /**
@@ -151,6 +150,7 @@ export default {
             _this.listDatas.push({
               from : value.from,
               id : value.id,
+              love_wall_ID : value.love_wall_ID,
               status: value.status,
               time:value.time,
               start_info:value.start_info,
