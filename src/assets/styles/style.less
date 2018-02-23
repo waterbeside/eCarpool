@@ -1074,24 +1074,21 @@
     }
     .department {  left:4px; right: auto; }
   }
-  .cp-heading-bg { margin-top:@avatar-width/2  ; border-top:20px solid @color-primary ;  height:84px; background: url(../images/carpool_bg.jpg); background-size: cover;
+  .cp-heading-bg { margin-top:@avatar-width/2  ; border-top:20px solid @color-primary ;  height:84px; background: url(../images/carpool_bg.jpg); background-size: cover;}
+
+  .cp-btn-goback-wrapper{
     transition: all .5s;
-    &.cp-sticky {
-      height: 50px; border-top:0;
+    &.cp-sticky {transform: translate(0,-2px);
+      .cp-btn-goback {background: rgba(0,0,0,.3);}
     }
   }
 
-  .cp-heading.cp-sticky { height:90px;
-      .cp-avatar { transform: translate(0,-100px); }
-      .cp-btn-goback { }
-      .cp-txt h3 {transform: translate(0,-30px); font-size: 18px}
-      .department {  display: none}
-  }
-  .cp-btn-goback-wrapper{
-    transition: all .5s;
-    &.cp-sticky {transform: translate(0,-4px);}
+  .cp-heading-wrapper.cp-sticky {  transform: translate(0,-30px);
+      .cp-avatar { transform:  /*translate(0,0)*/ translate(0,100px); opacity: 0}
+      .cp-txt h3 { font-size: 18px;transform: translate(0,0);}
   }
 
+  .cp-tab-wrapper{ transition: all .5s;  }
   .cp-tab-item {
     .cp-inner {heigt:100%;border-left:1px solid #fafafa;}
     .bage { margin-left:2px;   line-height: 1; display: inline-block;padding: 2px 5px; border-radius: 10px;color: #fff; background: #666; transform: scale(.8) translate(0,-4px)}

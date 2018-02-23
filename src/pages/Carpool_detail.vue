@@ -9,24 +9,24 @@
 
         <div class="cp-main" >
           <sticky scroll-box="cp-scroll-wrapper" ref="sticky" :offset="0" >
-            <div class="cp-heading " :class="{'cp-sticky':isSticky}" >
-                <cp-avatar :src="user.avatar"></cp-avatar>
-                <div class="cp-txt">
-                  <h3>{{user.name}}</h3>
-                </div>
-                <h6>{{typeLabel}}</h6>
-                <h4 class="department">{{user.Department}}</h4>
+            <div class="cp-heading-wrapper" :class="{'cp-sticky':isSticky}" >
+              <div class="cp-heading " >
+                  <cp-avatar :src="user.avatar"></cp-avatar>
+                  <div class="cp-txt">
+                    <h3>{{user.name}}</h3>
+                  </div>
+                  <h6>{{typeLabel}}</h6>
+                  <h4 class="department">{{user.Department}}</h4>
+              </div>
+              <div class="cp-heading-bg" ></div>
+              <!-- / heading -->
+              <tab class="cp-tab-wrapper" :line-width="2" active-color='#8877ba' v-model="tabIndex" v-if="type=='wall'" >
+                <tab-item class="cp-tab-item"  :key="0"><div class="cp-inner">详情</div></tab-item>
+                <tab-item class="cp-tab-item"  :key="1" @on-item-click="getCommentLists"><div class="cp-inner">留言<b class="bage" v-show="comments_total>0">{{comments_total}}</b></div></tab-item>
+                <tab-item class="cp-tab-item"  :key="2" @on-item-click="onShowPassengers" ><div class="cp-inner">乘客列表<b class="bage" v-show="statis.took_count>0">{{statis.took_count}}</b></div></tab-item>
+              </tab>
             </div>
-            <div class="cp-heading-bg" :class="{'cp-sticky':isSticky}"></div>
 
-            <!-- / heading -->
-
-
-            <tab class="cp-tab-wrapper" :line-width="2" active-color='#8877ba' v-model="tabIndex" v-if="type=='wall'">
-              <tab-item class="cp-tab-item"  :key="0"><div class="cp-inner">详情</div></tab-item>
-              <tab-item class="cp-tab-item"  :key="1" @on-item-click="getCommentLists"><div class="cp-inner">留言<b class="bage" v-show="comments_total>0">{{comments_total}}</b></div></tab-item>
-              <tab-item class="cp-tab-item"  :key="2" @on-item-click="onShowPassengers" ><div class="cp-inner">乘客列表<b class="bage" v-show="statis.took_count>0">{{statis.took_count}}</b></div></tab-item>
-            </tab>
           </sticky>
           <div class="cp-content-item" :key="0" v-show="tabIndex == 0">
 
@@ -547,7 +547,7 @@ export default {
 
      onScroll(e){
        let sTop = e.target.scrollTop;
-       if(sTop > 300){
+       if(sTop > 280){
          this.isSticky = true;
        }else{
          this.isSticky = false;
