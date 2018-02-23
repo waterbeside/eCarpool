@@ -1057,7 +1057,7 @@
   .cp-map-content { position: fixed; top:0; height: 280px; width:100%; z-index: 1;}
   .cp-scroll {transition: all .5s;}
   .cp-scroll-inner { z-index: 2 ; margin-top: 240px; transition: all .5s;}
-  .cp-main { position: relative; min-height: 500px; background: #FFF; height: 100%; box-shadow: 0 -4px 4px rgba(0,0,0,0.1)}
+  .cp-main { position: relative; min-height: 520px; background: #FFF; height: 100%; box-shadow: 0 -4px 4px rgba(0,0,0,0.1)}
    @avatar-width : 74px;
   .cp-heading  {
     position: absolute; top:  -@avatar-width/2 ;clear:both;
@@ -1084,11 +1084,11 @@
   }
 
   .cp-heading-wrapper.cp-sticky {  transform: translate(0,-30px);
-      .cp-avatar { transform:  /*translate(0,0)*/ translate(0,100px); opacity: 0}
+      .cp-avatar { transform:  /*translate(0,0)*/ translate(0,100px); opacity: 0; z-index: 0; position: relative;}
       .cp-txt h3 { font-size: 18px;transform: translate(0,0);}
   }
 
-  .cp-tab-wrapper{ transition: all .5s;  }
+  .cp-tab-wrapper{ transition: all .5s; position: relative; z-index: 2}
   .cp-tab-item {
     .cp-inner {heigt:100%;border-left:1px solid #fafafa;}
     .bage { margin-left:2px;   line-height: 1; display: inline-block;padding: 2px 5px; border-radius: 10px;color: #fff; background: #666; transform: scale(.8) translate(0,-4px)}

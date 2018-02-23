@@ -92,23 +92,6 @@
              </li>
             </ul>
             <p class="cp-nodata-tips" v-else v-show="!isLoading_pss">未有乘客</p>
-            <p>
-              d
-            </p><p>
-              d
-            </p><p>
-              d
-            </p><p>
-              d
-            </p><p>
-              d
-            </p><p>
-              d
-            </p><p>
-              d
-            </p><p>
-              d
-            </p>
           </div>
           <!-- /乘客 -->
 
