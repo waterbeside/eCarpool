@@ -81,7 +81,7 @@
             </div>
             <ul class="cp-wallView-passenger" v-if="passengers.length">
               <li class="cp-item " v-for="(item,index) in passengers ">
-                <cp-avatar :src="item.avatar" class="cp-avatar " ></cp-avatar>
+                <cp-avatar :src="item.avatar" ></cp-avatar>
                 <div class="cp-txt">
                   <h4 class="media-heading">{{item.name}}</h4>
                   <p>{{item.Department}}</p>
