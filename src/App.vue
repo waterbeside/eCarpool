@@ -87,7 +87,10 @@ export default {
   },
   methods :{
     init () {
-      const that = this ;
+      const _this = this ;
+      if(this.$router.history.current.name=='login'){
+        return false;
+      }
       this.$tokenAxios.get(config.urls.checkLogin,{params:{more:1}}).then(res => {
         // console.log(res)
          // 登录成功
@@ -95,31 +98,29 @@ export default {
             let userDatas = res.data.data;
             userDatas.loginname = userDatas.loginname.toLowerCase()
             localStorage.setItem('CP_loginname',userDatas.loginname);
-            // that.$store.commit('setUserBaseData',userDatas);
-            that.$store.commit('setUserData',userDatas);
+            // _this.$store.commit('setUserBaseData',userDatas);
+            _this.$store.commit('setUserData',userDatas);
             // console.log(config.avatarBasePath + userDatas.avatar)
             if(userDatas.avatar.trim()!=''){
-              that.$store.commit('setUserAvatar',config.avatarBasePath + userDatas.avatar);
+              _this.$store.commit('setUserAvatar',config.avatarBasePath + userDatas.avatar);
             }
           }else{
-            that.$router.push({ name: 'login'})
+            _this.$router.push({ name: 'login'})
           }
         })
         .catch(error => {
 
         })
-          /*.then(function(res){
-          console.log(res)
-          if(response.data.code==200){
-
-          }
-        }, function(error){
-
-        })*/
     },
   },
   mounted () {
-    this.init()
+  },
+  created () {
+    let _this = this;
+    setTimeout(function(){
+      _this.init();
+    },500)
+
   },
   activated () {}
 }
