@@ -1,8 +1,16 @@
+import Vue from 'vue'
+import router from '../router'
+import {ToastPlugin} from 'vux'
+
 import axios from 'axios'
 import config from '../configs'
 import qs from 'qs'
+
+Vue.use(ToastPlugin);
+
+
 const tokenAxios = axios.create({
-  baseURL: process.env.BASE_API,
+  // baseURL: process.env.BASE_API,
   timeout: 10000,
   transformRequest: [function (data) {
     // data = Qs.stringify(data);
@@ -45,20 +53,35 @@ tokenAxios.interceptors.request.use(config => {
 
 //返回状态判断(添加响应拦截器)
 tokenAxios.interceptors.response.use(res =>{
-
-   /*console.log(res)
+  if(res.status!==200){
+    Vue.$vux.toast.text('网络不畅，请稍候再试');
+    return Promise.reject(res)
+  }
+   console.log(res)
    //对响应数据做些事
-    if(res.data.code !=200){
-      // console.log(res)
-       // alert(res.error_msg)
+    if(res.data.code !==0){
+      switch (res.data.code) {
+        case 10004:
+            console.log(10004)
+            if(router.history.current.name!='login'){
+              Vue.$vux.toast.text('请先登入');
+              router.push({ name: 'login'});
+            }
+
+          break;
+        default:
+
+      }
        return Promise.reject(res)
-    }*/
+    }
+
     return res
 }, error => {
+    if(error.response.status!==200){
+      Vue.$vux.toast.text('网络好像不太畅通');
+    }
     if(error.response.status === 401) {
-      // 401 说明 token 验证失败
-      // 可以直接跳转到登录页面，重新登录获取 token
-      location.href = '/login'
+
     } else {
        // do something
     }

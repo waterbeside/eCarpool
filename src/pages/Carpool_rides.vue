@@ -173,15 +173,9 @@ export default {
       _this.isLoading = 1;
       _this.noData = 0;
       _this.$tokenAxios.get(config.urls.getWallLists,{params:params}).then(res => {
-        if(res.status!==200){
-          _this.$vux.toast.text('网络不畅，请稍候再试');
-          return false;
-        }
-        if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
         let data = res.data.data;
         _this.isLoading = 0;
         if(res.data.code === 0) {
-
           _this.page = data.page.currentPage + 1;
           _this.pageCount = data.page.pageCount;
 
@@ -205,6 +199,7 @@ export default {
         }
       })
       .catch(error => {
+        _this.isLoading = 0;
         console.log(error)
       })
     },

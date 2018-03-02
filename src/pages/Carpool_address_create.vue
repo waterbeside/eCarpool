@@ -225,12 +225,8 @@ export default {
 
       this.$tokenAxios.post(config.urls.createAddress,postDatas).then(res => {
         this.isSubmiting = false;
-        if(res.status!==200){
-          this.$vux.toast.text('网络不畅，请稍候再试');
-          return false;
-        }
         var resData = res.data.data
-        if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
+
         if(res.data.code === 0){
           var inDatas = {
             addressid:resData.aid,
@@ -260,7 +256,10 @@ export default {
           }
         }
       })
-
+      .catch(error => {
+        this.isSubmiting = false;
+        console.log(error)
+      })
 
     },
 

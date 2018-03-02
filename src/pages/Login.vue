@@ -104,7 +104,8 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error)
+          that.isSubmiting = false;
+          that.subBtnText = '登 入'
         })
     }
   },

@@ -298,11 +298,6 @@ export default {
       let url = this.type == "wall" ? config.urls.getRideDetail : config.urls.getRequestDetail;
       this.$tokenAxios.get(url,{params:{id:_this.id}}).then(res => {
         // console.log(res);
-        if(res.status!==200){
-          _this.$vux.toast.text('网络不畅，请稍候再试');
-          return false;
-        }
-        if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
         if(res.data.code === 0) {
           let data = res.data.data;
           _this.detailData      = data;
@@ -370,11 +365,7 @@ export default {
       let _this = this;
       let params = {wallid:this.id}
       _this.$tokenAxios.get(config.urls.getRidePassengers,{params:params}).then(res => {
-        if(res.status!==200){
-          _this.$vux.toast.text('网络不畅，请稍候再试');
-          return false;
-        }
-        if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
+
         let data = res.data.data;
         _this.isLoading_pss = false;
         if(res.data.code === 0) {
@@ -390,6 +381,8 @@ export default {
       })
       .catch(error => {
         console.log(error)
+        _this.isLoading_pss = false;
+
       })
     },
 
@@ -400,11 +393,6 @@ export default {
        var _this = this;
        let params = {wid:this.id,getcount:1}
        _this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
-         if(res.status!==200){
-           _this.$vux.toast.text('网络不畅，请稍候再试');
-           return false;
-         }
-         if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
          if(res.data.code == 0){
            var data = res.data.data;
            _this.comments_total = data.total;
@@ -427,12 +415,7 @@ export default {
        let params = {wid:_this.id,num:5}
        _this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
          console.log(res);
-         this.isLoading_comments = false;
-         if(res.status!==200){
-           _this.$vux.toast.text('网络不畅，请稍候再试');
-           return false;
-         }
-         if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
+         _this.isLoading_comments = false;
          if(res.data.code == 0){
            var data = res.data.data;
            data.lists.forEach(function(value,index,arr){
@@ -441,8 +424,10 @@ export default {
            _this.comments_total = data.total ? data.total : 0;
            _this.comments = data.lists;
            _this.comments_time = nowTimestamp;
-
          }
+       }).catch(error => {
+         _this.isLoading_comments = false;
+         console.log(error)
        });
      },
      /******* 按钮相关方法 *******/
@@ -500,11 +485,6 @@ export default {
            // return false;
            _this.$tokenAxios.post(url,postData).then(res => {
              _this.$store.commit('setLoading',{isShow:false});
-             if(res.status!==200){
-               _this.$vux.toast.text('网络不畅，请稍候再试');
-               return false;
-             }
-             if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
              if(res.data.code === 0) {
                _this.$vux.toast.text(successText);
                if(typeof(success)==="function"){
