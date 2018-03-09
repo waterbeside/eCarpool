@@ -1211,13 +1211,19 @@
       .cp-error { font-size: 12px; padding-left: 5px; color:red}
     }
   }
+  .cp-commentLists-tips { text-align: center; padding: 10px; background: #fafafa;
+    a {display: block;}
+  }
 }
 
 #Page-comment-lists {
   @textarea-height : 100px;
-  .cp-comment-list { padding-bottom: @textarea-height;}
+  .cp-comment-list { padding-bottom: @textarea-height;
+    .cp-error { font-size: 10px; }
+  }
+  .cp-scroll {z-index: 1}
   .cp-comment-addbox {
-
+    z-index: 2;
     position: fixed; bottom: 0; left: 0; right:0; border-top:1px solid #DDD; background: #FFF; box-shadow: 0 0 30px rgba(0,0,0,.1);
     .cp-input-wrapper { display:flex; padding: 10px; height: @textarea-height; }
     textarea { resize:none; width: 100%; border:1px solid #DDD; border-right: none; box-shadow: inset 2px 3px 8px rgba(0,0,0,.1); border-radius:3px 0 0 3px;

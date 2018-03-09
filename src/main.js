@@ -5,9 +5,10 @@ import App from './App'
 import router from './router'
 import store from './store'
 import axios from 'axios';
+import { focus } from 'vue-focus';
 import tokenAxios from './utils/cTokenAxios';
 import VueAMap from 'vue-amap';
-import {Group, Cell, XInput, XButton,XNumber, XSwitch, PopupPicker,Datetime,DatetimePlugin, ViewBox, Search,Spinner, ButtonTab, ButtonTabItem, Divider, AlertPlugin, ConfirmPlugin,ToastPlugin,Loading,InlineLoading,Toast, Tab, TabItem,Sticky} from 'vux'
+import {Group, Cell, XInput, XButton,XNumber, XSwitch, PopupPicker,Datetime,DatetimePlugin, ViewBox, Search,Spinner,  Divider, AlertPlugin, ConfirmPlugin,ToastPlugin,Loading,InlineLoading,Toast, Tab, TabItem,Sticky,} from 'vux'
 
 
 import config from './configs/index'
@@ -26,8 +27,7 @@ Vue.component('Cell', Cell)
 Vue.component('PopupPicker', PopupPicker)
 
 Vue.component('Datetime', Datetime)
-Vue.component('ButtonTab', ButtonTab)
-Vue.component('ButtonTabItem', ButtonTabItem)
+
 Vue.component('Divider', Divider)
 
 Vue.component('Search', Search)
@@ -41,6 +41,8 @@ Vue.component('Tab', Tab)
 Vue.component('TabItem', TabItem)
 Vue.component('Toast', Toast)
 Vue.component('Sticky', Sticky)
+
+Vue.directive('focus', focus);
 
 Vue.use(ToastPlugin);
 Vue.use(DatetimePlugin);

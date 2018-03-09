@@ -8,7 +8,7 @@
           <el-amap class="amap-box" :vid="'amap-vue-address'" :events="mapEvents" :plugin="mapPlugin">
             <el-amap-marker vid="marker-my" :position="myMarker.position"  v-if="myMarker.position.length > 1" :events="myMarker.events"></el-amap-marker>
 
-            <el-amap-marker  v-for="(marker, index) in markers" :position="marker.position" :events="marker.events"  :vid="index"></el-amap-marker>
+            <el-amap-marker  v-for="(marker, index) in markers" :position="marker.position" :events="marker.events"  :vid="index" :key="marker.index"></el-amap-marker>
             <el-amap-info-window  v-if="markerInfoWin.position.length > 1" class="cp-markInfo-box-wrapper"
               :autoMove="true"
 
@@ -22,7 +22,7 @@
                   <form @submit.prevent="searchMap(0)">
                     <div class="cp-form-group ">
                       <label  class="control-label"  for="addressname"><i class="fa fa-map-marker"></i>站点名称</label>
-                      <input class="form-control form-control-line" type="text" name="keyword"  ref="keywordBox"  v-model="keyword" v-focus="isFocusKeyword"/>
+                      <input class="form-control form-control-line" type="text" name="keyword"  ref="keywordBox"  v-model="keyword"   v-focus="isFocusKeyword" @focus="isFocusKeyword=true" @blur="isFocusKeyword=false"/>
                       <span class="cp-search-btn" @click="searchMap(0)"><i class="fa fa-search"></i></span>
                     </div>
                   </form>
@@ -136,15 +136,7 @@ export default {
   watch:{
 
   },
-  directives: {
-    focus: {
-        inserted: function (el, {value}) {
-            if (value) {
-                el.focus();
-            }
-        }
-    }
-  },
+
   methods: {
     /**
      * 显示地图窗体
