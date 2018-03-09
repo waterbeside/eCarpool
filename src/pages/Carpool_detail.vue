@@ -57,22 +57,27 @@
             <div class="text-center"  v-show="isLoading_comments">
               <spinner type="dots" size="60px"></spinner>
             </div>
-            <ul v-if="comments.length" class="cp-comment-list">
-              <li v-for="(item,index) in comments" class="cp-comment-item">
-                <div class="cp-avatarbox">
-                  <cp-avatar :src="item.avatar"></cp-avatar>
-                </div>
-                <div class="cp-mainbox">
-                  <div class="cp-title">
-                    <b class="name">{{item.name}}</b>
-                    <span class="time">{{item.time}}</span>
+            <template v-if="comments.length">
+              <ul class="cp-comment-list">
+                <li v-for="(item,index) in comments" class="cp-comment-item">
+                  <div class="cp-avatarbox">
+                    <cp-avatar :src="item.avatar"></cp-avatar>
                   </div>
-                  <div class="cp-content">{{item.content}}</div>
-                </div>
-              </li>
-            </ul>
+                  <div class="cp-mainbox">
+                    <div class="cp-title">
+                      <b class="name">{{item.name}}</b>
+                      <span class="time">{{item.time}}</span>
+                    </div>
+                    <div class="cp-content">{{item.content}}</div>
+                  </div>
+                </li>
+                <li class="cp-commentLists-tips" ><router-link   :to="{ name:'carpool_rides_comments', params: {id: id} }">共{{comments_total}}条评论，查看全部</router-link></li>
+              </ul>
+
+            </template>
+
             <p class="cp-nodata-tips" v-else v-show="!isLoading_comments">还未有人评论   (´°̥̥̥̥̥̥̥̥ω°̥̥̥̥̥̥̥̥｀)</p>
-            <div class="text-center"><a class="btn btn-default" href="javascript:void(0);" onclick="pageMethods.goCommentsPage()"><i class="fa fa-edit"></i> 我要评论</a></div>
+            <div class="text-center"><router-link class="btn btn-default"  :to="{ name:'carpool_rides_comments', params: {id: id} }"><i class="fa fa-edit"></i> 我要评论</router-link></div>
           </div>
           <!-- /留言 -->
           <div class="cp-content-item" :key="2" v-show="tabIndex == 2">

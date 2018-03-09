@@ -89,6 +89,15 @@ const routes = [
     },
     meta: {keepAlive: false }
   },
+  // 评论
+  {
+    path: '/carpool/rides/comments/:id',
+    name: 'carpool_rides_comments',
+    component (resolve) {
+      require(['../pages/carpool_rides_comments'], resolve)
+    },
+    meta: {keepAlive: false }
+  },
   // 加行程
   {
     path: '/carpool/addroute/:type',
