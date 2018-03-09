@@ -9,6 +9,7 @@
       <cp-scroller :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
          <cp-route-card
           v-for="(item,index) in listDatas"
+           :key="item.id"
            :id="item.id"
            :name="item.passenger_info.name"
            :avatar="item.passenger_info.imgpath"

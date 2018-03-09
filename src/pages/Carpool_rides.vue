@@ -17,6 +17,7 @@
 
          <cp-route-card
             v-for="(item,index) in listDatas"
+           :key="item.id"
            :id="item.id"
            :name="item.owner_info.name"
            :avatar="item.owner_info.imgpath"
