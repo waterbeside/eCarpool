@@ -1,7 +1,7 @@
 <template lang="html">
-    <div class="cp-scroll" :class="{'down':(state===0),'up':(state==1),refresh:(state===2),touch:touching}" @touchstart="touchStart($event)" @touchmove="touchMove($event)" @touchend="touchEnd($event)" @scroll="scroll($event)">
+    <div class="cp-scroll"  :class="{'down':(state===0),'up':(state==1),refresh:(state===2),touch:touching}" @touchstart="touchStart($event)" @touchmove="touchMove($event)" @touchend="touchEnd($event)" @scroll="scroll($event)">
         <slot name="before-inner"></slot>
-        <section class="cp-scroll-inner" :style="{ transform: 'translate3d(0, ' + top + 'px, 0)' }">
+        <section :id="innerID" class="cp-scroll-inner" :style="{ transform: 'translate3d(0, ' + top + 'px, 0)' }" >
             <div class="pull-refresh" v-show="enableRefresh">
                 <slot name="pull-refresh">
                     <span class="down-tip">下拉更新</span>
@@ -50,7 +50,11 @@
                 type: Function,
                 default: undefined,
                 require: false
-            }
+            },
+            innerID: {
+                type: String,
+                default: 'cp-scroll-inner'
+            },
         },
         data() {
             return {
