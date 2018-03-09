@@ -57,13 +57,7 @@ export default {
       }
     }*/
   },
-  directives: {
-    focus: {
-        inserted: function (el ) {
-            el.focus();
-        }
-    }
-  },
+
   methods: {
     emitEvent () {
       this.$nextTick(() => {
@@ -100,13 +94,13 @@ export default {
     },
 
     setFocus () {
-      this.$refs.input.focus()
+      this.isFocus = true;
     },
     setBlur () {
-      this.$refs.input.blur()
+      this.isFocus = false;
     },
     onFocus () {
-      this.isFocus = true
+      this.isFocus = true;
       this.$emit('on-focus')
       // this.touch()
     },
