@@ -144,7 +144,27 @@ const routes = [
     meta: {keepAlive: true }
 
   },
+  // 个人资料修改
+  {
+    path: '/user/profile',
+    name: 'user_profile',
+    component (resolve) {
+      require(['../pages/User_profile'], resolve)
+    },
+    meta: {keepAlive: true }
 
+  },
+
+  // 个人资料修改
+  {
+    path: '/user/profile/edit/:field',
+    name: 'user_profile_edit',
+    component (resolve) {
+      require(['../pages/user_profile_edit'], resolve)
+    },
+    meta: {keepAlive: false }
+
+  },
 
 ]
 

@@ -2,7 +2,8 @@
   <div class="page-view-index" id="Page-user-index">
     <div class="page-view-header">
         <div class="cp-heading btn-ripple"  >
-            <img class="cp-avatar " :src="avatar" :onerror="'this.src=\''+defaultAvatar+'\';return false'">
+            <cp-avatar :src="avatar"></cp-avatar>
+
             <div class="cp-txt">
               <h3> {{userName}} </h3>
               <p> {{loginName}} </p>
@@ -16,8 +17,8 @@
             <statis-item class="cp-statis-item col-xs-4" :num="statis.carbon" unit="千克碳" icon="fa fa-leaf" :duration="1"></statis-item>
           </div>
           <ul class="cp-options-list">
-            <li><a class="btn btn-ripple" href="javascript:void(0);"  ><i class="fa fa-cog"></i>个人信息</a></li>
-            <li><a class="btn btn-ripple" href="javascript:void(0);" ><i class="fa fa-legal"></i>免责声明</a></li>
+            <li><router-link  class="btn btn-ripple" :to="{ name:'user_profile'}"><i class="fa fa-cog"></i>个人信息</router-link></li>
+            <li><router-link  class="btn btn-ripple" to="/disclaimer"><i class="fa fa-legal"></i>免责声明</router-link></li>
             <li><a class="btn btn-ripple" href="javascript:void(0);" ><i class="fa fa-sign-out"></i>退出登录</a></li>
           </ul>
       </div>
@@ -28,15 +29,15 @@
 <script>
 import config from '../configs'
 import statisItem from '../components/StatisItem'
+import CpAvatar from '../components/CpAvatar'
 
 export default {
   components: {
-    statisItem,
+    statisItem,CpAvatar
   },
   data () {
     return {
       avatar: config.defaultAvatar,
-      defaultAvatar: config.defaultAvatar,
       statis:{
         people:0,
         distance:0,
@@ -55,11 +56,6 @@ export default {
      loadUserInfo () {
        var that = this;
        this.$tokenAxios.get(config.urls.getUserInfo,{}).then(res => {
-         if(res.status!==200){
-           _this.$vux.toast.text('网络不畅，请稍候再试');
-           return false;
-         }
-         if(!cFuns.checkLoginByCode(res.data.code,_this,1)){return false;}
 
          if(res.data.code === 0) {
            let data = res.data.data;
@@ -105,15 +101,18 @@ export default {
 
   },
   activated (){
-    if(typeof(this.$store.state.userData.name)!="undefined"){
-      this.avatar = this.$store.state.userAvatar;
-      this.userName = this.$store.state.userData.name;
-      this.loginName = this.$store.state.userData.loginname;
-    }else{
-      this.loadUserInfo()
-    }
+    setTimeout(()=>{
+      if(typeof(this.$store.state.userData.name)!="undefined"){
+        this.avatar = this.$store.state.userAvatar;
+        this.userName = this.$store.state.userData.name;
+        this.loginName = this.$store.state.userData.loginname;
+      }else{
+        this.loadUserInfo()
+      }
 
-    this.loadUserStatis()
+      this.loadUserStatis()
+    },600)
+
     // this.loadUserInfo()
   }
 
