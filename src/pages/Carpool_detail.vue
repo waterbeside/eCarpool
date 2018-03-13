@@ -44,7 +44,7 @@
               </div>
               <div class="cp-btns-wrap">
                 <a v-show="isShowBtn_phone"  class="cp-btn cp-btn-phone " :href="'tel:'+user.phone"><i class="cp-icon fa fa-phone"></i>电 话</a>
-                <a v-show="isShowBtn_goback" class="cp-btn cp-btn-back " @click="goBack"><i class="cp-icon fa fa-arrow-left"></i>返 回</a>
+                <a v-show="isShowBtn_goback" class="cp-btn cp-btn-back "  @click="goBack"><i class="cp-icon fa fa-arrow-left"></i>返 回</a>
                 <a v-show="isShowBtn_pickup" class="cp-btn cp-btn-pickup " @click="btnAction('pickup')"><i class="cp-icon fa fa-car"></i>接受请求</a>
                 <a v-show="isShowBtn_riding" class="cp-btn cp-btn-riding " @click="btnAction('riding')"><i class="cp-icon fa fa-car"></i>搭 车</a>
                 <a v-show="isShowBtn_cancel" class="cp-btn cp-btn-cancel "  @click="btnAction('cancel')"><i class="cp-icon fa fa-times"></i>取消行程</a>
@@ -112,6 +112,8 @@
 <script>
 import config from '../configs/index'
 import cFuns from '../utils/cFuns'
+import {Tab, TabItem,Sticky} from 'vux'
+
 
 import CpAvatar from '../components/CpAvatar'
 import CpRouteBox from '../components/CpRouteBox'
@@ -121,7 +123,7 @@ import StatisItem from '../components/StatisItem'
 
 export default {
   components: {
-    CpAvatar,CpRouteBox,CpScroller,StatisItem
+    CpAvatar,CpRouteBox,CpScroller,StatisItem,Tab,TabItem,Sticky
   },
   data () {
     return {
