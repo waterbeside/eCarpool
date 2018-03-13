@@ -30,7 +30,7 @@
             <form   method="post" onsubmit="return false;">
               <div class="cp-userbar">
                 <div class="cp-avatar-wrap">
-                  <img class="cp-avatar " :src="avatar" :onerror="'this.src=\''+defaultAvatar+'\';return false'">
+                  <cp-avatar :src="avatar"></cp-avatar>
                 </div>
                 <div class="cp-userinfo">
                   <span class="cp-username">{{userData.name}}</span>
@@ -104,12 +104,15 @@
 
 import config from '../configs'
 import cFuns from '../utils/cFuns'
+import cModel from '../utils/cModel'
+import CpAvatar from '../components/CpAvatar'
+
 // import { AMapManager } from 'vue-amap';
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
 
 export default {
   components: {
-
+    CpAvatar
   },
   data () {
     return {
@@ -134,8 +137,7 @@ export default {
             });
           }
           _this.getDataFormStore()
-          console.log(11)
-          console.log(_this.formData)
+  
           if(typeof(_this.formData.time[0])=="undefined"){
             let d = new Date();
             _this.formData.time = [cFuns.formatDayItemData(d).value, cFuns.fixZero(d.getHours())+"",cFuns.fixZero(d.getMinutes())+""];
@@ -394,6 +396,18 @@ export default {
         var resData = res.data.data
         if(res.data.code === 0) {
           _this.$vux.toast.text("发布成功");
+          if(resData.createAddress.length>0){
+            // console.log(rs.data.createAddress)
+            var newDatas = resData.createAddress;
+            for(i=0;i<newDatas.length;i++){
+              newDatas[i].addressname = newDatas[i].name;
+              newDatas[i].listorder = 3;
+              newDatas[i].address_type = 'new';
+              newDatas[i].is_show = 1;
+              cModel.myAddress('add',{data:newDatas[i]});
+              // pageMethods.addAddressToDB(newDatas[i]);
+            }
+          }
           _this.$store.commit('setJumpTo',{name:"carpool_myroute"});
           _this.$router.push({name:'carpool'});
         }else{
