@@ -3,10 +3,9 @@
     <title-bar  :left-options="{showBack: true, preventGoBack:true}" @onClickBack="goHome">
       <span v-show="!isShowSearchBox">约车需求</span>
       <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)" @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch" ></cp-search-box>
-
     </title-bar>
     <div class="page-view-main"   >
-      <cp-scroller :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
+      <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
          <cp-route-card
           v-for="(item,index) in listDatas"
            :key="item.id"

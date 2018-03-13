@@ -13,7 +13,7 @@
       </div>-->
     </title-bar>
     <div class="page-view-main"   >
-      <cp-scroller :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
+      <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
 
          <cp-route-card
             v-for="(item,index) in listDatas"

@@ -15,7 +15,7 @@
 
 
     <div class="page-view-main " >
-      <cp-scroller :on-refresh="onRefresh"   :dataList="scrollData" :enableInfinite="false">
+      <cp-scroller :position="{top:'46px'}"  :on-refresh="onRefresh"   :dataList="scrollData" :enableInfinite="false">
         <ul id="J-getAddress" class="cp-list-wrap cp-list-points " :class="{'doSearch':isSearching}"  >
           <li v-for="(item,index) in listDatas" class="cp-item" :class="'cp-type-'+item.address_type"  @click="onSelectAddress(index,0)" v-show="item.is_show">
             <template v-if="item.address_type=='Home'">
@@ -47,7 +47,7 @@
          </div>
          <spinner type="dots" size="60px" v-show="isLoading"></spinner>
        </div>
-       <div class="cp-createAddress-box" @click="goCreateAddress">
+       <div class="cp-createAddress-box" @click="goCreateAddress" v-show="isShowCreateBtn">
          <p>没找到您想要的站点？</p>
          <p><i class="fa fa-plus"></i> 创建站点：<b class="cp-keyword"></b></p>
        </div>
@@ -93,9 +93,12 @@ export default {
         "start":"请选择开始地点",
         "end":"请选择结束地点",
         "home":"请选择家地址",
-        "company":"请选公司地址",
+        "work":"请选公司地址",
       }
       return typeof(titlesArray[this.to]!=="undefault") ? titlesArray[this.to] : "请选择地址"
+    },
+    isShowCreateBtn (){
+      return this.to == "start" || this.to=="end" ? true : false;
     }
   },
   methods:{
@@ -129,7 +132,8 @@ export default {
           this.isSearching = true;
           let  temp_array = this.listDatas;
           this.listDatas = temp_array.map(function(value,key,arr){
-            if(value.addressname.indexOf(_this.keyword)>-1  ){
+
+            if(value.addressname && value.addressname.indexOf(_this.keyword)>-1  ){
               value.is_show = 1
             }else{
               value.is_show = 0
@@ -343,11 +347,81 @@ export default {
 
       var  to = this.to;
       let formData = this.$store.state.routeFormData;
+      //如果是选择起点和终点
       if(to=="start"||to=="end"){
         formData[to] = data;
         // console.log(formData);
         this.$store.commit('setRouteFormData',formData);
         this.$router.back();
+      }
+      //如果是修改公司和家的地址。
+      if(to=="home"||to=="work"){
+        console.log(data);
+        //取得用户信息
+        var userData = this.$store.state.userData;
+        //要提交的数据
+        var  postData = {
+          latitude:data.latitude,
+          longtitude:data.longtitude,
+          aid:data.addressid,
+          name:data.addressname,
+          from: to
+        }
+        //提交修改个人信息（公司或家地址）
+        this.$tokenAxios.post(config.urls.editProfileAdress,postData).then(res => {
+          var resData = res.data.data
+          if(res.data.code === 0) {
+            var data_n = data;
+            data_n.addressid = typeof(resData.createAddress.addressid)!='undefined' ? resData.createAddress.addressid : data.addressid;
+            data_n.addressname = data.addressname;
+            if(to=='home'){
+              data_n.listorder = 0;
+              data_n.address_type = 'Home';
+              userData.home_address = data.addressname;
+              userData.home_address_id = data.addressid;
+            }else if(to == 'work'){
+              data_n.listorder = 1;
+              data_n.address_type = 'Work';
+              userData.company_address = data.addressname;
+              userData.company_address_id = data.addressid;
+            }
+            //把更新的数据写回到 $store
+            this.$store.commit('setUserData',userData);
+            //把旧的移出home或work位置
+            cModel.myAddress('only',{
+              data:{'address_type':data_n.address_type},
+              success:function(result,server){
+                if(result){
+                  var data_o = result;
+                  data_o.listorder = 3;
+                  data_o.address_type = 'Often'
+                  cModel.myAddress('update',{data:data_o});
+                }
+                // return false;
+                //把新的写进home或work位置
+                if(typeof(resData.createAddress.addressid)!='undefined'){
+                   cModel.myAddress('add',{data:data_n});
+                }else{
+                   cModel.myAddress('update',{data:data_n});
+                }
+                // console.log(GB_VAR['user_info']);
+                _this.$vux.toast.text("更改成功");
+
+              }
+            })
+          }else{
+            _this.$vux.toast.text("更改失败，请稍候再试");
+
+          }
+          // _this.$router.push({name:'user_profile'});
+          this.$router.back();
+        })
+        .catch(error => {
+          _this.$vux.toast.text("更改失败，请稍候再试");
+          this.$router.back();
+          console.log(error)
+        })
+
       }
     },
 
@@ -359,13 +433,14 @@ export default {
   created () {
     // this.init();
 
-    this.getList();
 
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
   },
   activated (){
+    this.getList();
+
     if(!this.$store.state.localCity){
       this.getCity();
     }

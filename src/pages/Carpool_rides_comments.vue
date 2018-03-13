@@ -2,7 +2,7 @@
   <div class="page-view " id="Page-comment-lists">
     <title-bar  >评论  </title-bar>
     <div class="page-view-main"   >
-      <cp-scroller :on-refresh="onRefresh"  :dataList="scrollData" :enableInfinite="enableInfinite" id="cp-scroll-wrapper" innerID="cp-scroll-inner">
+      <cp-scroller :position="{top:'46px'}"  :on-refresh="onRefresh"  :dataList="scrollData" :enableInfinite="enableInfinite" id="cp-scroll-wrapper" innerID="cp-scroll-inner">
         <ul v-if="comments.length" class="cp-comment-list">
           <li v-for="(item,index) in comments" class="cp-comment-item">
             <div class="cp-avatarbox">

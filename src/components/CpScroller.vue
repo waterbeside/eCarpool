@@ -1,7 +1,7 @@
 <template lang="html">
-    <div class="cp-scroll"  :class="{'down':(state===0),'up':(state==1),refresh:(state===2),touch:touching}" @touchstart="touchStart($event)" @touchmove="touchMove($event)" @touchend="touchEnd($event)" @scroll="scroll($event)">
+    <div class="cp-scroll"  :class="{'down':(state===0),'up':(state==1),refresh:(state===2),touch:touching}" :style="style"  @touchstart="touchStart($event)" @touchmove="touchMove($event)" @touchend="touchEnd($event)" @scroll="scroll($event)">
         <slot name="before-inner"></slot>
-        <section :id="innerID" class="cp-scroll-inner" :style="{ transform: 'translate3d(0, ' + top + 'px, 0)' }" >
+        <section :id="innerID" class="cp-scroll-inner" :class="{'cp-enableRefresh':enableRefresh}" :style="{ transform: 'translate3d(0, ' + top + 'px, 0)' }" >
             <div class="pull-refresh" v-show="enableRefresh">
                 <slot name="pull-refresh">
                     <span class="down-tip">下拉更新</span>
@@ -25,6 +25,12 @@
 <script>
     export default {
         props: {
+            position:{
+              type:Object,
+              default: ()=>{
+                return {top:0,left:0,right:0,bottom:0}
+              }
+            },
             offset: {
                 type: Number,
                 default: 60 //默认高度
@@ -55,6 +61,17 @@
                 type: String,
                 default: 'cp-scroll-inner'
             },
+        },
+        computed :{
+          style (){
+            let styleStr = ""
+            styleStr +=  this.position.top ? "top:"+this.position.top+";" : "";
+            styleStr +=  this.position.right  ? "right:"+this.position.right+";" : "";
+            styleStr +=  this.position.bottom ? "bottom:"+this.position.bottom+";" : "";
+            styleStr +=  this.position.left  ? "left:"+this.position.left+";" : "";
+
+            return styleStr;
+          }
         },
         data() {
             return {
@@ -181,6 +198,14 @@
               this.$emit('on-scroll',e);
             }
 
+        },
+        mounted () {
+
+        },
+        created () {
+
+        },
+        activated (){
         }
     }
 </script>
@@ -188,7 +213,7 @@
 .cp-scroll {
   font-size: 14px;
   position: absolute;
-  top: 46px;
+  top:0;
   right: 0;
   bottom: 0;
   left: 0;
@@ -198,11 +223,14 @@
   -webkit-overflow-scrolling: touch;
   .cp-scroll-inner {
       position: absolute;
-      top: -30px;
+
       width: 100%;
       height: auto;
       padding-bottom: 15px;
       transition-duration: 300ms;
+      &.cp-enableRefresh {
+        top: -30px;
+      }
       .pull-refresh {
           position: relative;
           left: 0;

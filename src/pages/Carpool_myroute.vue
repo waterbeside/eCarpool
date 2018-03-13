@@ -4,7 +4,7 @@
       <span  >我的行程</span>
     </title-bar>
     <div class="page-view-main"   >
-      <cp-scroller :on-refresh="onRefresh"   :dataList="scrollData" :enableInfinite="false">
+      <cp-scroller  :position="{top:'46px'}"  :on-refresh="onRefresh"   :dataList="scrollData" :enableInfinite="false">
 
          <cp-route-card
             v-for="(item,index) in listDatas"
