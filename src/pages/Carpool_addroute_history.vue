@@ -4,7 +4,7 @@
       <span >选择历史路线</span>
     </title-bar>
     <div class="page-view-main"   >
-      <cp-scroller :on-refresh="onRefresh"  :dataList="scrollData" :enableInfinite="false">
+      <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh"  :dataList="scrollData" :enableInfinite="false">
         <ul>
           <li v-for="(item,index) in listDatas" class="cp-item btn-ripple" @click="onSelect(index)">
             <i class="cp-icon fa fa-history"></i>
