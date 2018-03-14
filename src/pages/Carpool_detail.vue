@@ -117,13 +117,13 @@ import {Tab, TabItem,Sticky} from 'vux'
 
 import CpAvatar from '../components/CpAvatar'
 import CpRouteBox from '../components/CpRouteBox'
-import CpScroller from '../components/CpScroller'
+
 import StatisItem from '../components/StatisItem'
 
 
 export default {
   components: {
-    CpAvatar,CpRouteBox,CpScroller,StatisItem,Tab,TabItem,Sticky
+    CpAvatar,CpRouteBox,StatisItem,Tab,TabItem,Sticky
   },
   data () {
     return {
@@ -139,6 +139,7 @@ export default {
         end_info        :{addressname:'-'},
         status          : 0,
         hasTake         : 0,
+
       },
 
       //alert框相关
@@ -272,9 +273,9 @@ export default {
 
             }
             if(_this.type=="info"){
-              _this.alertText = "该乘客已被司机 【<img class='cp-avatar' src='"+_this.carowner.avatar+"' /> "+_this.carowner.name+" 】搭载";
-              _this.isShowBtn_cancel = _this.uid == _this.user.uid ? true : false;
-              _this.isShowBtn_complete = _this.uid == _this.user.uid ? true : false;
+              _this.alertText = "该乘客已被司机 【<img class='cp-avatar' src='"+_this.detailData.owner_info.avatar+"' /> "+_this.detailData.owner_info.name+" 】搭载";
+              _this.isShowBtn_cancel = _this.uid == _this.user.uid || _this.detailData.owner_info.uid == _this.uid ? true : false;
+              _this.isShowBtn_complete = _this.uid == _this.user.uid || _this.detailData.owner_info.uid == _this.uid ? true : false;
             }
 
             _this.statusText  = "已搭车";
@@ -316,6 +317,7 @@ export default {
             _this.passengers[0].avatar = data.passenger_info.imgpath ? config.avatarBasePath + _this.passengers[0].imgpath :_this.defaultAvatar ;
             _this.isShowAlert          = true;
             _this.user                 = data.passenger_info
+
           }else{
             _this.typeLabel            = data.owner_info.carnumber;
             _this.user                 = data.owner_info;
@@ -528,9 +530,7 @@ export default {
 
 
   },
-  mounted () {
 
-  },
   created () {
     console.log(this.type)
     this.getDetail()
@@ -540,6 +540,9 @@ export default {
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
+  },
+  mounted () {
+
   },
   activated (){
   }
