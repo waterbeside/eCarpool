@@ -49,10 +49,10 @@ import config from '../configs/index'
 import cFuns from '../utils/cFuns'
 import CpSearchBox from '../components/CpSearchBox'
 import CpRouteCard from '../components/CpRouteCard'
-import CpScroller from '../components/CpScroller'
+
 export default {
   components: {
-    CpSearchBox,CpRouteCard,CpScroller
+    CpSearchBox,CpRouteCard
   },
   data () {
     return {

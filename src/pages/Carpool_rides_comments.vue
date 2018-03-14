@@ -49,18 +49,13 @@
 import config from '../configs/index'
 import cFuns from '../utils/cFuns'
 
-import CpScroller from '../components/CpScroller'
 import CpAvatar from '../components/CpAvatar'
-
-
-
-
 
 
 
 export default {
   components: {
-    CpAvatar,CpScroller
+    CpAvatar
   },
   data () {
     return {

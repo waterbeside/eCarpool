@@ -33,11 +33,10 @@ import config from '../configs/index'
 import cFuns from '../utils/cFuns'
 
 import CpRouteCard from '../components/CpRouteCard'
-import CpScroller from '../components/CpScroller'
 import CpRouteBox from '../components/CpRouteBox'
 export default {
   components: {
-    CpRouteCard,CpScroller,CpRouteBox
+    CpRouteCard,CpRouteBox
   },
   data () {
     return {

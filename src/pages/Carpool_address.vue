@@ -63,12 +63,11 @@
 import config from '../configs/index'
 import cFuns from '../utils/cFuns'
 import CpSearchBox from '../components/CpSearchBox'
-import CpScroller from '../components/CpScroller'
 import cModel from '../utils/cModel'
 
 export default {
   components: {
-    CpSearchBox,CpScroller
+    CpSearchBox
   },
   data () {
     return {

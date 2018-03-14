@@ -1,11 +1,11 @@
 
 <template>
-  <div class="page-view" id="Page-user-profile-edit">
+  <div class="page-view page-view-profile-edit" id="Page-user-profile-edit">
     <title-bar >{{fieldSetting.title}}</title-bar>
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}"  :enableRefresh="false" :enableInfinite="false">
         <div class="container">
-          <div class="cp-form-group ">
+          <div class="cp-form-group cp-input-wrapper">
               <x-input   class="form-control-line" :show-clear="true"   :placeholder="fieldSetting.placeholder" :name="field"  v-model="value" ref="input"></x-input>
 
               <div class="help-block" v-html="helpText"> </div>
@@ -24,7 +24,7 @@
 
 <script>
 import config from '../configs/index'
-import CpScroller from '../components/CpScroller'
+
 var fieldArray = {
   'loginname':{
     title : "修改工号",
@@ -47,13 +47,14 @@ var fieldArray = {
 }
 export default {
   components: {
-    CpScroller,
+
   },
   data () {
     return {
       field:this.$route.params.field,
       fieldSetting:{},
       isEnableSubmit : false,
+      isSubmiting : false,
       title : '',
       isFocus : true,
       value:"",
@@ -91,8 +92,9 @@ export default {
       }
       // if(user)
 
-
+      this.isSubmiting = true;
       this.$tokenAxios.post(config.urls.editProfile,postData).then(res => {
+        this.isSubmiting = false;
         if(res.data.code === 0 ){
           userData_o[postData.type] =  postData[postData.type];
           this.$store.commit('setUserData',userData_o);
@@ -103,6 +105,7 @@ export default {
         }
       }).catch(error => {
         this.$vux.toast.text("更改失败，请稍候再试");
+        this.isSubmiting = false;
         return false;
       })
     }

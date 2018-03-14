@@ -26,9 +26,13 @@
            :isShowPhoneBtn="false"
            @click.native="goDetail(index)"
          >
+         <div slot="btnbar" class="cp-btns-wrapper cp-goDetail-wrapper">
+           <span class="pull-right">详请 <i class="fa fa-arrow-circle-right"></i></span>
+           <span class="tips-text" v-if="item.status ==0 && item.from=='info'">等待车主接受</span>
+         </div>
 
-           <div slot="btnbar" class="cp-btns-wrapper" v-if="item.from=='wall'">
-              <div class="cp-fabBtn-wrap">
+           <!--<div slot="btnbar" class="cp-btns-wrapper" v-if="item.from=='wall'">
+               <div class="cp-fabBtn-wrap">
                 <b class="t">点赞</b>
                 <a href="javascript:void(0);" class="btn  btn-fab btn-primary" >
                   <i class="fa fa-heart" ></i>
@@ -39,7 +43,8 @@
               <div class="cp-fabBtn-wrap" :class="[{'hasLike':item.hasTake===1}]">
                 <b class="t">已搭</b>
                 <a href="javascript:void(0);" class="btn btn-fab" :class="item.hasTake===1 ? 'btn-danger' : 'btn-primary' "><i class="fa fa-user"></i></a>
-                <b class="num">{{item.took_count}}</b></div>
+                <b class="num">{{item.took_count}}</b>
+              </div>
            </div>
 
            <div slot="btnbar" class="cp-btns-wrapper" v-if="item.from=='info'">
@@ -54,7 +59,7 @@
                <span class="tips-text">等待车主接受</span>
                <div class="cp-clear"></div>
              </div>
-           </div>
+           </div>-->
 
 
          </cp-route-card>
@@ -76,10 +81,10 @@ import config from '../configs/index'
 import cFuns from '../utils/cFuns'
 
 import CpRouteCard from '../components/CpRouteCard'
-import CpScroller from '../components/CpScroller'
+
 export default {
   components: {
-    CpRouteCard,CpScroller
+    CpRouteCard
   },
   data () {
     return {
