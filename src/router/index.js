@@ -162,8 +162,17 @@ const routes = [
     component (resolve) {
       require(['../pages/user_profile_edit'], resolve)
     },
-    meta: {keepAlive: false }
+    meta: {keepAlive: true }
+  },
 
+  // 个人资料修改
+  {
+    path: '/user/profile/departments',
+    name: 'user_profile_departments',
+    component (resolve) {
+      require(['../pages/user_profile_departments'], resolve)
+    },
+    meta: {keepAlive: true }
   },
 
 ]

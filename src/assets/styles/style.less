@@ -288,7 +288,7 @@
 }
 
 .page-view {
-  width: 100%; position: absolute; top: 0; left: 0;right:0;  height: 100%; background:#fafafa;/*animation: page_view_in .2s ease;*/ z-index: 1000;
+  width: 100%; position: absolute; top: 0; left: 0;right:0;  height: 100%; background:#fafafa;  z-index: 1000;
   // &.out {animation: page_view_out .2s ease; opacity: 0;}
   &.cp-overhide { bottom: 0;  }
 }
@@ -335,6 +335,10 @@
 .page-view-main {  overflow: hidden; height: 100%; position: relative; z-index: 2;
   &.cp-pdt , .cp-pdt { padding-top: @topbar-height;}
   &.cp-ah {height:auto}
+}
+
+.page-view-inner {
+  height: 100%;
 }
 
 .page-view-index {
@@ -1302,16 +1306,20 @@
   .cp-avatar { width: @avatar-width; height: @avatar-width; border-radius: 50%; margin: 0 auto; border:2px solid rgba(255,255,255,.8);  transition: all .5s;}
   .cp-container { padding-top: 110px;}
   .weui-cells {
-    label { font-weight: 400; color: #666;}
+    label { font-weight: 400; color: #444; margin: 0}
   }
+
 
   .cp-title-icon {
      margin-right: 5px; font-size: 16px; text-align: center; min-width: 18px;
   }
   .cp-group {
-    .weui-cell__ft,.vux-cell-value {  font-size: 14px;}
+    .weui-cell__ft,.vux-cell-value,.weui-select  {  font-size: 14px;}
     .weui-cells__title { color:lighten(@color-primary,16%); font-weight: 400;
       .cp-title-icon { color:lighten(@color-primary,30%); }
+    }
+    .weui-select  {   width: auto; float: right;text-align: right; color: #888; line-height: 44px;
+      option {}
     }
   }
   .cp-group-title  {
@@ -1319,8 +1327,31 @@
   }
 }
 
+#Page-user-profile-edit {
+  .cp-form-group { margin-top: 15px;}
+  .form-control { padding:12px 10px ; height: 48px; font-size: 16px}
+  .help-block { color:lighten(@color-primary,35%); margin: 4px 0 24px 4px}
 
+}
 
+#Page-user-profile-departments {
+  .cp-search-bar {}
+  .vux-no-group-title { margin-top: 0}
+  .weui-cell__hd { width: 30px;
+    label {margin: 0}
+  }
+  .cp-search-bar {
+    position: absolute; top:46px; width: 100%;
+    .fa-search { color: #aaa}
+  }
+  .cp-departments-list {
+    list-style: none; padding: 0;
+    li {
+      .cp-icon { font-size: 12px; color: #DDD; margin-right: 5px;}
+      padding: 10px; border-bottom: 1px solid #DDD; margin: 0
+    }
+  }
+}
 
 /* 免责声明 */
  .cp-disclaimer .page-view-content {

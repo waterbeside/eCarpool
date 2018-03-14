@@ -35,6 +35,10 @@ let config = {
     logout            : baseDomain + 'carpool/publics/logout', // 登出
     createAddress     : baseDomain + 'carpool/address/add', // 创建站点
     wallComments      : baseDomain + 'carpool/comment/wall', //取得空座位评论列表
+
+    getCompanys       : baseDomain + 'carpool/assist/get_companys', //取得公司列表
+    getDepartments       : baseDomain + 'carpool/assist/get_departments', //取得部门列表
+    getDisclaimer     : baseDomain + 'carpool/assist/get_disclaimer', //免责声明
   }
 }
 
