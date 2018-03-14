@@ -1,9 +1,9 @@
 <template>
-  <div class="page-view cp-overhide cp-disclaimer" id="Page-disclaimer" >
-    <title-bar  :left-options="{showBack: true}">免责声明</title-bar>
-    <div class="page-view-main cp-pdt " >
-      <div class="cp-scroller-wrap " >
-        <div class="cp-scroller container"  >
+  <div class="page-view   cp-disclaimer" id="Page-disclaimer" >
+    <title-bar >免责声明</title-bar>
+    <div class="page-view-main   " >
+      <cp-scroller :position="{top:'46px'}"  :enableRefresh="false" :enableInfinite="false">
+        <article class="cp-article">
           <p></p>
           <p>  &nbsp;&nbsp;&nbsp;&nbsp;溢达Carpool拼车APP是一款非经营性和公益性的APP，本APP免费对公众开放使用。本APP为开车人、想拼车上下班或出行的人提供信息发布和配对平台。</p>
           <p>  &nbsp;&nbsp;&nbsp;&nbsp;我们的宗旨是：减少交通拥堵，缓解车位紧张，提高汽车的利用效率，减少环境污染，倡导环保绿色低炭出行；让您上下班或出行更加方便省心，出行更加便捷愉快。</p>
@@ -18,11 +18,13 @@
           <p>  &nbsp;&nbsp;&nbsp;&nbsp;超豐科技服務有限公司作为本APP所有者及发布者保留下述权利：随时修改、删除在本APP发布的任何信息；随时停止本APP提供的服务；当用户违反了基本义务时，溢达Carpool拼车APP的系统记录有可能作为其违反法律的证据；同时，本APP所有者及发布者有权作出独立判断，立即取消该用户帐号，而用户亦应对自己在APP上的行为独立承担法律后果。 </p>
           <p>  &nbsp;&nbsp;&nbsp;&nbsp;溢达Carpool拼车APP提醒您：拼车时为保障车主和乘客双方权益，建议要求对方出示相关身份证明，签署免责协议或声明，并在启程前协商好各项事宜。
           APP内各项拼车信息均为用户自行发布，本APP平台无法核实信息真伪，溢达Carpool拼车APP提醒您拼车有风险，在实际拼车过程中，请您务必保持警惕！本APP平台无法了解车主是否是合格司机及车辆手续是否齐全，车主是否购买乘客险或其他相关保险，及保险额度，同时，也无法判断保险公司是否会因非营业性私有车辆进行拼车服务而拒绝赔偿，因此请用户使用本APP平台时了解相关风险，如果使用本平台，请自行承担相关风险，本APP所有者及发布者不负任何责任。</p>
-        </div>
-      </div>
+
+        </article>
+
+      </cp-scroller>
     </div>
   </div>
-  
+
 </template>
 
 <script>
