@@ -15,8 +15,7 @@ let config = {
     getWallLists      : baseDomain + 'carpool/wall/get_lists', //取空座位求列表
     getAddress        : baseDomain + 'carpool/publics/get_address', //取得地址列表
     getMyAddress      : baseDomain + 'carpool/address/get_myaddress', //取得我的地址
-    /*addInfo         : baseDomain + 'carpool/info/add', //发布需求
-    addWall           : baseDomain + 'carpool/wall/add', //发布空座位*/
+
     getOfentTrips     : baseDomain + 'carpool/myroute/get_ofent_trips', //取得常用行程
     getMyroute        : baseDomain + 'carpool/myroute/myroute', //取得我的行程列表
     addRoute          : baseDomain + 'carpool/myroute/add', //发布行呈现
@@ -37,8 +36,11 @@ let config = {
     wallComments      : baseDomain + 'carpool/comment/wall', //取得空座位评论列表
 
     getCompanys       : baseDomain + 'carpool/assist/get_companys', //取得公司列表
-    getDepartments       : baseDomain + 'carpool/assist/get_departments', //取得部门列表
+    getDepartments    : baseDomain + 'carpool/assist/get_departments', //取得部门列表
     getDisclaimer     : baseDomain + 'carpool/assist/get_disclaimer', //免责声明
+
+    sendSms           : baseDomain + 'carpool/service/send_code', //发送短信
+    checkSmsCode      : baseDomain + 'carpool/service/check_code', //发送短信
   }
 }
 
