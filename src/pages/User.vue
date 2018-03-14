@@ -1,9 +1,8 @@
 <template>
   <div class="page-view-index" id="Page-user-index">
     <div class="page-view-header">
-        <div class="cp-heading btn-ripple"  >
+        <div class="cp-heading btn-ripple" @click="$router.push({ name:'user_profile'})"  >
             <cp-avatar :src="avatar"></cp-avatar>
-
             <div class="cp-txt">
               <h3> {{userName}} </h3>
               <p> {{loginName}} </p>
@@ -19,6 +18,7 @@
           <ul class="cp-options-list">
             <li><router-link  class="btn btn-ripple" :to="{ name:'user_profile'}"><i class="fa fa-cog"></i>个人信息</router-link></li>
             <li><router-link  class="btn btn-ripple" to="/disclaimer"><i class="fa fa-legal"></i>免责声明</router-link></li>
+            <li><router-link  class="btn btn-ripple" to="/downloadapp"><i class="fa fa-download"></i>下载APP</router-link></li>
             <li><a class="btn btn-ripple" href="javascript:void(0);" ><i class="fa fa-sign-out"></i>退出登录</a></li>
           </ul>
       </div>
@@ -97,10 +97,6 @@ export default {
 
   },
   mounted () {
-
-
-  },
-  activated (){
     setTimeout(()=>{
       if(typeof(this.$store.state.userData.name)!="undefined"){
         this.avatar = this.$store.state.userAvatar;
@@ -113,6 +109,8 @@ export default {
       this.loadUserStatis()
     },600)
 
+  },
+  activated (){
     // this.loadUserInfo()
   }
 
