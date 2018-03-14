@@ -57,7 +57,7 @@ tokenAxios.interceptors.response.use(res =>{
     Vue.$vux.toast.text('网络不畅，请稍候再试');
     return Promise.reject(res)
   }
-   console.log(res)
+   // console.log(res)
    //对响应数据做些事
     if(res.data.code !==0){
       switch (res.data.code) {
@@ -67,12 +67,11 @@ tokenAxios.interceptors.response.use(res =>{
               Vue.$vux.toast.text('请先登入');
               router.push({ name: 'login'});
             }
-
           break;
         default:
 
       }
-       return Promise.reject(res)
+
     }
 
     return res
