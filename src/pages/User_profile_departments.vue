@@ -1,12 +1,10 @@
 <template>
-  <div class="page-view" id="Page-user-profile-departments">
+  <div class="page-view page-view-profile-edit" id="Page-user-profile-departments">
     <title-bar >请选择部门</title-bar>
 
     <div class="page-view-main"   >
       <group   class="cp-search-bar">
-        <div class="cp-form-group ">
             <x-input title="<i class='fa fa-search'></i>"   class="form-control-line" :show-clear="true"   placeholder="请输入关键字查找" name="Department"  v-model="keyword" ref="input" @on-change="doSearch"></x-input>
-        </div>
       </group>
       <cp-scroller :position="{top:'90px'}"  :enableRefresh="false" :enableInfinite="false" id="cp-scroll-wrapper">
 
