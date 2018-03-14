@@ -175,6 +175,26 @@ const routes = [
     meta: {keepAlive: true }
   },
 
+  // 重新绑定手机
+  {
+    path: '/user/profile/phone',
+    name: 'user_profile_phone',
+    component (resolve) {
+      require(['../pages/user_profile_phone'], resolve)
+    },
+    meta: {keepAlive: true }
+  },
+
+  // 下载app页
+  {
+    path: '/downloadapp',
+    name: 'downloadapp',
+    component (resolve) {
+      require(['../pages/downloadapp'], resolve)
+    },
+    meta: {keepAlive: true }
+  },
+
 ]
 
 let router = new VueRouter({
