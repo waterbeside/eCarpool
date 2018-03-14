@@ -130,7 +130,11 @@
     i.fa { color:#aaa;/* color:rgb(230, 136, 127)*/}
   }
   input.form-control {transition: all .8s; padding-left: 30px;}
+}
 
+.cp-article {
+  padding: 12px; line-height: 1.6;
+  p { margin-bottom: 8px;}
 }
 
 /*******/
@@ -658,6 +662,10 @@
     .cp-fabBtn-wrap  {margin: -4px 0 8px;}
     .cp-btns .cp-btn { width: 36px; height: 36px; line-height: 36px; margin:-8px 0 8px 12px;}
     // .cp-btn {  margin:0 10px; border-radius: 50%; border:1px solid @color-primary ; color: @color-primary; font-size: 22px; width:36px; height: 36px; line-height: 34px; text-align: center;}
+  }
+  .cp-goDetail-wrapper {
+    margin-top: -8px; padding-bottom: 4px; overflow: hidden; color:lighten(@color-primary,20%);
+    .tips-text { float: left; padding-left: 8px; color:#aaa}
   }
   .cp-btn-accept {   margin: -5px auto 10px; width: 180px;height: 34px; line-height: 34px;box-shadow: 0 0 2px rgba(0,0,0,0.2); background-color: @color-warning; border-color: @color-warning; color: #FFF}
   &.cancel {/* visibility: hidden;*/ animation: remove_routecard .8s linear 1; opacity: 0}
@@ -1327,11 +1335,26 @@
   }
 }
 
+.page-view-profile-edit {
+
+  .cp-input-wrapper {
+
+    // .form-control { padding:12px 10px ; height: 48px; font-size: 16px}
+  }
+
+}
+
 #Page-user-profile-edit {
   .cp-form-group { margin-top: 15px;}
-  .form-control { padding:12px 10px ; height: 48px; font-size: 16px}
   .help-block { color:lighten(@color-primary,35%); margin: 4px 0 24px 4px}
+}
 
+#Page-user-profile-phone {
+  .cp-form-group .vux-no-group-title { margin-top: 0;}
+  .btn-sendsms { position: absolute; right: 4px; top:5px;}
+  .cp-btn-wrapper { margin-top: 20px;
+    .weui-btn {padding: 0}
+  }
 }
 
 #Page-user-profile-departments {
@@ -1354,7 +1377,7 @@
 }
 
 /* 免责声明 */
- .cp-disclaimer .page-view-content {
+ .cp-disclaimer .page-view-main {
    background: #fbfbfb; color: #666; text-shadow: 1px 1px 0 #FFF;
    .container {padding-top: 16px;}
  }

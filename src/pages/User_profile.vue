@@ -18,7 +18,7 @@
           <cell title="姓名"  :is-loading="false" :value="userData.name"></cell>
           <popup-radio class="cp-select" title="性别" :options="sexs" v-model="userData.sex" placeholder="请选择性别" @on-change="onChangeSex"></popup-radio>
           <!-- <popup-picker title="性别" :data="sexs" v-model="sex"   @on-change="onChangeSex" :display-format="formatSexDisplay"  ></popup-picker> -->
-          <cell title="手机" @click.native="onClick" :is-loading="false" :value="userData.phone" is-link></cell>
+          <cell title="手机" @click.native="$router.push({name:'user_profile_phone'})" :is-loading="false" :value="userData.phone" is-link></cell>
         </group>
         <group class="cp-group">
           <!-- <cell title="公司" @click.native="goEdit('company')" :is-loading="false" :value="company" is-link></cell> -->
@@ -50,12 +50,11 @@ import cFuns from '../utils/cFuns'
 import {GroupTitle,PopupRadio,Selector} from 'vux'
 
 import CpRouteCard from '../components/CpRouteCard'
-import CpScroller from '../components/CpScroller'
 import CpAvatar from '../components/CpAvatar'
 
 export default {
   components: {
-    CpScroller,GroupTitle,CpAvatar,PopupRadio,Selector
+    GroupTitle,CpAvatar,PopupRadio,Selector
   },
   data () {
     return {
