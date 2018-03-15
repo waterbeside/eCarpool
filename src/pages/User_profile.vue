@@ -15,7 +15,9 @@
         </div>
         <group class="cp-group">
           <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-id-card"></i>个人信息</group-title>
-          <cell title="姓名"  :is-loading="false" :value="userData.name"></cell>
+          <cell title="姓名" @click.native="goEdit('name')" :is-loading="false" :value="userData.name" is-link></cell>
+
+          <!-- <cell title="姓名"  :is-loading="false" :value="userData.name"></cell> -->
           <popup-radio class="cp-select" title="性别" :options="sexs" v-model="userData.sex" placeholder="请选择性别" @on-change="onChangeSex"></popup-radio>
           <!-- <popup-picker title="性别" :data="sexs" v-model="sex"   @on-change="onChangeSex" :display-format="formatSexDisplay"  ></popup-picker> -->
           <cell title="手机" @click.native="$router.push({name:'user_profile_phone'})" :is-loading="false" :value="userData.phone" is-link></cell>
