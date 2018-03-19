@@ -1,4 +1,4 @@
-import Vue from 'vue'
+// import Vue from 'vue'
 import router from '../router'
 import {ToastPlugin} from 'vux'
 
@@ -62,7 +62,7 @@ tokenAxios.interceptors.response.use(res =>{
     if(res.data.code !==0){
       switch (res.data.code) {
         case 10004:
-            console.log(10004)
+            // console.log(10004)
             if(router.history.current.name!='login'){
               Vue.$vux.toast.text('请先登入');
               router.push({ name: 'login'});
