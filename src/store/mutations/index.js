@@ -11,6 +11,11 @@ export default {
   setJumpTo(state,datas){
     state.jumpTo = datas;
   },
+
+  //设置是否刷新拼车页面
+  setIsRefreshCarpoolList(state,datas){
+    state.isRefreshCarpoolList = datas;
+  },
   //设置用户基础数据
 /*  setUserBaseData(state,datas){
     state.userBaseData = datas;

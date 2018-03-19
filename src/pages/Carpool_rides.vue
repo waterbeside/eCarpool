@@ -81,7 +81,7 @@ export default {
       page    : 1,
       pageCount:1,
       isLoading : 0,
-      listDatas :{},
+      listDatas :[],
       noData:0,
       isShowSearchBox:0,
       scrollData: {
@@ -100,7 +100,6 @@ export default {
      * [goHome 返回首页]
      */
     goHome (){
-      console.log(1)
       this.$router.push({name:'carpool'})
     },
     /**
@@ -124,7 +123,6 @@ export default {
      * [doSearch 执行搜索]
      */
     doSearch (){
-      console.log(11)
       if(this.keyword_o !==  this.keyword ){
         this.keyword_o =  this.keyword
         this.getList(1)
@@ -233,12 +231,16 @@ export default {
   },
   created () {
     this.init();
-    this.getList(1);
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
   },
   activated (){
+    if(this.$store.state.isRefreshCarpoolList){
+      this.listDatas = [];
+      this.getList(1);
+      this.$store.commit('setIsRefreshCarpoolList',false);
+    }
     this.$el.querySelector('.load-more').style.display = 'none';
   }
 }

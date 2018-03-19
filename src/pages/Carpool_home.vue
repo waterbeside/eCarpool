@@ -75,6 +75,8 @@ export default {
   },
   activated (){
     this.$store.commit('setRouteFormData',{});
+    this.$store.commit('setIsRefreshCarpoolList',true);
+
     this.jumpTo();
 
   }
