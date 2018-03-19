@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
+
+// import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
@@ -8,7 +9,8 @@ import axios from 'axios';
 import { focus } from 'vue-focus';
 import tokenAxios from './utils/cTokenAxios';
 import VueAMap from 'vue-amap';
-import {Group, Cell, XInput, XButton,XNumber, XSwitch, PopupPicker,Datetime,DatetimePlugin ,Spinner,  Divider, AlertPlugin, ConfirmPlugin,ToastPlugin,Loading,InlineLoading,Toast} from 'vux'
+import {Group, Cell, XInput, XButton , PopupPicker, Spinner,  Divider, ConfirmPlugin,ToastPlugin,Loading,Toast} from 'vux'
+
 
 
 import config from './configs/index'
@@ -27,23 +29,16 @@ Vue.component('Group', Group)
 Vue.component('Cell', Cell)
 
 Vue.component('PopupPicker', PopupPicker)
-Vue.component('Datetime', Datetime)
-
 Vue.component('Divider', Divider)
-
 Vue.component('Spinner', Spinner)
 Vue.component('XInput', XInput)
 Vue.component('XButton', XButton)
-Vue.component('XNumber', XNumber)
-Vue.component('XSwitch', XSwitch)
 Vue.component('Loading', Loading)
-
 Vue.component('Toast', Toast)
 
 Vue.directive('focus', focus);
 
 Vue.use(ToastPlugin);
-Vue.use(DatetimePlugin);
 Vue.use(ConfirmPlugin);
 
 Vue.use(VueAMap);
@@ -67,6 +62,5 @@ new Vue({
   components: { App }
 })
 
-import "./assets/styles/font-awesome.min.css";
-import "./assets/styles/bootstrap.cp.min.css";
+import "./assets/styles/bootstrap/bootstrap.less";
 import "./assets/styles/style.less";
