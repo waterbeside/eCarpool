@@ -10,7 +10,7 @@
         <div class="page-view-header" >
 
           <div class="cp-heading " >
-            <cp-avatar :src="avatar"></cp-avatar>
+            <cp-avatar :src="avatar" @click.native="$router.push({ name:'user_profile_avatar'})" ></cp-avatar>
           </div>
         </div>
         <group class="cp-group">
@@ -27,7 +27,7 @@
           <popup-picker title="公司" :data="companys" v-model="company"    @on-change="onChangeCompany" :display-format="formatCompanyDisplay"  ></popup-picker>
 
           <cell title="部门" @click.native="$router.push({name:'user_profile_departments'})" :is-loading="false" :value="userData.Department" is-link v-show="userData.company_id > 0"></cell>
-          <cell title="工号" @click.native="goEdit('loginname')" :is-loading="false" :value="userData.loginname" is-link></cell>
+          <!-- <cell title="工号" @click.native="goEdit('loginname')" :is-loading="false" :value="userData.loginname" is-link></cell> -->
         </group>
         <group  class="cp-group">
           <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-car"></i>车辆信息</group-title>
@@ -187,7 +187,7 @@ export default {
            });
            this.companys = [companys];
          }
-         console.log(this.companys);
+         // console.log(this.companys);
        }
      })
     },
