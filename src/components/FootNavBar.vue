@@ -14,12 +14,12 @@
     </tabbar-item>
   </tabbar>-->
   <div class="cp-bar cp-bar-tab cp-footer"  id="footer">
-    <div class="router-link cp-bar-tab-item "  :class="{'active' : current=='im'}">
+    <!--<div class="router-link cp-bar-tab-item "  :class="{'active' : current=='im'}">
       <router-link :to="{ name: 'im' }">
         <i class="cp-iconfont fa fa-comment"></i>
         <div class="cp-bar-tab-label">溢信</div>
       </router-link>
-    </div>
+    </div>-->
     <div   class="router-link cp-bar-tab-item" :class="{'active' : current=='carpool'}">
       <router-link :to="{ name: 'carpool' }">
         <i class="cp-iconfont fa fa-car"></i>

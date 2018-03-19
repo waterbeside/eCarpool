@@ -77,10 +77,7 @@ export default {
         this.transitionName = 'backward'
         return;
       }
-      if(from.name == 'carpool_rides_detail' && to.name=="carpool_rides_comments"){
-        this.$route.meta.keepAlive = true;
-        console.log(1)
-      }
+    
       if(to.name == 'carpool_rides_detail' || to.name == 'carpool_requests_detail' || from.name== 'carpool_rides_detail' || from.name== 'carpool_requests_detail' ){
         this.transitionName = 'fade'
         return;

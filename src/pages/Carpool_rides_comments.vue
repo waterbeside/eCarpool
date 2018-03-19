@@ -142,7 +142,7 @@ export default {
         return false;
       }
       let userData =  _this.$store.state.userData;
-      console.log(userData)
+      // console.log(userData)
       var newData = {
         content : this.content.trim(),
         time : cFuns.formatDate((new Date()),"yyyy-mm-dd hh:ii"),
