@@ -1,10 +1,8 @@
 // import config from '../configs'
-let loginname = localStorage.getItem('CP_loginname');
+let uid = localStorage.getItem('CP_uid');
 var cModel = {
     config:{
-      // serverName : 'carpool_'+ GB_VAR['username'],
-      serverName : 'carpool_'+ loginname,
-
+      serverName : 'carpool_u'+ uid,
       version: 1
     },
     supports: function(){
