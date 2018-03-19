@@ -2,13 +2,16 @@
   <div class="page-view " id="Page-route-detail" >
     <!-- <title-bar  :left-options="{showBack: true}">详情</title-bar> -->
     <div class="page-view-main "   >
-      <cp-goback-btn :class="{'cp-sticky':isSticky}"></cp-goback-btn>
+      <title-bar  v-show="isSticky">
+        <div class="text-center" >{{user.name}}</div>
+      </title-bar>
+      <cp-goback-btn v-show="!isSticky" :class="{'cp-sticky':isSticky}"></cp-goback-btn>
 
       <cp-scroller :enableInfinite="false" :enableRefresh="false" id="cp-scroll-wrapper" @on-scroll="onScroll">
         <el-amap slot="before-inner" class="cp-map-content map-box" :vid="'amap-vue'" :events="mapEvents" :plugin="mapPlugin">  </el-amap>
 
         <div class="cp-main" >
-          <sticky scroll-box="cp-scroll-wrapper" ref="sticky" :offset="0" >
+          <div scroll-box="cp-scroll-wrapper" ref="sticky" :offset="0" >
             <div class="cp-heading-wrapper" :class="{'cp-sticky':isSticky}" >
               <div class="cp-heading " >
                   <cp-avatar :src="user.avatar"></cp-avatar>
@@ -27,7 +30,7 @@
               </tab>
             </div>
 
-          </sticky>
+          </div>
           <div class="cp-content-item" :key="0" v-show="tabIndex == 0">
 
               <div class="alert " :class="alertClass" v-show="isShowAlert" v-html="alertText">  </div>
@@ -112,7 +115,7 @@
 <script>
 import config from '../configs/index'
 import cFuns from '../utils/cFuns'
-import {Tab, TabItem,Sticky} from 'vux'
+import {Tab, TabItem} from 'vux'
 
 
 import CpAvatar from '../components/CpAvatar'
@@ -123,7 +126,7 @@ import StatisItem from '../components/StatisItem'
 
 export default {
   components: {
-    CpAvatar,CpRouteBox,StatisItem,Tab,TabItem,Sticky
+    CpAvatar,CpRouteBox,StatisItem,Tab,TabItem
   },
   data () {
     return {
@@ -132,6 +135,7 @@ export default {
       uid               : 0,
       tabIndex          : 0,
       isSticky          : false,
+      type              : "",
 
       detailData        : {
         time_format    : "0000-00-00 00:00",
@@ -214,20 +218,15 @@ export default {
 
   },
   computed :{
-    type (){
-      let path = this.$route.path;
-      if(path.indexOf('requests')>1){
-        return 'info';
-      }
-      if(path.indexOf('rides')>1){
-        return 'wall';
-      }
-    },
+
 
   },
   watch :{
     "detailData.status" (val,oldval){
       this.changeStatus(val);
+    },
+    type (val,oldval){
+      this.changeStatus(this.detailData.status);
     }
   },
   methods :{
@@ -247,6 +246,7 @@ export default {
       _this.isShowBtn_complete= false;
       _this.isShowBtn_phone = _this.uid == _this.user.uid ? false : true;
       _this.isShowAlert = _this.type=="info" ? true : false
+      // console.log(_this.type);
       switch (parseInt(status)) {
         case 0:
             _this.alertText = "该乘客正等待被搭载"
@@ -327,6 +327,7 @@ export default {
             _this.hasTake              = data.hasTake;
           }
           _this.status = data.status;
+          _this.mapObj.clearMap()
 
           let start = [data.start_info.longtitude,data.start_info.latitude]
           let end = [data.end_info.longtitude,data.end_info.latitude]
@@ -405,7 +406,7 @@ export default {
          if(res.data.code == 0){
            var data = res.data.data;
            _this.comments_total = data.total;
-           console.log(_this.comments_total)
+           // console.log(_this.comments_total)
          }
        });
      },
@@ -423,7 +424,7 @@ export default {
 
        let params = {wid:_this.id,num:5}
        _this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
-         console.log(res);
+         // console.log(res);
          _this.isLoading_comments = false;
          if(res.data.code == 0){
            var data = res.data.data;
@@ -532,11 +533,7 @@ export default {
   },
 
   created () {
-    console.log(this.type)
-    this.getDetail()
-    if(this.type=="wall"){
-      this.getCommentsCount();
-    }
+
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
@@ -545,6 +542,22 @@ export default {
 
   },
   activated (){
+    // console.log(this.type)
+
+    let path = this.$route.path;
+    if(path.indexOf('requests')>1){
+      this.type =  'info';
+    }
+    if(path.indexOf('rides')>1){
+      this.type =  'wall';
+    }
+
+    //
+    this.id = this.$route.params.id;
+    this.getDetail()
+    if(this.type=="wall"){
+      this.getCommentsCount();
+    }
   }
 }
 </script>
