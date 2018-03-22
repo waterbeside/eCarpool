@@ -822,15 +822,16 @@
       .weui-cell__hd { float: left; color: #888;
         // i {   }
       }
-      .vux-popup-picker-value { font-size: 14px}
+      .vux-popup-picker-value { font-size: 14px;  color: #444}
+      .vux-number-round { margin-top: 2px; * {box-sizing: content-box;}}
       .vux-number-selector {
-        width: 26px; height: 26px; line-height: 0; text-align: center; border-color:#FF9900; margin-top: -2px; margin-right: 0;
+        // width: 26px; height: 26px; line-height: 0; text-align: center;  margin-top: -2px; margin-right: 0;
+        border-color:#FF9900;
         svg {fill:#FF9900}
       }
       .vux-number-input {
-        font-size: 14px
+        font-size: 14px; line-height: 14px;
       }
-      .vux-number-round { margin-top: 2px}
       .cp-selectbtn { display: block;   color: #444; height: @btn-height; line-height: @btn-height; padding:0 8px 0 0; text-align: left; background: none; box-shadow: none;  margin: 0;
 
       }
@@ -1268,7 +1269,7 @@
 
 /* 用户个人资料页 */
 .page-view-header {
-  position: relative; height: 180px; background-color:lighten(@color-primary,16%); background-image: url(../images/carpool_bg.jpg); background-position: center ; background-size: cover;
+  position: relative; height: 160px; background-color:lighten(@color-primary,16%); background-image: url(../images/carpool_bg.jpg); background-position: center ; background-size: cover;
   .cp-btn-goback { display: inline-block; float: left; font-size: 20px;  color:#fff; padding: 0 12px; margin-right: 5px;line-height: 50px; overflow: hidden;
     svg { width: 40px; height: 20px;}
   }
@@ -1277,7 +1278,7 @@
 
 
 #Page-user-index {
-  @avatar-width : 90px;
+  @avatar-width : 84px;
   background: #fafafa;
   .page-view-header {
     .cp-heading  { position: absolute; padding: 0 20px; width: 100%;bottom:24px; color:#fff}
@@ -1353,7 +1354,8 @@
     label {margin: 0}
   }
   .cp-btn-wrapper { margin-top: 20px;
-    .weui-btn {padding: 0}
+    .cp-btn-submit {font-size: 16px; line-height: 1.8}
+    // .weui-btn {padding: 0}
   }
 
 }
@@ -1366,6 +1368,7 @@
 #Page-user-profile-phone {
   .cp-form-group .vux-no-group-title { margin-top: 0;}
   .btn-sendsms { position: absolute; right: 4px; top:5px;}
+
 }
 
 #Page-user-profile-password {

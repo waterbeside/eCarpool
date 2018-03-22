@@ -16,7 +16,7 @@
         <div class="container">
 
           <div class="cp-btn-wrapper">
-            <x-button text="完成" :disabled="!isEnableSubmit" @click.native="done" type="submit" class="btn btn-success" :show-loading="isSubmiting"></x-button>
+            <x-button text="完成" :disabled="!isEnableSubmit" @click.native="done" type="success" class="cp-btn-submit btn btn-success" :show-loading="isSubmiting"></x-button>
           </div>
         </div>
 

@@ -17,7 +17,7 @@
           ></vueCropper>
         </div>
         <div class="cp-btn-wrapper">
-          <x-button text="完成"   @click.native="done" type="submit" class="cp-btn-submit  btn-success" :show-loading="isSubmiting" v-show="isSelected"></x-button>
+          <button text="完成"   @click="done"  class="cp-btn-submit btn btn-success btn-lg btn-block" :disabled="isSubmiting"  v-show="isSelected">完成</button>
 
           <div class="cp-selectpic-btn">
             <label class="btn btn-default btn-block btn-lg" for="uploads" >选择图片</label>
