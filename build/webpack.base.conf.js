@@ -33,8 +33,8 @@ const webpackConfig = {
   },
   //无需打包的第三方类库
   externals: {
-    'vue': 'Vue',
-     'vue-router':"VueRouter"
+    // 'vue': 'Vue',
+     // 'vue-router':"VueRouter"
   },
   module: {
     rules: [

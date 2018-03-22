@@ -1,5 +1,5 @@
-// import Vue from 'vue'
-// import VueRouter from 'vue-router'
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
@@ -220,18 +220,18 @@ let router = new VueRouter({
   routes,
   mode: 'hash',
 	strict: process.env.NODE_ENV !== 'production',
-	scrollBehavior (to, from, savedPosition) {
-    console.log(savedPosition);
-	    if (savedPosition) {
+	/*scrollBehavior (to, from, savedPosition) {
+    // console.log(savedPosition);
+	  if (savedPosition) {
 		    return savedPosition
 		} else {
 			if (from.meta.keepAlive) {
-        console.log(document.querySelector(".cp-scroll"));
-				from.meta.savedPosition = document.querySelector(".cp-scroll").scrollTop;
+        // console.log(document.querySelector(".cp-scroll"));
+				// from.meta.savedPosition = document.querySelector(".cp-scroll").scrollTop;
 			}
-		    return { x: 0, y: to.meta.savedPosition || 0 }
+		  return { x: 0, y: to.meta.savedPosition || 0 }
 		}
-	}
+	}*/
 })
 
 
