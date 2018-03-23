@@ -87,23 +87,6 @@
 .cp-mask { position: fixed;   width: 100%;   height: 100%;   top: 0;   left: 0;   background: rgba(0, 0, 0, 0.3);      z-index: 10000;      }
 
 
-/* 重置bootstrap模态框 */
-.cp-modal {
-  .close {font-size: 18px}
-  .modal-dialog { margin-top: 100px}
-}
-
-.modal-content {
-  border-radius: 3px;
-  .modal-header {
-    border-bottom: none;
-  }
-  .modal-footer {
-    border-top: none;
-  }
-}
-
-
 
 
 /* 输入框 */
@@ -355,6 +338,8 @@
   }
 }
 
+//无数据提示
+.cp-nodata-tips { margin-top: 10px; text-align:  center;}
 
 /*路线盒*/
 .cp-route-box {clear: both;padding:0px 20px 10px 24px; border-bottom: 1px dotted #DDD; position: relative; display: flex;
@@ -990,67 +975,10 @@
 }
 
 
-/* 列表加载更多loading样式 */
-.cp-loading-l {
-    @point-width:12px;
-    clear:both;width: 150px;  height: @point-width;   margin: 80px auto ;   text-align: center;
-    span{
-        display: inline-block;  width: @point-width;  height: 100%;  margin-right: 5px; background: @color-primary;   animation: loadingMore 1.04s ease infinite;
-    }
-    span:last-child{ margin-right: 0px;}
-    span:nth-child(1){animation-delay:0.13s;}
-    span:nth-child(2){animation-delay:0.26s;}
-    span:nth-child(3){animation-delay:0.39s;}
-    span:nth-child(4){animation-delay:0.52s;}
-    span:nth-child(5){animation-delay:0.65s;}
-}
-
-.cp-error-tips , .cp-nodata-tips {
-  text-align: center; margin-top: 50px;
-}
-
-
-@keyframes loadingMore{
-  0%{
-      opacity: 1;
-  }
-  100%{
-      opacity: 0;
-  }
-}
-@-webkit-keyframes loadingMore{
-  0%{
-      opacity: 1;
-  }
-  100%{
-      opacity: 0;
-  }
-}
-
-.cp-loading-more { display: none; padding: 15px 0 50px; text-align:center; font-size: 28px; color: #ccc;
-  &.show {display: block}
-}
-
 /*page-wrapper*/
-.page-wrapper { height: 100%;min-height: 600px;   }
-.page-content {height: 100%; overflow: hidden;}
 .cp-scroller-wrap {display: block;height: 100%; width: 100%;	padding: 0 ;	overflow: hidden; overflow-y: auto;
   .cp-list-wrap {overflow: hidden;padding-bottom: 30px; }
 }
-
-/* 下拉刷新样式 */
-.cp-reloading-wrap { display: block;height: 30px; line-height: 30px; width: 100%; margin-top: -@topbar-height; margin-bottom: 15px; text-align: center; font-size: 16px; color: #888;
-  .cp-loading { display: none;}
-  .cp-refresh-pull-up & .cp-down .fa {
-    transform: rotate(180deg);
-    -webkit-transform: rotate(180deg);
-  }
-  .cp-refreshing & {
-    .cp-down {display: none;}
-    .cp-loading { display: block;}
-  }
-}
-
 
 
 
@@ -1064,7 +992,6 @@
   .unit {display: block; font-size: 12px; color:lighten(@color-primary,30%); }
   .num { font-size: 22px; padding-top: 5px; color:lighten(@color-primary,20%); display: block; }
   small { margin-left: 3px; font-size: 10px;  color: lighten(@color-primary,30%);}
-
 }
 
 /* 选项列表 */
@@ -1111,8 +1038,8 @@
   }
 
   .cp-heading-wrapper.cp-sticky {
-    top:0; width: 100%;
-    position: sticky;
+      width: 100%;
+    // position: sticky;
      // transform: translate(0,-30px);
       .cp-avatar { transform:  /*translate(0,0)*/ translate(0,100px); opacity: 0; z-index: 0; position: relative;}
       .cp-txt h3 { font-size: 18px;transform: translate(0,0);}
@@ -1203,7 +1130,7 @@
     b { padding: 2px 4px; border-radius: 5px;background: lighten(@color-primary,60%); color: lighten(@color-primary,20%); border:1px solid lighten(@color-primary,40%)}
   }
   .cp-comment-list { margin-bottom: 12px}
-  .cp-nodata-tips { margin-top: 10px;}
+
   .cp-commentLists-tips { padding: 10px; text-align: center; border-bottom: 1px solid #eee; background: #f2f2ed; color: #c3c2bc;}
 }
 
