@@ -33,7 +33,7 @@
           </div>
           <div class="cp-content-item" :key="0" v-show="tabIndex == 0">
 
-              <div class="alert " :class="alertClass" v-show="isShowAlert" v-html="alertText">  </div>
+              <div class="alert " :class="alertClass" v-show="isShowAlert" ><span v-html="alertText"></span>  <a v-show="isShowBtn_cancel_alert" @click="btnAction('cancel')" style='margin-left:4px' class='btn btn-sm btn-info'>取消</a></div>
               <div class="cp-cell cp-cell-time">
                   <div class="la"><i class="fa fa-clock-o"></i></div>
                   <span class="cp-time">{{detailData.time_format}}</span>
@@ -132,6 +132,7 @@ export default {
     return {
 
       id                : this.$route.params.id,
+      infoid            : 0,
       uid               : 0,
       tabIndex          : 0,
       isSticky          : false,
@@ -174,6 +175,7 @@ export default {
       isShowBtn_riding  :false,
       isShowBtn_cancel  :false,
       isShowBtn_complete :false,
+      isShowBtn_cancel_alert:false,
 
       //statis-item组件相关
       statis            :{
@@ -237,6 +239,7 @@ export default {
         this.$router ? this.$router.back() : window.history.back();
     },
     changeStatus(status){
+      console.log(this.type);
       let _this = this;
       _this.isShowBtn_phone   = false;
       _this.isShowBtn_goback  = false;
@@ -244,6 +247,7 @@ export default {
       _this.isShowBtn_riding  = false;
       _this.isShowBtn_cancel  = false;
       _this.isShowBtn_complete= false;
+      _this.isShowBtn_cancel_alert = false;
       _this.isShowBtn_phone = _this.uid == _this.user.uid ? false : true;
       _this.isShowAlert = _this.type=="info" ? true : false
       // console.log(_this.type);
@@ -252,7 +256,15 @@ export default {
             _this.alertText = "该乘客正等待被搭载"
             _this.isShowBtn_cancel = _this.uid == _this.user.uid ? true : false;
             if(_this.type=="wall"){
-              _this.isShowBtn_riding = _this.uid == _this.user.uid ? false : true;
+              if(_this.detailData.hasTake==="1"){
+                  _this.isShowAlert = true;
+                  _this.alertClass  = "alert-info"
+                  _this.alertText = "你已搭该司机的车";
+                  _this.isShowBtn_cancel_alert = true;
+                  _this.isShowBtn_goback =  true;
+              }else{
+                _this.isShowBtn_riding = _this.uid == _this.user.uid ? false : true;
+              }
             }
             if(_this.type=="info"){
               _this.isShowBtn_pickup = _this.uid == _this.user.uid ? false : true;
@@ -262,10 +274,11 @@ export default {
           break;
         case 1:
             if(_this.type=="wall"){
-              if(_this.hasTake){
+              if(_this.detailData.hasTake==="1"){
                   _this.isShowAlert = true;
                   _this.alertClass  = "alert-info"
-                  _this.alertText = "你已搭该司机的车<a style='margin-left:4px' class='btn btn-sm btn-info'>取消</a>";
+                  _this.alertText = "你已搭该司机的车";
+                  _this.isShowBtn_cancel_alert = true;
                   _this.isShowBtn_goback =  true;
               }else{
                 _this.isShowBtn_riding = _this.uid == _this.user.uid ? false : true;
@@ -282,6 +295,7 @@ export default {
             _this.statusIcon  = "fa fa-car";
           break;
         case 2:
+        alert(_this.isShowBtn_cancel_alert);
             _this.alertText = "行程已取消"
             _this.isShowBtn_goback =  true;
             _this.statusText  = "已取消";
@@ -324,9 +338,10 @@ export default {
             _this.statis.seat_count    = data.seat_count;
             _this.statis.took_count    = data.took_count;
             _this.statis.surplus_count = data.seat_count - data.took_count;
-            _this.hasTake              = data.hasTake;
+
           }
-          _this.status = data.status;
+          this.changeStatus(data.status)
+          // _this.status = data.status;
           _this.mapObj.clearMap()
 
           let start = [data.start_info.longtitude,data.start_info.latitude]
@@ -472,7 +487,8 @@ export default {
            successText = "本次行程已完成"
            isJumpToMyroute = false;
            var success = function(rs){
-             _this.status = 3;
+             _this.detailData.status = 3;
+             _this.changeStatus(3);
            }
            break;
          case 'cancel':
@@ -482,7 +498,18 @@ export default {
            successText = "取消成功"
            isJumpToMyroute = false;
            var success = function(rs){
-             _this.status = 2;
+             if( _this.uid == _this.user.uid){
+               _this.detailData.status = 2;
+               _this.changeStatus(2);
+             }else{
+               _this.statis.took_count = _this.statis.took_count - 1;
+               _this.detailData.hasTake = 0;
+               // _this.passengers  = _this.passengers.filter(t => t.uid != _this.uid);
+               _this.passengers_time = 0;
+               _this.isShowBtn_cancel_alert = false;
+
+               _this.changeStatus(_this.detailData.status);
+             }
            }
            break;
        }
@@ -534,9 +561,7 @@ export default {
 
   created () {
 
-    // this.$nextTick(function () {
-    //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
-    // })
+  
   },
   mounted () {
 
@@ -545,6 +570,10 @@ export default {
     // console.log(this.type)
 
     let path = this.$route.path;
+    this.tabIndex   = 0;
+    this.isSticky   = false;
+    this.passengers = [];
+    this.passengers_time = 0 ;
     if(path.indexOf('requests')>1){
       this.type =  'info';
     }
