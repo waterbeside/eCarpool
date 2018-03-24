@@ -194,11 +194,11 @@ export default {
     // })
   },
   activated (){
-    if(this.$store.state.isRefreshCarpoolList){
+    // if(this.$store.state.isRefreshCarpoolList){
       this.listDatas = [];
       this.getList();
       this.$store.commit('setIsRefreshCarpoolList',false);
-    }
+    // }
     this.$el.querySelector('.load-more').style.display = 'none';
   }
 }
