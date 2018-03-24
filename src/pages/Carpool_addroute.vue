@@ -94,8 +94,7 @@
               </div>
 
 
-              <button class="cp-btn  cp-btn-submit"   :disabled="disableSubmitBtn" style="border-radius:99px;" @click.native="doSubmit"><i class="cp-icon fa fa-paper-plane"></i>发布</button>
-
+              <button class="cp-btn  cp-btn-submit "   :disabled="disableSubmitBtn" style="border-radius:99px;" @click="doSubmit"><i class="cp-icon fa fa-paper-plane"></i>发布</button>
 
             </div>
           </form>
