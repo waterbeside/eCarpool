@@ -2,7 +2,7 @@
   "name": "carpool",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "Kan  <waterbeside@163.com>",
+  "author": "Kan  <waterbeside@126.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -17,6 +17,7 @@
     "qs": "^6.5.1",
     "vue": "^2.5.2",
     "vue-amap": "^0.4.5",
+    "vue-cropper": "^0.2.9",
     "vue-focus": "^2.1.0",
     "vue-i18n": "^7.4.2",
     "vue-router": "^3.0.1",

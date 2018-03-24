@@ -81,7 +81,7 @@ export default {
                 if (data['province'] && typeof data['province'] === 'string') {
                   _this.$store.commit('setLocalCity',data);
                   _this.city = data.city
-                  console.log(_this.city);
+                  // console.log(_this.city);
                   _this.searchMap(1)
                 }
             });
@@ -93,7 +93,7 @@ export default {
           // console.log(o.getCenter())
         },
         'click': (e) => {
-          console.log(e)
+          // console.log(e)
           let position = [e.lnglat.lng,e.lnglat.lat];
           let _this = this;
           _this.myMarker.position = position;
@@ -117,7 +117,7 @@ export default {
             locate:false,
             events: {
               init(o) {
-                console.log(o);
+                // console.log(o);
               },
 
             }
@@ -167,7 +167,6 @@ export default {
           // marker.setPosition(lnglat);
           geocoder.getAddress(lnglat,function(status,result){
             // console.log(result);
-            console.log(result);
             if(typeof(callback)=="function"){
               callback(status,result);
             }
@@ -239,7 +238,7 @@ export default {
 
             // console.log(formData);
             this.$store.commit('setRouteFormData',formData);
-            console.log(formData);
+            // console.log(formData);
             this.$router.go(-2);
 
 
@@ -275,7 +274,7 @@ export default {
         }
 
         _this.keyword_o = _this.keyword;
-        console.log(_this.keyword)
+        // console.log(_this.keyword)
         //关键字查询
         placeSearch.search(_this.keyword, function(status, result) {
           if( typeof(result.poiList)!='undefined' && result.poiList.pois.length>0){

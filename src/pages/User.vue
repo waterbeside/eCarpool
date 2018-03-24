@@ -9,7 +9,7 @@
             </div>
         </div>
       </div>
-      <div class="page-view-content"  >
+      <div class="page-view-content" style="margin-bottom:80px;" >
           <div class=" cp-statis-list">
             <statis-item class="cp-statis-item col-xs-4" :num="statis.people" unit="人次" icon="fa fa-male" :duration="1"></statis-item>
             <statis-item class="cp-statis-item col-xs-4" :num="statis.distance" unit="公里" icon="fa fa-map" :duration="1"></statis-item>
@@ -17,9 +17,10 @@
           </div>
           <ul class="cp-options-list">
             <li><router-link  class="btn btn-ripple" :to="{ name:'user_profile'}"><i class="fa fa-cog"></i>个人信息</router-link></li>
+            <li><router-link  class="btn btn-ripple" :to="{ name:'user_profile_password'}"><i class="fa fa-key"></i>更改密码</router-link></li>
             <li><router-link  class="btn btn-ripple" to="/disclaimer"><i class="fa fa-legal"></i>免责声明</router-link></li>
             <li><router-link  class="btn btn-ripple" to="/downloadapp"><i class="fa fa-download"></i>下载APP</router-link></li>
-            <li><a class="btn btn-ripple" href="javascript:void(0);" ><i class="fa fa-sign-out"></i>退出登录</a></li>
+            <li><a class="btn btn-ripple" @click="logout" ><i class="fa fa-sign-out"></i>退出登录</a></li>
           </ul>
       </div>
     <foot-nav-bar current="user"></foot-nav-bar>
@@ -81,7 +82,7 @@ export default {
    loadUserStatis : function(){
      var that = this;
      this.$tokenAxios.get(config.urls.getUserStatis,{}).then(res => {
-       console.log(res)
+       // console.log(res)
        let data = res.data.data;
        if(res.data.code === 0) {
          this.statis.people = parseInt(data.total_trips)
@@ -93,6 +94,30 @@ export default {
        console.log(error)
      })
    },
+
+   /**
+    * [avatar description]
+    * @type {[type]}
+    */
+   logout (){
+
+     this.$vux.confirm.show({
+       title  : '请确认',
+       content: '是否退出',
+       onConfirm: ()=>{
+         this.$tokenAxios.get(config.urls.logout).then(res => { });
+         let uid = localStorage.getItem('CP_uid');
+
+         window.localStorage.removeItem('CP_U_TOKEN');
+         window.localStorage.removeItem('CP_uid');
+         window.localStorage.removeItem('CP_'+uid+'_');
+         this.$store.commit("setUserData",null);
+         this.$store.commit("setUserAvatar",null);
+         this.$router.push({"name":"login"});
+
+       }
+     })
+   }
 
 
   },

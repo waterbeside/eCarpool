@@ -83,7 +83,7 @@ export default {
       enableInfinite:false,
       isLoading:true,
       isSearching:false,
-      loginname:localStorage.getItem('CP_loginname'),
+      uid:localStorage.getItem('CP_uid'),
     }
   },
   computed:{
@@ -161,7 +161,7 @@ export default {
       cModel.myAddress('getAll',{
         orderBy:'listorder',
         success:function(results,server){
-          var overTime = window.localStorage.getItem('CP_'+_this.loginname+'_addressOverTime'); //上次记录本地数据的时间
+          var overTime = window.localStorage.getItem('CP_'+_this.uid+'_addressOverTime'); //上次记录本地数据的时间
           overTime = overTime ? overTime : 0;
           // console.log(overTime)
           //当本地数据为空，或者数据过期时，重新获取
@@ -222,7 +222,7 @@ export default {
             let data = res.data.data;
 
             cModel.myAddress('clear');
-            window.localStorage.setItem('CP_'+this.loginname+'_addressOverTime',nowTimestamp);
+            window.localStorage.setItem('CP_'+this.uid+'_addressOverTime',nowTimestamp);
 
             _this.listDatas = data.lists.map(function(value,key,arr){
               value.listorder = key;
@@ -247,8 +247,7 @@ export default {
                  });
                  _this.listDatas.forEach(function(value,key,arr){
                    // console.log(value)
-                   console.log(value.address_type)
-
+                   // console.log(value.address_type)
 
                    if(value.address_type!='Home' && value.address_type!='Work'){
                      if(value.addressid==arr[0].addressid || value.addressid==arr[1].addressid){
@@ -312,7 +311,7 @@ export default {
           autocomplete.search(keyword, function(status, result){
             if(status == 'complete'){
               _this.smListDatas = [];
-              console.log(result.tips);
+              // console.log(result.tips);
                result.tips.forEach(function(value,index,arr){
                 if(value.location.lat && value.location.lng){
                   let itemValue =  {
@@ -355,7 +354,7 @@ export default {
       }
       //如果是修改公司和家的地址。
       if(to=="home"||to=="work"){
-        console.log(data);
+        // console.log(data);
         //取得用户信息
         var userData = this.$store.state.userData;
         //要提交的数据

@@ -44,6 +44,11 @@ var fieldArray = {
     placeholder:"汽车颜色",
     tips:''
   },
+  'name':{
+    title : "修改姓名",
+    placeholder:"请输入您的姓名",
+    tips:''
+  },
 }
 export default {
   components: {

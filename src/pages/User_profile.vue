@@ -10,12 +10,14 @@
         <div class="page-view-header" >
 
           <div class="cp-heading " >
-            <cp-avatar :src="avatar"></cp-avatar>
+            <cp-avatar :src="avatar" @click.native="$router.push({ name:'user_profile_avatar'})" ></cp-avatar>
           </div>
         </div>
         <group class="cp-group">
           <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-id-card"></i>个人信息</group-title>
-          <cell title="姓名"  :is-loading="false" :value="userData.name"></cell>
+          <cell title="姓名" @click.native="goEdit('name')" :is-loading="false" :value="userData.name" is-link></cell>
+
+          <!-- <cell title="姓名"  :is-loading="false" :value="userData.name"></cell> -->
           <popup-radio class="cp-select" title="性别" :options="sexs" v-model="userData.sex" placeholder="请选择性别" @on-change="onChangeSex"></popup-radio>
           <!-- <popup-picker title="性别" :data="sexs" v-model="sex"   @on-change="onChangeSex" :display-format="formatSexDisplay"  ></popup-picker> -->
           <cell title="手机" @click.native="$router.push({name:'user_profile_phone'})" :is-loading="false" :value="userData.phone" is-link></cell>
@@ -25,7 +27,7 @@
           <popup-picker title="公司" :data="companys" v-model="company"    @on-change="onChangeCompany" :display-format="formatCompanyDisplay"  ></popup-picker>
 
           <cell title="部门" @click.native="$router.push({name:'user_profile_departments'})" :is-loading="false" :value="userData.Department" is-link v-show="userData.company_id > 0"></cell>
-          <cell title="工号" @click.native="goEdit('loginname')" :is-loading="false" :value="userData.loginname" is-link></cell>
+          <!-- <cell title="工号" @click.native="goEdit('loginname')" :is-loading="false" :value="userData.loginname" is-link></cell> -->
         </group>
         <group  class="cp-group">
           <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-car"></i>车辆信息</group-title>
@@ -185,7 +187,7 @@ export default {
            });
            this.companys = [companys];
          }
-         console.log(this.companys);
+         // console.log(this.companys);
        }
      })
     },

@@ -62,7 +62,7 @@ export default {
       page    : 1,
       pageCount:1,
       isLoading : 0,
-      listDatas :{},
+      listDatas :[],
       noData:0,
       scrollData: {
           noFlag: false //暂无更多数据显示
@@ -81,7 +81,6 @@ export default {
      * [goHome 返回首页]
      */
     goHome (){
-      console.log(1)
       this.$router.push({name:'carpool'})
     },
     /**
@@ -129,7 +128,6 @@ export default {
           // return false;
 
           _this.$tokenAxios.post(config.urls.acceptRequest,{id:id}).then(res => {
-            console.log()
             _this.$store.commit('setLoading',{isShow:false});
             if(res.data.code === 0) {
               _this.listDatas[index].status = 1
@@ -225,12 +223,16 @@ export default {
   },
   created () {
     this.init();
-    this.getList(1);
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
   },
   activated (){
+    if(this.$store.state.isRefreshCarpoolList){
+      this.listDatas = [];
+      this.getList(1);
+      this.$store.commit('setIsRefreshCarpoolList',false);
+    }
     this.$el.querySelector('.load-more').style.display = 'none';
   }
 }

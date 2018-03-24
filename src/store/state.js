@@ -10,6 +10,9 @@ export default {
     isShow:false,
     text:"加载中"
   },
+  
+  //是否刷新拼车页面
+  isRefreshCarpoolList: true,
 
   //当前城市
   localCity : null,

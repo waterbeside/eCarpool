@@ -87,23 +87,6 @@
 .cp-mask { position: fixed;   width: 100%;   height: 100%;   top: 0;   left: 0;   background: rgba(0, 0, 0, 0.3);      z-index: 10000;      }
 
 
-/* 重置bootstrap模态框 */
-.cp-modal {
-  .close {font-size: 18px}
-  .modal-dialog { margin-top: 100px}
-}
-
-.modal-content {
-  border-radius: 3px;
-  .modal-header {
-    border-bottom: none;
-  }
-  .modal-footer {
-    border-top: none;
-  }
-}
-
-
 
 
 /* 输入框 */
@@ -355,6 +338,8 @@
   }
 }
 
+//无数据提示
+.cp-nodata-tips { margin-top: 10px; text-align:  center;}
 
 /*路线盒*/
 .cp-route-box {clear: both;padding:0px 20px 10px 24px; border-bottom: 1px dotted #DDD; position: relative; display: flex;
@@ -716,6 +701,7 @@
 .cp-map-wapper , .map-box{ position: absolute; top:0; left: 0; bottom: 0; right: 0;  width: 100%; overflow: hidden; z-index: 1;
   .amap-logo,.amap-copyright { display: none!important;}
   .amap-toolbar-geo {width: 32px; height: 32px;opacity: .7;}
+  .amap-touch-toolbar .amap-toolbar-geo-secc {    background-size: 18px 18px!important}
   .amap-zoomcontrol {
     width: 32px; opacity: .7;
     /*.amap-zoom-touch-plus ,.amap-zoom-touch-minus { background-color:rgba(0,0,0,.6);
@@ -726,8 +712,6 @@
 
 .cp-map-wrapper-addroute {
   top:-100px;
-
-
 }
 
 .cp-map-addAddress-wapper { top:34px;}
@@ -789,86 +773,97 @@
     opacity: 0;
   }
 }
-// 表单
-.cp-map-form {
-  @margin:0;
-  @btn-height : 44px;
-  position: fixed; bottom:@margin; left:@margin; right:@margin; z-index: 2;box-shadow: 0 2px 18px rgba(0,0,0,0.2);
-  .cp-userbar { height: 20px; position: relative; background: lighten(@color-primary,12%); color:lighten(@color-primary,42%); padding:0 12px 0 60px; font-size: 12px; line-height: 20px; text-align: left;
-    .cp-avatar-wrap {position: absolute; bottom:-9px; left:8px;text-align: center;}
-    .cp-avatar { width: 44px; height:44px; border-radius: 50%; border:3px solid lighten(@color-primary,12%);}
-  }
-  .cp-map-form-inner {background: rgba(255,255,255,0.8); border-radius: 0; padding: 12px 10px 2px ; }
-  .form-group { margin-top: 8px;  }
-  .form-control  { padding: 3px 0; }
 
-  .cp-selectbtn-wrap {
-
-    border-bottom: 1px solid #eaeaea; clear: both;
-    .weui-cell {padding: 0;}
-    .vux-cell-box {padding: 0 4px}
-    .vux-cell-box:before { border:none; }
-    .weui-cell__hd { float: left; color: #888;
-      i {   }
-    }
-    .vux-popup-picker-value { font-size: 16px}
-    .vux-number-selector {
-      width: 26px; height: 26px; line-height: 0; text-align: center; border-color:#FF9900; margin-top: -2px; margin-right: 0;
-      svg {fill:#FF9900}
-    }
-    .vux-number-input {
-      font-size: 16px
-    }
-    .vux-number-round { margin-top: -10px}
-    .cp-selectbtn { display: block;   color: #444; height: @btn-height; line-height: @btn-height; padding:0 10px 0 4px; text-align: left; background: none; box-shadow: none;  margin: 0;
-
-    }
-    &.isNull .cp-selectbtn {
-      .cp-text {color: #777}
-    }
-    .cp-label { font-size:14px;
-      i {display: inline-block;width: 26px; text-align: center;   }
-      .cp-title { color: #777; vertical-align:middle; text-align: left}
-    }
-  }
-
-
-
-  .cp-route-wrapper { position: relative;
-    .cp-btn-change {
-      @exTop : @btn-height - 12;
-      position: absolute; top:@exTop; left:70px;width: 26px; height: 26px; padding-top: 2px; line-height: 26px;
-        background: #FFF; border-radius: 50%; text-align: center;/* border: 1px solid lighten(@color-primary,20%);*/
-        svg {height: 20px;width: 20px; fill: lighten(@color-primary,15%)}
-    }
-    .cp-text { float: right; font-size: 16px;}
-    &.exchanging {
-      .cp-startp-wrap {
-        .cp-text {animation: exchange_s .4s linear 1}
-      }
-      .cp-endp-wrap {
-        .cp-text {animation: exchange_e .4s linear 1}
-      }
-    }
-  }
-  .cp-needTime-sWrap , .cp-seatCount-sWrap {
-    .fa {color: #779dc2;}
-  }
-  .cp-seatCount-sWrap { }
-
-  .cp-startp-wrap , .cp-endp-wrap { clear: both ;.btn{font-size:14px} }
-  .cp-startp-wrap .fa-map-marker { color: rgb(94,155,248); /*desaturate(#00f,50%)*/}
-  .cp-endp-wrap {
-    .fa-map-marker { color: rgb(215,61,67);}
-  }
-
-  .cp-btn-submit { margin-top: 20px;  }
-
-}
 #Page-route-add {
   .cp-tools-wrapper { position: absolute; z-index: 100;right:12px; top:12px;  width: 32px; height: 32px;
     line-height: 34px;text-align: center; background: rgba(0,0,0,.75); border-radius: 4px;
     svg { margin: 5px auto 0;width: 20px; height: 20px; fill:#fff}
+  }
+
+  /*.cp-scroll {transition: all .5s;}
+  .cp-scroll-inner { z-index: 2 ; margin-top: 740px; transition: all .5s;}
+  .cp-main { position: relative; min-height: 520px; background: #FFF; height: 100%; box-shadow: 0 -4px 4px rgba(0,0,0,0.1)}
+  .cp-map-wapper { position: fixed; top:0; bottom: 0; width:100%; z-index: 1;}*/
+  // 表单
+  .cp-map-form {
+    @margin:0;
+    @btn-height : 34px;
+    position: fixed; bottom:0; left:@margin; right:@margin; z-index: 2;box-shadow: 0 2px 18px rgba(0,0,0,0.2);
+    .cp-userbar { height: 20px; position: relative; background: lighten(@color-primary,12%); color:lighten(@color-primary,42%); padding:0 12px 0 60px;
+       font-size: 12px; line-height: 20px; text-align: left;
+       // border-radius:4px 4px 0 0 ;
+      .cp-avatar-wrap {position: absolute; bottom:-9px; left:8px;text-align: center;}
+      .cp-avatar { width: 44px; height:44px; border-radius: 50%; border:3px solid lighten(@color-primary,12%);}
+    }
+    .cp-map-form-inner {background: rgba(255,255,255,0.9); border-radius:0 0 4px 4px; padding: 12px 10px 2px ; }
+    .form-group { margin-top: 8px;  }
+    .form-control  { padding: 3px 0; }
+
+    .cp-selectbtn-wrap {
+      border-bottom: 1px solid #eaeaea; clear: both;
+      .weui-cell {padding: 0;}
+      .vux-cell-box {padding: 0 4px}
+      .vux-cell-box:before { border:none; }
+      .weui-cell__hd { float: left; color: #888;
+        // i {   }
+      }
+      .vux-popup-picker-value { font-size: 14px;  color: #444}
+      .vux-number-round { margin-top: 2px; * {box-sizing: content-box;}}
+      .vux-number-selector {
+        // width: 26px; height: 26px; line-height: 0; text-align: center;  margin-top: -2px; margin-right: 0;
+        border-color:#FF9900;
+        svg {fill:#FF9900}
+      }
+      .vux-number-input {
+        font-size: 14px; line-height: 14px;
+      }
+      .cp-selectbtn { display: block;   color: #444; height: @btn-height; line-height: @btn-height; padding:0 8px 0 0; text-align: left; background: none; box-shadow: none;  margin: 0;
+
+      }
+      &.isNull .cp-selectbtn {
+        .cp-text {color: #777;}
+      }
+      .cp-label { font-size:14px;
+        i {display: inline-block;width: 26px; text-align: center;   }
+        .cp-title { color: #777; vertical-align:middle; text-align: left}
+      }
+    }
+
+
+
+    .cp-route-wrapper { position: relative;
+      .cp-btn-change {
+        @exTop : @btn-height - 12;
+        position: absolute; top:@exTop; left:70px;width: 30px; height: 30px; padding-top: 2px; line-height: 26px;
+          background: #FFF; border-radius: 50%; text-align: center;/* border: 1px solid lighten(@color-primary,20%);*/
+          svg {height: 24px;width: 24px; fill: lighten(@color-primary,15%)}
+      }
+      .cp-text { float: right; font-size: 14px;}
+      &.exchanging {
+        .cp-startp-wrap {
+          .cp-text {animation: exchange_s .4s linear 1}
+        }
+        .cp-endp-wrap {
+          .cp-text {animation: exchange_e .4s linear 1}
+        }
+      }
+    }
+    .cp-needTime-sWrap , .cp-seatCount-sWrap {
+      .fa {color: #779dc2;}
+    }
+    .cp-seatCount-sWrap { }
+
+    .cp-startp-wrap , .cp-endp-wrap { clear: both ;.btn{font-size:14px} }
+    .cp-startp-wrap .fa-map-marker { color: rgb(94,155,248); /*desaturate(#00f,50%)*/}
+    .cp-endp-wrap {
+      .fa-map-marker { color: rgb(215,61,67);}
+    }
+
+    .cp-btn-submit { margin-top: 16px; display: block; width: 100%; background: @color-primary;  color: #FFF; border:none; height: 40px; line-height:40px;
+      .cp-icon {line-height:40px; height: 40px; margin-left: 16px}
+      &:disabled { background: lighten(@color-primary,26%);  }
+     }
+
   }
 }
 
@@ -980,67 +975,10 @@
 }
 
 
-/* 列表加载更多loading样式 */
-.cp-loading-l {
-    @point-width:12px;
-    clear:both;width: 150px;  height: @point-width;   margin: 80px auto ;   text-align: center;
-    span{
-        display: inline-block;  width: @point-width;  height: 100%;  margin-right: 5px; background: @color-primary;   animation: loadingMore 1.04s ease infinite;
-    }
-    span:last-child{ margin-right: 0px;}
-    span:nth-child(1){animation-delay:0.13s;}
-    span:nth-child(2){animation-delay:0.26s;}
-    span:nth-child(3){animation-delay:0.39s;}
-    span:nth-child(4){animation-delay:0.52s;}
-    span:nth-child(5){animation-delay:0.65s;}
-}
-
-.cp-error-tips , .cp-nodata-tips {
-  text-align: center; margin-top: 50px;
-}
-
-
-@keyframes loadingMore{
-  0%{
-      opacity: 1;
-  }
-  100%{
-      opacity: 0;
-  }
-}
-@-webkit-keyframes loadingMore{
-  0%{
-      opacity: 1;
-  }
-  100%{
-      opacity: 0;
-  }
-}
-
-.cp-loading-more { display: none; padding: 15px 0 50px; text-align:center; font-size: 28px; color: #ccc;
-  &.show {display: block}
-}
-
 /*page-wrapper*/
-.page-wrapper { height: 100%;min-height: 600px;   }
-.page-content {height: 100%; overflow: hidden;}
 .cp-scroller-wrap {display: block;height: 100%; width: 100%;	padding: 0 ;	overflow: hidden; overflow-y: auto;
   .cp-list-wrap {overflow: hidden;padding-bottom: 30px; }
 }
-
-/* 下拉刷新样式 */
-.cp-reloading-wrap { display: block;height: 30px; line-height: 30px; width: 100%; margin-top: -@topbar-height; margin-bottom: 15px; text-align: center; font-size: 16px; color: #888;
-  .cp-loading { display: none;}
-  .cp-refresh-pull-up & .cp-down .fa {
-    transform: rotate(180deg);
-    -webkit-transform: rotate(180deg);
-  }
-  .cp-refreshing & {
-    .cp-down {display: none;}
-    .cp-loading { display: block;}
-  }
-}
-
 
 
 
@@ -1054,7 +992,6 @@
   .unit {display: block; font-size: 12px; color:lighten(@color-primary,30%); }
   .num { font-size: 22px; padding-top: 5px; color:lighten(@color-primary,20%); display: block; }
   small { margin-left: 3px; font-size: 10px;  color: lighten(@color-primary,30%);}
-
 }
 
 /* 选项列表 */
@@ -1070,6 +1007,7 @@
 
 
 #Page-route-detail {
+  .page-view-title { z-index: 200}
   .cp-map-content { position: fixed; top:0; height: 280px; width:100%; z-index: 1;}
   .cp-scroll {transition: all .5s;}
   .cp-scroll-inner { z-index: 2 ; margin-top: 240px; transition: all .5s;}
@@ -1099,7 +1037,10 @@
     }
   }
 
-  .cp-heading-wrapper.cp-sticky {  transform: translate(0,-30px);
+  .cp-heading-wrapper.cp-sticky {
+      width: 100%;
+    // position: sticky;
+     // transform: translate(0,-30px);
       .cp-avatar { transform:  /*translate(0,0)*/ translate(0,100px); opacity: 0; z-index: 0; position: relative;}
       .cp-txt h3 { font-size: 18px;transform: translate(0,0);}
   }
@@ -1189,7 +1130,7 @@
     b { padding: 2px 4px; border-radius: 5px;background: lighten(@color-primary,60%); color: lighten(@color-primary,20%); border:1px solid lighten(@color-primary,40%)}
   }
   .cp-comment-list { margin-bottom: 12px}
-  .cp-nodata-tips { margin-top: 10px;}
+
   .cp-commentLists-tips { padding: 10px; text-align: center; border-bottom: 1px solid #eee; background: #f2f2ed; color: #c3c2bc;}
 }
 
@@ -1255,7 +1196,7 @@
 
 /* 用户个人资料页 */
 .page-view-header {
-  position: relative; height: 180px; background-color:lighten(@color-primary,16%); background-image: url(../images/carpool_bg.jpg); background-position: center ; background-size: cover;
+  position: relative; height: 160px; background-color:lighten(@color-primary,16%); background-image: url(../images/carpool_bg.jpg); background-position: center ; background-size: cover;
   .cp-btn-goback { display: inline-block; float: left; font-size: 20px;  color:#fff; padding: 0 12px; margin-right: 5px;line-height: 50px; overflow: hidden;
     svg { width: 40px; height: 20px;}
   }
@@ -1264,7 +1205,7 @@
 
 
 #Page-user-index {
-  @avatar-width : 90px;
+  @avatar-width : 84px;
   background: #fafafa;
   .page-view-header {
     .cp-heading  { position: absolute; padding: 0 20px; width: 100%;bottom:24px; color:#fff}
@@ -1336,10 +1277,12 @@
 }
 
 .page-view-profile-edit {
-
-  .cp-input-wrapper {
-
-    // .form-control { padding:12px 10px ; height: 48px; font-size: 16px}
+  .weui-cell__hd {
+    label {margin: 0}
+  }
+  .cp-btn-wrapper { margin-top: 20px;
+    .cp-btn-submit {font-size: 16px; line-height: 1.8}
+    // .weui-btn {padding: 0}
   }
 
 }
@@ -1352,9 +1295,14 @@
 #Page-user-profile-phone {
   .cp-form-group .vux-no-group-title { margin-top: 0;}
   .btn-sendsms { position: absolute; right: 4px; top:5px;}
-  .cp-btn-wrapper { margin-top: 20px;
-    .weui-btn {padding: 0}
+
+}
+
+#Page-user-profile-password {
+  .weui-cell__hd { width: 30px;
+    .fa { color: #aaa}
   }
+  .cp-form-group .vux-no-group-title { margin-top: 0;}
 }
 
 #Page-user-profile-departments {
@@ -1384,89 +1332,12 @@
 
 
 /* 头像更改页 */
-#Page-user-avatar {
-  // .page-view-main {background-color:lighten(@color-primary,16%); background-image: url(../images/carpool_bg.jpg); background-position: center ; background-size: cover;}
-  .avatar-body {  padding: 0 0 60px; }
-  .cp-avatarSelectBox-wrapper {
-    position: absolute;
-    top:@topbar-height; left:0; right:0; bottom:0;
-    z-index: 300; background: #FFF;
-    .avatar-view { display: block; margin: 120px auto 30px; height: 120px; width: 120px; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 0 5px rgba(0,0,0,.15); cursor: pointer; overflow: hidden;
-      img {
-        width: 100%;
-      }
-    }
-    .avatar-upload {
-      overflow: hidden; text-align: center;
-      label {
-        display: inline-block;
-         text-align: center; border-radius: 4px;
-        margin: 0 auto;
-        min-width: 140px; padding: 8px 20px; font-size: 14px;
-      }
-      .avatar-input {
-        display: block; position: absolute; font-size: 480px;
-        top: 0; left: 0;right:0; bottom: 0;
-        opacity: 0; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-        cursor: pointer;
-        background: #000;
-      }
-    }
-    .btn-goback {  position: relative; display: block; margin: 15px auto; z-index: 2; min-width: 140px}
-  }
+#Page-user-profile-avatar {
+  .cp-cropper-wrapper {height: 360px;}
 
-  .cp-avatarBtns-wrapper { position: fixed;; bottom: 0; left:0; right:0; text-align: center;/* background: @color-primary; */padding: 10px 0 0;}
-  .cp-avatarBtns-inner {/*display:  flex;  flex-direction: row; justify-content:space-between;*/ text-align: center;
-    .btn-rotate { width:60px; display: block; border-radius: 0; border:none; opacity: .6; text-align: center;}
-    .avatar-save { display: block; width: 100%;height: 50px; border-radius: 0; }
-  }
-  @media (min-width: 992px) {
-    .cp-avatarBtns-wrapper {
-     position: relative; padding: 40px 0 0; left: auto; right: auto;
-    }
-    .cp-avatarBtns-inner {
-      .avatar-save { display: inline-block;  width: 200px;  border-radius: 4px;}
-    }
-  }
-
-  .avater-alert { margin-top: 10px;margin-bottom: 10px;}
-
-  .avatar-wrapper { height: 300px; width: 100%; box-shadow: inset 0 0 5px rgba(0,0,0,.25); background-color: #fcfcfc; overflow: hidden;
-    img {
-      display: block;
-      height: auto;
-      max-width: 100%;
-    }
-  }
-
-  .cp-label-avatar-preview { float: left; display: block; width: 100%;clear: both; padding: 16px 10px 0 16px; }
-  .avatar-preview { float: left; border: 1px solid #eee; margin:0 0 16px 16px; border-radius: 4px; background-color: #fff; overflow: hidden; display: none;
-    &:hover {
-      border-color: #ccf;
-      box-shadow: 0 0 5px rgba(0,0,0,.15);
-    }
-    img {
-      width: 100%;
-    }
-    &.preview-circle { border-radius: 50%;  }
-
-  }
-  .cp-avatar-preview {
-    width: 80px; height:80px; overflow: hidden;
-    float: left; border: 1px solid #eee; margin:0 0 16px 16px; border-radius: 4px;
-    img {width: 80px; height: 80px;border-radius: 4px; }
-    &.preview-circle { border-radius: 50%; img {border-radius: 50%; }}
-  }
-
-  .preview-lg { display: none; height: 184px; width: 184px; margin-top: 15px; }
-  .preview-md { height: 80px; width: 89px;}
-  .preview-sm { display: none; height: 50px; width: 50px;}
-
-  @media (min-width: 992px) {
-    .avatar-preview {
-      float: none;
-    }
-  }
+  .cp-selectpic-btn { margin-bottom: 12px;}
+  .cp-btn-submit { margin-bottom: 12px;}
+  .cp-btn-wrapper { padding: 10px;}
 }
 
 

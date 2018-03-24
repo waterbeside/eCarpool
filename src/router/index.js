@@ -78,7 +78,7 @@ const routes = [
     component (resolve) {
       require(['../pages/Carpool_detail'], resolve)
     },
-    meta: {keepAlive: false }
+    meta: {keepAlive: true }
   },
   // 行程细览
   {
@@ -87,7 +87,7 @@ const routes = [
     component (resolve) {
       require(['../pages/Carpool_detail'], resolve)
     },
-    meta: {keepAlive: false }
+    meta: {keepAlive: true }
   },
   // 评论
   {
@@ -184,6 +184,24 @@ const routes = [
     },
     meta: {keepAlive: true }
   },
+  // 重置密码
+  {
+    path: '/user/profile/password',
+    name: 'user_profile_password',
+    component (resolve) {
+      require(['../pages/user_profile_password'], resolve)
+    },
+    meta: {keepAlive: true }
+  },
+  // 上传头像
+  {
+    path: '/user/profile/avatar',
+    name: 'user_profile_avatar',
+    component (resolve) {
+      require(['../pages/user_profile_avatar'], resolve)
+    },
+    meta: {keepAlive: false }
+  },
 
   // 下载app页
   {
@@ -202,16 +220,18 @@ let router = new VueRouter({
   routes,
   mode: 'hash',
 	strict: process.env.NODE_ENV !== 'production',
-	scrollBehavior (to, from, savedPosition) {
-	    if (savedPosition) {
+	/*scrollBehavior (to, from, savedPosition) {
+    // console.log(savedPosition);
+	  if (savedPosition) {
 		    return savedPosition
 		} else {
 			if (from.meta.keepAlive) {
-				from.meta.savedPosition = document.body.scrollTop;
+        // console.log(document.querySelector(".cp-scroll"));
+				// from.meta.savedPosition = document.querySelector(".cp-scroll").scrollTop;
 			}
-		    return { x: 0, y: to.meta.savedPosition || 0 }
+		  return { x: 0, y: to.meta.savedPosition || 0 }
 		}
-	}
+	}*/
 })
 
 

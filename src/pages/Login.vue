@@ -68,44 +68,45 @@ export default {
       // console.log(config.urls.checkLogin)
       // alert(1)
       let postData = {username:this.username,password:this.password,client:'h5'};
-      const that = this;
       this.isSubmiting = true;
       this.subBtnText = '登 入 中'
       this.$tokenAxios.post(config.urls.login,postData).then(res => {
-          that.isSubmiting = false;
-          that.subBtnText = '登 入'
+          this.isSubmiting = false;
+          this.subBtnText = '登 入'
           // 登录成功
           if(res.data.code === 0) {
             this.$vux.toast.text('登入成功');
 
             let data = res.data.data;
             localStorage.setItem('CP_U_TOKEN',data.token);
-            localStorage.setItem('CP_loginname',data.user.loginname);
+            localStorage.setItem('CP_uid',data.user.uid);
             data.user.loginname = data.user.loginname.toLowerCase();
             // console.log(data.user)
-            // that.$store.commit('setUserBaseData',data.user);
-            that.$store.commit('setUserData',data.user);
+            // this.$store.commit('setUserBaseData',data.user);
+            this.$store.commit('setUserData',data.user);
             // console.log(config.avatarBasePath + data.user.imgpath)
             if(data.user.avatar.trim()!=''){
-              that.$store.commit('setUserAvatar',config.avatarBasePath + data.user.avatar);
+              this.$store.commit('setUserAvatar',config.avatarBasePath + data.user.avatar);
             }
 
-            that.errorTips = res.data.desc;
-            // that.isShowToast = true;
-            that.$router.push({name:'carpool'});
+            this.errorTips = res.data.desc;
+            // this.isShowToast = true;
+            this.$router.push({name:'carpool'});
+
           }else{
             // alert(res.data.msg);
-            this.$vux.toast.text(res.data.desc);
-            //
-            that.errorTips = res.data.desc;
-            that.isShowError = true;
-            that.iconType  = 'error';
-            // that.password  = "";
+            let errorMsg = res.data.code === 10001 ? "用户名或密码错误" : res.data.desc;
+
+            this.$vux.toast.text(errorMsg);
+            this.errorTips = errorMsg;
+            this.isShowError = true;
+            this.iconType  = 'error';
+            // this.password  = "";
           }
         })
         .catch(error => {
-          that.isSubmiting = false;
-          that.subBtnText = '登 入'
+          this.isSubmiting = false;
+          this.subBtnText = '登 入'
         })
     }
   },

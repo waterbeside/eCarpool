@@ -31,9 +31,11 @@ const webpackConfig = {
       '@': resolve('src'),
     }
   },
-  /*externals: {
-    'AMap': 'window.AMap'
-  },*/
+  //无需打包的第三方类库
+  externals: {
+    // 'vue': 'Vue',
+     // 'vue-router':"VueRouter"
+  },
   module: {
     rules: [
       {

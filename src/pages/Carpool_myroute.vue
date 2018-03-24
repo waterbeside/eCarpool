@@ -114,7 +114,6 @@ export default {
      * [goHome 返回首页]
      */
     goHome (){
-      console.log(1)
       this.$router.push({name:'carpool'})
     },
     /**
@@ -190,12 +189,16 @@ export default {
   },
   created () {
     this.init();
-    this.getList();
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
   },
   activated (){
+    // if(this.$store.state.isRefreshCarpoolList){
+      this.listDatas = [];
+      this.getList();
+      this.$store.commit('setIsRefreshCarpoolList',false);
+    // }
     this.$el.querySelector('.load-more').style.display = 'none';
   }
 }

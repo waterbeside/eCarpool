@@ -1,4 +1,3 @@
-
 <template>
   <div class="page-view-index">
     <title-bar  :left-options="{showBack: false}">溢起拼车</title-bar>
@@ -12,7 +11,6 @@
                 <router-link  class="btn btn-ripple" to="/carpool/myroute">
                   <i class="fa fa-map"></i>我的行程
                 </router-link>
-                <!-- <a class="btn btn-ripple" href="javascript:void(0);" on-click="pageMethods.goPage(\'#/myRoute\')"><i class="fa fa-map"></i>我的行程</a> -->
                 </dd>
             </dl>
             <dl class="cp-index-btn-item">
@@ -54,7 +52,6 @@ export default {
   data () {
     return {
       isShowAddBtns : false,
-      // msg      : 'Welcome to Your Vue.js App'
     }
   },
   methods:{
@@ -75,6 +72,8 @@ export default {
   },
   activated (){
     this.$store.commit('setRouteFormData',{});
+    this.$store.commit('setIsRefreshCarpoolList',true);
+
     this.jumpTo();
 
   }
