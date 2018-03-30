@@ -3,6 +3,9 @@
 > A Vue.js project
 
 ## Build Setup
+1 重命名 src/configs/index.back.js 文件为 src/configs/index.js ，
+2 打开src/configs/index.js 把你的接口域名添加到baseDomain项。
+3
 
 ``` bash
 # install dependencies
