@@ -191,7 +191,7 @@ const routes = [
     component (resolve) {
       require(['../pages/user_profile_password'], resolve)
     },
-    meta: {keepAlive: true }
+    meta: {keepAlive: false }
   },
   // 上传头像
   {
