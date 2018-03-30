@@ -295,7 +295,6 @@ export default {
             _this.statusIcon  = "fa fa-car";
           break;
         case 2:
-        alert(_this.isShowBtn_cancel_alert);
             _this.alertText = "行程已取消"
             _this.isShowBtn_goback =  true;
             _this.statusText  = "已取消";
@@ -561,7 +560,7 @@ export default {
 
   created () {
 
-  
+
   },
   mounted () {
 
