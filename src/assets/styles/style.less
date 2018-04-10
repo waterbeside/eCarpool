@@ -711,7 +711,7 @@
   }
 }
 
-.cp-map-wrapper-addroute {
+.cp-map-wrapper-addtrip {
   top:-100px;
 }
 
@@ -942,7 +942,7 @@
 
 /*添加站点页的信息弹窗*/
 // .cp-markInfo-box-wrapper { background: #FFF; padding: 12px;}
-.cp-map-wapper-addroute .amap-info-close { display: none}
+.cp-map-wapper-addtrip .amap-info-close { display: none}
 .cp-markInfo-box {
   font-size: 14px;
   .cp-form-group { position: relative; margin-bottom: 12px;
@@ -1115,11 +1115,18 @@
 
   .cp-item { position: relative; list-style: none; padding: 12px 15px; border-bottom: 1px dotted #ddd;
     .cp-avatar { float: left;width: 46px; height: 46px; margin:-2px 15px 0 0; border-radius: 50%}
-    .media-heading { font-size: 18px; margin-top: 1px; color: #666; font-weight: 400}
+    .media-heading { font-size: 18px; margin-top: 1px; margin-bottom: 5px;color: #666; font-weight: 400}
     p {margin: 0; color:#999}
+    &.cp-finish {
+      background: #fafafa; color: #DDD;
+      p {color: #ccc}
+      .cp-avatar { opacity: .6}
+      .media-heading { color: #aaa; }
+      .btn-fab-mini { background-color:lighten(@color-primary,50%); color:lighten(@color-primary,30%)}
+    }
 
   }
-  .cp-btns-wrap { position: absolute; right:12px; top:0px}
+  .cp-btns-wrap { position: absolute; right:12px; top:12px; padding: 0 !important;}
   .btn-fab-mini {line-height: 40px; box-shadow: none; background-color:lighten(@color-primary,50%); color:lighten(@color-primary,10%)}
 }
 
