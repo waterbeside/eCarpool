@@ -26,14 +26,17 @@
               <tab class="cp-tab-wrapper" :line-width="2" active-color='#8877ba' v-model="tabIndex" v-if="type=='wall'" >
                 <tab-item class="cp-tab-item"  :key="0"><div class="cp-inner">详情</div></tab-item>
                 <tab-item class="cp-tab-item"  :key="1" @on-item-click="getCommentLists"><div class="cp-inner">留言<b class="bage" v-show="comments_total>0">{{comments_total}}</b></div></tab-item>
-                <tab-item class="cp-tab-item"  :key="2" @on-item-click="onShowPassengers" ><div class="cp-inner">乘客列表<b class="bage" v-show="statis.took_count>0">{{statis.took_count}}</b></div></tab-item>
+                <tab-item class="cp-tab-item"  :key="2" @on-item-click="onShowPassengers" ><div class="cp-inner">乘客列表<b class="bage" v-show="detailData.took_count_all>0">{{detailData.took_count_all}}</b></div></tab-item>
               </tab>
             </div>
 
           </div>
           <div class="cp-content-item" :key="0" v-show="tabIndex == 0">
 
-              <div class="alert " :class="alertClass" v-show="isShowAlert" ><span v-html="alertText"></span>  <a v-show="isShowBtn_cancel_alert" @click="btnAction('cancel')" style='margin-left:4px' class='btn btn-sm btn-info'>取消</a></div>
+              <div class="alert " :class="alertClass" v-show="isShowAlert" ><span v-html="alertText"></span>
+                <a v-show="isShowBtn_cancel_alert" @click="btnAction('cancel')" style='margin-left:4px' class='btn btn-sm btn-info'>取消</a>
+                <a v-show="isShowBtn_finish_alert" @click="btnAction('finish')" style='margin-left:4px' class='btn btn-sm btn-info'>结束</a>
+              </div>
               <div class="cp-cell cp-cell-time">
                   <div class="la"><i class="fa fa-clock-o"></i></div>
                   <span class="cp-time">{{detailData.time_format}}</span>
@@ -83,12 +86,13 @@
             <div class="text-center"><router-link class="btn btn-default"  :to="{ name:'carpool_rides_comments', params: {id: id} }"><i class="fa fa-edit"></i> 我要评论</router-link></div>
           </div>
           <!-- /留言 -->
+
           <div class="cp-content-item" :key="2" v-show="tabIndex == 2">
             <div class="text-center"  v-show="isLoading_pss">
               <spinner type="dots" size="60px"></spinner>
             </div>
             <ul class="cp-wallView-passenger" v-if="passengers.length">
-              <li class="cp-item " v-for="(item,index) in passengers ">
+              <li class="cp-item " :class="{'cp-finish':item.status==3}" v-for="(item,index) in passengers ">
                 <cp-avatar :src="item.avatar" ></cp-avatar>
                 <div class="cp-txt">
                   <h4 class="media-heading">{{item.name}}</h4>
@@ -144,6 +148,7 @@ export default {
         end_info        :{addressname:'-'},
         status          : 0,
         hasTake         : 0,
+        hasTake_finish  : 0,
 
       },
 
@@ -176,6 +181,7 @@ export default {
       isShowBtn_cancel  :false,
       isShowBtn_complete :false,
       isShowBtn_cancel_alert:false,
+      isShowBtn_finish_alert: false,
 
       //statis-item组件相关
       statis            :{
@@ -248,6 +254,8 @@ export default {
       _this.isShowBtn_cancel  = false;
       _this.isShowBtn_complete= false;
       _this.isShowBtn_cancel_alert = false;
+      _this.isShowBtn_finish_alert = false;
+
       _this.isShowBtn_phone = _this.uid == _this.user.uid ? false : true;
       _this.isShowAlert = _this.type=="info" ? true : false
       // console.log(_this.type);
@@ -255,13 +263,17 @@ export default {
         case 0:
             _this.alertText = "该乘客正等待被搭载"
             _this.isShowBtn_cancel = _this.uid == _this.user.uid ? true : false;
+            _this.isShowBtn_complete = _this.uid == _this.user.uid ? true : false;
             if(_this.type=="wall"){
-              if(_this.detailData.hasTake==="1"){
+              if(_this.detailData.hasTake > 0){
                   _this.isShowAlert = true;
                   _this.alertClass  = "alert-info"
                   _this.alertText = "你已搭该司机的车";
                   _this.isShowBtn_cancel_alert = true;
+                  _this.isShowBtn_finish_alert = true;
                   _this.isShowBtn_goback =  true;
+              }else if(_this.detailData.hasTake_finish > 0){
+                _this.isShowBtn_goback = true;
               }else{
                 _this.isShowBtn_riding = _this.uid == _this.user.uid ? false : true;
               }
@@ -274,15 +286,21 @@ export default {
           break;
         case 1:
             if(_this.type=="wall"){
-              if(_this.detailData.hasTake==="1"){
+              _this.isShowBtn_cancel = _this.uid == _this.user.uid ? true : false;
+              _this.isShowBtn_complete = _this.uid == _this.user.uid ? true : false;
+              if(_this.detailData.hasTake > 0){
                   _this.isShowAlert = true;
                   _this.alertClass  = "alert-info"
                   _this.alertText = "你已搭该司机的车";
                   _this.isShowBtn_cancel_alert = true;
+                  _this.isShowBtn_finish_alert = true;
                   _this.isShowBtn_goback =  true;
+              }else if(_this.detailData.hasTake_finish > 0){
+                _this.isShowBtn_goback = true;
               }else{
                 _this.isShowBtn_riding = _this.uid == _this.user.uid ? false : true;
               }
+
 
             }
             if(_this.type=="info"){
@@ -346,14 +364,14 @@ export default {
           let start = [data.start_info.longtitude,data.start_info.latitude]
           let end = [data.end_info.longtitude,data.end_info.latitude]
           setTimeout(function(){
-            cFuns.amap.drawRouteLine(start, end,_this.mapObj,function(status,result){
+            cFuns.amap.drawTripLine(start, end,_this.mapObj,function(status,result){
               if(status == 'complete'){
                 _this.isShowComputebox = true;
                 var distance = result.routes[0].distance; //计出的距离
                 var distanceObj = cFuns.amap.formatDistance(distance,1);
                 // var distanceStr = distanceObj.distance + distanceObj.unit;
                 var dtTime = result.routes[0].time;
-                var dtTimeStr = cFuns.amap.formatRouteTime(dtTime);
+                var dtTimeStr = cFuns.amap.formatTripTime(dtTime);
 
                 _this.statis.distance = parseFloat(distanceObj.distance);
                 _this.statis.distance_unit = distanceObj.unit;
@@ -480,18 +498,29 @@ export default {
            isJumpToMytrip = true;
            break;
          case 'finish':
-           url = config.urls.finishRoute;
+           url = config.urls.finishTrip;
            postData = {id:_this.id,from:_this.type};
            confirmText = '是否结束本次行程'
            successText = "本次行程已完成"
            isJumpToMytrip = false;
            var success = function(rs){
-             _this.detailData.status = 3;
-             _this.changeStatus(3);
+             if( _this.uid == _this.user.uid){
+               _this.detailData.status = 3;
+               _this.changeStatus(3);
+             }else{
+               _this.statis.took_count      = _this.statis.took_count - 1;
+               _this.detailData.took_count  = _this.detailData.took_count - 1;
+               _this.detailData.hasTake = 0;
+               // _this.passengers  = _this.passengers.filter(t => t.uid != _this.uid);
+               _this.passengers_time = 0;
+               _this.isShowBtn_finish_alert = false;
+
+               _this.changeStatus(_this.detailData.status);
+             }
            }
            break;
          case 'cancel':
-           url = config.urls.cancelRoute;
+           url = config.urls.cancelTrip;
            postData = {id:_this.id,from:_this.type};
            confirmText = '您确定要取消本次行程吗？'
            successText = "取消成功"
@@ -501,7 +530,9 @@ export default {
                _this.detailData.status = 2;
                _this.changeStatus(2);
              }else{
-               _this.statis.took_count = _this.statis.took_count - 1;
+               _this.statis.took_count          = _this.statis.took_count - 1;
+               _this.detailData.took_count      = _this.detailData.took_count - 1;
+               _this.detailData.took_count_all  = _this.detailData.took_count_all - 1;
                _this.detailData.hasTake = 0;
                // _this.passengers  = _this.passengers.filter(t => t.uid != _this.uid);
                _this.passengers_time = 0;
