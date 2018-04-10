@@ -176,7 +176,7 @@ var cFuns = {
       mapObj.setZoomAndCenter(zoom, position);
     },
     //画线
-    drawRouteLine(start,end,mapObj,callBack){
+    drawTripLine(start,end,mapObj,callBack){
       console.log(mapObj)
       // mapObj.clearMap();
       AMap.service('AMap.Driving',function(){//回调函数
@@ -219,7 +219,7 @@ var cFuns = {
     },
 
     // 格式化行程用时
-   formatRouteTime (dtTime){
+   formatTripTime (dtTime){
     	var dtTimeStr = '';
     	if(dtTime > 3600){
     		dtTimeStr = Math.floor(dtTime/3600)+'小时' + Math.floor((dtTime%3600)/60)+'分钟';

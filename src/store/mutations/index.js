@@ -44,8 +44,8 @@ export default {
     state.loading = obj ;
   },
 
-  setRouteFormData(state,datas){
-    state.routeFormData = datas ? datas : {}
+  setTripFormData(state,datas){
+    state.tripFormData = datas ? datas : {}
   },
 
 }

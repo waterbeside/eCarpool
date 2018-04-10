@@ -7,14 +7,14 @@
       <div class="page-view-main" >
 
 
-          <div   class="cp-map-wapper cp-map-wapper-addroute">
+          <div   class="cp-map-wapper cp-map-wapper-addtrip">
             <el-amap class="amap-box" :vid="'amap-vue'" :events="mapEvents" :plugin="mapPlugin">
               <el-amap-marker vid="marker-s" :position="marker_start.position"  v-if="marker_start.position.length > 1"></el-amap-marker>
               <el-amap-marker vid="marker-e" :position="marker_end.position"  v-if="marker_end.position.length > 1" ></el-amap-marker>
             </el-amap>
             <!-- <div class="amap-box" id="routeFormMap" style="height:100%"></div> -->
             <div class="cp-tools-wrapper">
-              <router-link    :to="'/carpool/addroute/history/'+type">
+              <router-link    :to="'/carpool/addtrip/history/'+type">
                 <svg class="icon" width="200px" height="200.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M49.166722 803.556967a44.05248 44.05248 0 1 0 0 88.150118h235.751891a435.173469 435.173469 0 0 1-39.197901-88.150118H49.166722z m0-573.043505h793.441379a44.075059 44.075059 0 1 0 0-88.172698H49.166722a44.075059 44.075059 0 1 0 0 88.172698z m0 440.795748h176.322815c0-30.211285 3.070803-59.677449 8.873718-88.150118H49.166722a44.0299 44.0299 0 1 0 0 88.150118z m617.118564-352.623051c-194.747635 0-352.645631 157.897996-352.645631 352.645631S471.537651 1023.977421 666.285286 1023.977421s352.623051-157.897996 352.623051-352.645631-157.875416-352.645631-352.623051-352.645631z m0 661.193623c-170.429583 0-308.547992-138.140989-308.547992-308.570572 0-170.407003 138.11841-308.570572 308.547992-308.570571s308.570572 138.140989 308.570572 308.570571-138.140989 308.570572-308.570572 308.570572zM49.166722 362.761218a44.0299 44.0299 0 1 0 0 88.150118h235.751891a440.276422 440.276422 0 0 1 66.812551-88.150118h-302.564442z m661.193623 132.247756h-88.150118v220.397875h220.397874v-88.172698H710.360345v-132.225177z"  /></svg>
                 <!-- <svg class="icon"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M938.666667 448V192.042667A42.666667 42.666667 0 0 0 896.042667 149.333333H768v42.666667l128 0.042667V405.333333H128V192.042667L256 192V149.333333H127.957333A42.56 42.56 0 0 0 85.333333 192.042667v703.914666A42.666667 42.666667 0 0 0 127.936 938.666667H490.666667v-42.688l-362.666667-0.021334V448h810.666667zM298.666667 85.333333h42.666666v170.666667h-42.666666V85.333333z m384 0h42.666666v170.666667h-42.666666V85.333333zM384 149.333333h256v42.666667H384V149.333333z"  /><path d="M746.666667 917.333333a170.666667 170.666667 0 1 0 0-341.333333 170.666667 170.666667 0 0 0 0 341.333333z m0 42.666667c-117.824 0-213.333333-95.509333-213.333334-213.333333s95.509333-213.333333 213.333334-213.333334 213.333333 95.509333 213.333333 213.333334-95.509333 213.333333-213.333333 213.333333z" /><path d="M768 759.232v-119.296c0-11.605333-9.557333-21.269333-21.333333-21.269333-11.861333 0-21.333333 9.514667-21.333334 21.269333v128.128a20.992 20.992 0 0 0 6.101334 14.933333l60.629333 60.629334a21.184 21.184 0 0 0 30.016-0.149334 21.333333 21.333333 0 0 0 0.149333-30.016L768 759.232z" /></svg> -->
               </router-link>
@@ -250,16 +250,16 @@ export default {
 
     },
     'formData.time':function(val,oldval){
-      let formData = this.$store.state.routeFormData;
+      let formData = this.$store.state.tripFormData;
         formData.time = val;
-        this.$store.commit('setRouteFormData',formData);
-        // console.log(this.$store.state.routeFormData);
+        this.$store.commit('setTripFormData',formData);
+        // console.log(this.$store.state.tripFormData);
     },
     'formData.seat_count':function(val,oldval){
-      let formData = this.$store.state.routeFormData;
+      let formData = this.$store.state.tripFormData;
         formData.seat_count = val;
-        this.$store.commit('setRouteFormData',formData);
-        // console.log(this.$store.state.routeFormData);
+        this.$store.commit('setTripFormData',formData);
+        // console.log(this.$store.state.tripFormData);
     },
   },
   methods: {
@@ -274,9 +274,9 @@ export default {
      */
     getDataFormStore (){
       var _this = this;
-      let formData_s = this.$store.state.routeFormData;
+      let formData_s = this.$store.state.tripFormData;
       // console.log(formData_s)
-      // console.log(this.$store.state.routeFormData)
+      // console.log(this.$store.state.tripFormData)
       if(formData_s){
         _this.markerAndDraw(formData_s);
 
@@ -299,21 +299,21 @@ export default {
         return false;
       }
       this.exChangeAddressing = true;
-      let formData_o = this.$store.state.routeFormData;
-      // var formData_n =  this.$store.state.routeFormData;
+      let formData_o = this.$store.state.tripFormData;
+      // var formData_n =  this.$store.state.tripFormData;
       let startp = typeof(formData_o.start)!="undefined" && typeof(formData_o.start.latitude)!="undefined"  ? formData_o.start : {};
       let endp   = typeof(formData_o.end)!="undefined"  && typeof(formData_o.end.latitude)!="undefined" ? formData_o.end  : {};
       formData_o.end =  startp  ;
       formData_o.start = endp;
       this.formData =  Object.assign({}, formData_o);
-      this.$store.commit('setRouteFormData',formData_o);
+      this.$store.commit('setTripFormData',formData_o);
       // return false;
       // if(formData.start && formData.end ){ //画线
       //   _this.mapObj.clearMap()
       //   var start = new AMap.LngLat(parseFloat(formData.start.longtitude), parseFloat(formData.start.latitude));
       //   var end = new AMap.LngLat(parseFloat(formData.end.longtitude), parseFloat(formData.end.latitude));
       //
-      //   cFuns.amap.drawRouteLine(start, end,_this.mapObj);
+      //   cFuns.amap.drawTripLine(start, end,_this.mapObj);
       // }
       _this.getDataFormStore();
 
@@ -343,14 +343,14 @@ export default {
         var start = new AMap.LngLat(parseFloat(formData_s.start.longtitude), parseFloat(formData_s.start.latitude));
         var end = new AMap.LngLat(parseFloat(formData_s.end.longtitude), parseFloat(formData_s.end.latitude));
 
-        cFuns.amap.drawRouteLine(start, end,this.mapObj,function(status,result){
+        cFuns.amap.drawTripLine(start, end,this.mapObj,function(status,result){
 
           if(status == 'complete'){
             _this.isShowComputebox = true;
             var distance = result.routes[0].distance; //计出的距离
             var distanceStr = cFuns.amap.formatDistance(distance);
             var dtTime = result.routes[0].time;
-            var dtTimeStr = cFuns.amap.formatRouteTime(dtTime);
+            var dtTimeStr = cFuns.amap.formatTripTime(dtTime);
             _this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
             _this.formData.distance = distance;
           }else{
@@ -399,7 +399,7 @@ export default {
         postData.seat_count = _this.formData.seat_count
       }
 
-      this.$tokenAxios.post(config.urls.addRoute,postData).then(res => {
+      this.$tokenAxios.post(config.urls.addTrip,postData).then(res => {
 
         var resData = res.data.data
         if(res.data.code === 0) {

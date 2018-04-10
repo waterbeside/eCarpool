@@ -37,8 +37,8 @@
     <div class="cp-fixed-btn-wrap" id="J-index-fixedBtnWrap" :class="{'isshow':isShowAddBtns === true}">
       <a class="btn btn-primary btn-fab btn-fab-mini   cp-btn-control btn-ripple" id="J-btn-showAdd" @click="showAddBtns" href="javascript:void(0);"><i class="fa fa-plus"></i></a>
       <div class="cp-btn-options-wrap" v-show="isShowAddBtns">
-        <a href="javascript:void(0);" @click="goRouteAdd('wall')" class="cp-btn-car btn btn-primary  btn-fab btn-ripple " ><i class="fa fa-car"></i><p>发布空座位</p></a>
-        <a href="javascript:void(0);" @click="goRouteAdd('info')" class="cp-btn-need btn btn-primary  btn-fab  btn-ripple"><i class="fa fa-user-o"></i><p>我要约车</p></a>
+        <a href="javascript:void(0);" @click="goTripAdd('wall')" class="cp-btn-car btn btn-primary  btn-fab btn-ripple " ><i class="fa fa-car"></i><p>发布空座位</p></a>
+        <a href="javascript:void(0);" @click="goTripAdd('info')" class="cp-btn-need btn btn-primary  btn-fab  btn-ripple"><i class="fa fa-user-o"></i><p>我要约车</p></a>
       </div>
     </div>
     <foot-nav-bar current="carpool"></foot-nav-bar>
@@ -58,8 +58,8 @@ export default {
     showAddBtns (){
       this.isShowAddBtns = this.isShowAddBtns ? false : true
     },
-    goRouteAdd (type){
-      this.$router.push({name:'carpool_addroute',params: {type:type}});
+    goTripAdd (type){
+      this.$router.push({name:'carpool_addtrip',params: {type:type}});
     },
     jumpTo (){
       let jumpToSetting = this.$store.state.jumpTo;
@@ -71,7 +71,7 @@ export default {
     }
   },
   activated (){
-    this.$store.commit('setRouteFormData',{});
+    this.$store.commit('setTripFormData',{});
     this.$store.commit('setIsRefreshCarpoolList',true);
 
     this.jumpTo();

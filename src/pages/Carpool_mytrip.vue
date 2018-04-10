@@ -31,35 +31,6 @@
            <span class="tips-text" v-if="item.status ==0 && item.from=='info'">等待车主接受</span>
          </div>
 
-           <!--<div slot="btnbar" class="cp-btns-wrapper" v-if="item.from=='wall'">
-               <div class="cp-fabBtn-wrap">
-                <b class="t">点赞</b>
-                <a href="javascript:void(0);" class="btn  btn-fab btn-primary" >
-                  <i class="fa fa-heart" ></i>
-                </a>
-                <b class="num">{{item.like_count}}</b>
-              </div>
-              <div class="cp-fabBtn-wrap"><b class="t">空位</b><a href="javascript:void(0);" class="btn btn-primary btn-fab "><i class="fa fa-car"></i></a><b class="num">{{item.seat_count - item.took_count}}</b></div>
-              <div class="cp-fabBtn-wrap" :class="[{'hasLike':item.hasTake===1}]">
-                <b class="t">已搭</b>
-                <a href="javascript:void(0);" class="btn btn-fab" :class="item.hasTake===1 ? 'btn-danger' : 'btn-primary' "><i class="fa fa-user"></i></a>
-                <b class="num">{{item.took_count}}</b>
-              </div>
-           </div>
-
-           <div slot="btnbar" class="cp-btns-wrapper" v-if="item.from=='info'">
-             <div class="cp-btns" v-if="item.status ==1">
-               <a href="javascript:void(0);" onclick="pageMethods.cencelRoute('+data.id+',\''+data.from+'\',this)"  data-loading-text="..." class="cp-btn  btn-ripple  pull-right"><i class="fa fa-times"></i></a>
-               <a href="javascript:void(0);" onclick="pageMethods.finishRoute('+data.id+',\''+data.from+'\',this)"  data-loading-text="..." class="cp-btn   btn-ripple pull-right"><i class="fa fa-check"></i></a>
-               <a href="tel:'+ (data.show_owner == 1 ? data.owner_info.phone : data.passenger_info.phone)+'" onclick="event.stopPropagation();"  class="cp-btn  btn-ripple pull-right"><i class="fa fa-phone"></i></a>
-               <div class="cp-clear"></div>
-             </div>
-             <div class="cp-btns" v-if="item.status ==0">
-               <a href="javascript:void(0);" onclick="pageMethods.cencelRoute('+data.id+',\''+data.from+'\',this)"  data-loading-text="..." class="cp-btn  btn-ripple   pull-right"><i class="fa fa-times"></i></a>
-               <span class="tips-text">等待车主接受</span>
-               <div class="cp-clear"></div>
-             </div>
-           </div>-->
 
 
          </cp-trip-card>
@@ -151,7 +122,7 @@ export default {
               id : value.id,
               love_wall_ID : value.love_wall_ID,
               status: value.status,
-              time:value.time,
+              time: value.time,
               start_info:value.start_info,
               end_info:value.end_info,
               user : value.from == "wall" || value.show_owner ? value.owner_info : value.passenger_info,

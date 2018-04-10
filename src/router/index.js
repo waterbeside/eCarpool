@@ -100,19 +100,19 @@ const routes = [
   },
   // 加行程
   {
-    path: '/carpool/addroute/:type',
-    name: 'carpool_addroute',
+    path: '/carpool/addtrip/:type',
+    name: 'carpool_addtrip',
     component (resolve) {
-      require(['../pages/Carpool_addroute'], resolve)
+      require(['../pages/Carpool_addtrip'], resolve)
     },
     meta: {keepAlive: false }
   },
   // 历史行程
   {
-    path: '/carpool/addroute/history/:type',
-    name: 'carpool_addroute_history',
+    path: '/carpool/addtrip/history/:type',
+    name: 'carpool_addtrip_history',
     component (resolve) {
-      require(['../pages/carpool_addroute_history'], resolve)
+      require(['../pages/Carpool_addtrip_history'], resolve)
     },
     meta: {keepAlive: true }
   },
@@ -130,7 +130,7 @@ const routes = [
     path: '/carpool/address/add/:to/:keyword',
     name: 'carpool_address_create',
     component (resolve) {
-      require(['../pages/carpool_address_create'], resolve)
+      require(['../pages/Carpool_address_create'], resolve)
     },
     meta: {keepAlive: false }
   },

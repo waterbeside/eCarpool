@@ -104,7 +104,7 @@ export default {
     onSelect (index){
       let data =  this.listDatas[index]
 
-      let formData = this.$store.state.routeFormData;
+      let formData = this.$store.state.tripFormData;
       let today = cFuns.formatDayItemData(new Date).value;
       let hm = data.time.split(' ')[1]
       formData.start = data.start_info;
@@ -113,7 +113,7 @@ export default {
       formData.seat_count = parseInt(data.seat_count);
       formData.time = [  today ,hm.split(':')[0] ,hm.split(':')[1] ];
         // console.log(formData);
-        this.$store.commit('setRouteFormData',formData);
+        this.$store.commit('setTripFormData',formData);
         this.$router.back();
 
     }

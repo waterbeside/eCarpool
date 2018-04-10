@@ -4,7 +4,7 @@
       <!-- <title-bar  :left-options="{showBack: true}">{{type=="info"?"发布约车需求":"发布空座位"}}</title-bar> -->
       <cp-goback-btn></cp-goback-btn>
       <div class="page-view-main" >
-        <div class="cp-map-wapper  cp-map-wapper-addroute">
+        <div class="cp-map-wapper  cp-map-wapper-addtrip">
           <el-amap class="amap-box" :vid="'amap-vue-address'" :events="mapEvents" :plugin="mapPlugin">
             <el-amap-marker vid="marker-my" :position="myMarker.position"  v-if="myMarker.position.length > 1" :events="myMarker.events"></el-amap-marker>
 
@@ -232,12 +232,12 @@ export default {
           // pageMethods.addAddressToDB(inDatas);
           cModel.myAddress('add',{data:inDatas,success:function(result){console.log(result)}});
           if(_this.to == 'start' || _this.to == 'end' ){
-            let formData = this.$store.state.routeFormData;
+            let formData = this.$store.state.tripFormData;
 
             formData[_this.to] =   inDatas;
 
             // console.log(formData);
-            this.$store.commit('setRouteFormData',formData);
+            this.$store.commit('setTripFormData',formData);
             // console.log(formData);
             this.$router.go(-2);
 

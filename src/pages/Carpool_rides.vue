@@ -37,7 +37,7 @@
            <div slot="btnbar" class="cp-btns-wrapper">
               <div class="cp-fabBtn-wrap " :class="[{'hasLike':item.hasLike===1,'doLike':item.id === doLikeId}]">
                 <b class="t">点赞</b>
-                <a href="javascript:void(0);" class="btn  btn-fab" :class="item.hasLike===1 ? 'btn-danger' : 'btn-primary' " @click="likeRoute(item.id,index)">
+                <a href="javascript:void(0);" class="btn  btn-fab" :class="item.hasLike===1 ? 'btn-danger' : 'btn-primary' " @click="likeTrip(item.id,index)">
                   <i class="fa fa-heart" ></i>
                 </a>
                 <b class="num">{{item.like_count}}</b>
@@ -134,7 +134,7 @@ export default {
      * @param  {integer} id    [需求列表行id (infoid)]
      * @param  {integer} index [需求列表行的索引 ]
      */
-    likeRoute (id,index){
+    likeTrip (id,index){
       var _this = this;
       event.stopPropagation();
       _this.$el.querySelector('.load-more').style.display = 'none';
@@ -143,7 +143,7 @@ export default {
         _this.listDatas[index].like_count = parseInt(_this.listDatas[index].like_count) + 1
         _this.listDatas[index].hasLike = 1;
         _this.doLikeId = id;
-        this.$tokenAxios.post(config.urls.likeRoute,{id:id}).then(res => {
+        this.$tokenAxios.post(config.urls.likeTrip,{id:id}).then(res => {
           if(res.data.code === 0) {
 
           }else{

@@ -4,13 +4,6 @@
       <span v-show="isShowSearchBox==0">{{pageTitle}}</span>
       <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)" @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch" ></cp-search-box>
 
-      <!--<div slot="rightContent">
-        <div class="cp-search-box" v-show="isShowSearchBox"><input name="keyword" class="form-control form-control-line" placeholder="请输入关键字查找"  v-model="keyword" @keyup="doSearch" autocomplete="false" ></div>
-        <div class="cp-btn-wrapper">
-          <button class="cp-btn-search" v-show="isShowSearchBox==0" @click="showSearchBox(1)"><i class="fa fa-search"></i></button>
-          <button class="cp-btn-close" v-show="isShowSearchBox" @click="showSearchBox(0)"><i class="fa fa-times"></i></button>
-        </div>
-      </div>-->
     </title-bar>
 
 
@@ -344,12 +337,12 @@ export default {
       var data = isFromMap ? this.smListDatas[index] : this.listDatas[index]
 
       var  to = this.to;
-      let formData = this.$store.state.routeFormData;
+      let formData = this.$store.state.tripFormData;
       //如果是选择起点和终点
       if(to=="start"||to=="end"){
         formData[to] = data;
         // console.log(formData);
-        this.$store.commit('setRouteFormData',formData);
+        this.$store.commit('setTripFormData',formData);
         this.$router.back();
       }
       //如果是修改公司和家的地址。
