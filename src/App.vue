@@ -39,7 +39,7 @@ export default {
     '$route' (to, from) {
       const toDepth = to.path.split('/').length
       const fromDepth = from.path.split('/').length
-      this.transitionName = 'fade';
+
       return ;
       /*if(to.path=="/"){
         this.transitionName = 'backward'
