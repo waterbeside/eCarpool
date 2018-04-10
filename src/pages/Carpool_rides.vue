@@ -15,7 +15,7 @@
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
 
-         <cp-route-card
+         <cp-trip-card
             v-for="(item,index) in listDatas"
            :key="item.id"
            :id="item.id"
@@ -48,7 +48,7 @@
                 <a href="javascript:void(0);" class="btn btn-fab" :class="item.hasTake===1 ? 'btn-danger' : 'btn-primary' "><i class="fa fa-user"></i></a>
                 <b class="num">{{item.took_count}}</b></div>
            </div>
-         </cp-route-card>
+         </cp-trip-card>
 
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
        <div class="text-center">
@@ -67,11 +67,11 @@ import config from '../configs/index'
 import cFuns from '../utils/cFuns'
 
 import CpSearchBox from '../components/CpSearchBox'
-import CpRouteCard from '../components/CpRouteCard'
+import CpTripCard from '../components/CpTripCard'
 
 export default {
   components: {
-    CpSearchBox,CpRouteCard
+    CpSearchBox,CpTripCard
   },
   data () {
     return {

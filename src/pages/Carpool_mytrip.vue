@@ -6,7 +6,7 @@
     <div class="page-view-main"   >
       <cp-scroller  :position="{top:'46px'}"  :on-refresh="onRefresh"   :dataList="scrollData" :enableInfinite="false">
 
-         <cp-route-card
+         <cp-trip-card
             v-for="(item,index) in listDatas"
            :key="item.id"
            :id="item.id"
@@ -62,7 +62,7 @@
            </div>-->
 
 
-         </cp-route-card>
+         </cp-trip-card>
 
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
        <div class="text-center">
@@ -80,11 +80,11 @@
 import config from '../configs/index'
 import cFuns from '../utils/cFuns'
 
-import CpRouteCard from '../components/CpRouteCard'
+import CpTripCard from '../components/CpTripCard'
 
 export default {
   components: {
-    CpRouteCard
+    CpTripCard
   },
   data () {
     return {
@@ -139,7 +139,7 @@ export default {
 
       _this.isLoading = 1;
       _this.noData = 0;
-      _this.$tokenAxios.get(config.urls.getMyroute,{params:params}).then(res => {
+      _this.$tokenAxios.get(config.urls.getMytrip,{params:params}).then(res => {
         let data = res.data.data;
         _this.isLoading = 0;
         if(res.data.code === 0) {

@@ -6,7 +6,7 @@
     </title-bar>
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
-         <cp-route-card
+         <cp-trip-card
           v-for="(item,index) in listDatas"
            :key="item.id"
            :id="item.id"
@@ -29,7 +29,7 @@
            <div slot="btnbar" class="cp-btns-wrapper">
              <a class="cp-btn cp-btn-accept" @click.prevent.stop="acceptRequest(item.id,index)">接受</a>
            </div>
-         </cp-route-card>
+         </cp-trip-card>
 
 
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
@@ -48,11 +48,11 @@
 import config from '../configs/index'
 import cFuns from '../utils/cFuns'
 import CpSearchBox from '../components/CpSearchBox'
-import CpRouteCard from '../components/CpRouteCard'
+import CpTripCard from '../components/CpTripCard'
 
 export default {
   components: {
-    CpSearchBox,CpRouteCard
+    CpSearchBox,CpTripCard
   },
   data () {
     return {

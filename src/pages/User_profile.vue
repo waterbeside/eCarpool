@@ -51,7 +51,7 @@ import cFuns from '../utils/cFuns'
 
 import {GroupTitle,PopupRadio,Selector} from 'vux'
 
-import CpRouteCard from '../components/CpRouteCard'
+import CpTripCard from '../components/CpTripCard'
 import CpAvatar from '../components/CpAvatar'
 
 export default {

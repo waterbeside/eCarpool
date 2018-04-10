@@ -12,8 +12,8 @@
             <span class="cp-point">{{item.start_info.addressname}}</span>
             <span class="cp-arrow"><i class="fa fa-long-arrow-right"></i></span>
             <span class="cp-point">{{item.end_info.addressname}}</span>
-            <!-- <cp-route-box :start_name="item.start_info.addressname" :end_name="item.end_info.addressname">
-            </cp-route-box> -->
+            <!-- <cp-trip-box :start_name="item.start_info.addressname" :end_name="item.end_info.addressname">
+            </cp-trip-box> -->
           </li>
         </ul>
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
@@ -32,11 +32,11 @@
 import config from '../configs/index'
 import cFuns from '../utils/cFuns'
 
-import CpRouteCard from '../components/CpRouteCard'
-import CpRouteBox from '../components/CpRouteBox'
+import CpTripCard from '../components/CpTripCard'
+import CpTripBox from '../components/CpTripBox'
 export default {
   components: {
-    CpRouteCard,CpRouteBox
+    CpTripCard,CpTripBox
   },
   data () {
     return {
@@ -75,7 +75,7 @@ export default {
 
       _this.isLoading = 1;
       _this.noData = 0;
-      _this.$tokenAxios.get(config.urls.getMyroute,{params:params}).then(res => {
+      _this.$tokenAxios.get(config.urls.getMytrip,{params:params}).then(res => {
 
         let data = res.data.data;
           _this.isLoading = 0;

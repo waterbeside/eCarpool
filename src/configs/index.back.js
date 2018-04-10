@@ -16,12 +16,12 @@ let config = {
     getAddress        : baseDomain + 'carpool/publics/get_address', //取得地址列表
     getMyAddress      : baseDomain + 'carpool/address/get_myaddress', //取得我的地址
 
-    getOfentTrips     : baseDomain + 'carpool/myroute/get_ofent_trips', //取得常用行程
-    getMyroute        : baseDomain + 'carpool/myroute/myroute', //取得我的行程列表
-    addRoute          : baseDomain + 'carpool/myroute/add', //发布行呈现
-    cancelRoute       : baseDomain + 'carpool/myroute/cancel_route', //取消行程
-    finishRoute       : baseDomain + 'carpool/myroute/finish_route', //完结行程
-    likeRoute         : baseDomain + 'carpool/wall/like', //点赞行程
+    getOfentTrips     : baseDomain + 'carpool/mytrip/get_ofent_trips', //取得常用行程
+    getMytrip         : baseDomain + 'carpool/mytrip/index', //取得我的行程列表
+    addTrip           : baseDomain + 'carpool/mytrip/add', //发布行呈现
+    cancelTrip        : baseDomain + 'carpool/mytrip/cancel_route', //取消行程
+    finishTrip        : baseDomain + 'carpool/mytrip/finish_route', //完结行程
+    likeTrip          : baseDomain + 'carpool/wall/like', //点赞行程
     acceptRequest     : baseDomain + 'carpool/info/accept_demand', //接受需求
     riding            : baseDomain + 'carpool/info/riding', //乘车
     getRequestDetail  : baseDomain + 'carpool/info/get_view', // 取得约车需求位详细信息

@@ -1,6 +1,6 @@
 <template>
-  <div class="cp-routeCard-item col-sm-6 col-md-4 " :data-id="id" :data-from="dataFrom">
-    <div class="cp-routeCard-item-inner" >
+  <div class="cp-tripCard-item col-sm-6 col-md-4 " :data-id="id" :data-from="dataFrom">
+    <div class="cp-tripCard-item-inner" >
       <div class="cp-avatar-wrap">
         <cp-avatar :src="avatarPath"></cp-avatar>
       </div>
@@ -17,9 +17,9 @@
       </div>
       <div class="cp-body">
 
-        <cp-route-box :start_name="start_name" :end_name="end_name">
+        <cp-trip-box :start_name="start_name" :end_name="end_name">
             <div slot="route-middle" class="cp-date-wrap"><b class="cp-time">{{time}}</b><span class="cp-date">{{date}}</span></div>
-        </cp-route-box>
+        </cp-trip-box>
         <slot name="btnbar"></slot>
       </div>
     </div>
@@ -30,11 +30,11 @@
 <script>
 import config from '../configs'
 
-import CpRouteBox from './CpRouteBox'
+import CpTripBox from './CpTripBox'
 import CpAvatar from './CpAvatar'
 export default {
   components: {
-    CpAvatar,CpRouteBox,
+    CpAvatar,CpTripBox,
   },
   data () {
     return {

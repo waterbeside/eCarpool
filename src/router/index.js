@@ -64,10 +64,10 @@ const routes = [
   },
   // 我的行程
   {
-    path: '/carpool/myroute',
-    name: 'carpool_myroute',
+    path: '/carpool/mytrip',
+    name: 'carpool_mytrip',
     component (resolve) {
-      require(['../pages/Carpool_myroute'], resolve)
+      require(['../pages/Carpool_mytrip'], resolve)
     },
     meta: {keepAlive: true }
   },

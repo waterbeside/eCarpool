@@ -1,5 +1,5 @@
 <template>
-  <div class="page-view " id="Page-route-detail" >
+  <div class="page-view " id="Page-trip-detail" >
     <!-- <title-bar  :left-options="{showBack: true}">详情</title-bar> -->
     <div class="page-view-main "   >
       <title-bar  v-show="isSticky">
@@ -38,7 +38,7 @@
                   <div class="la"><i class="fa fa-clock-o"></i></div>
                   <span class="cp-time">{{detailData.time_format}}</span>
               </div>
-              <cp-route-box :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname"></cp-route-box>
+              <cp-trip-box :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname"></cp-trip-box>
               <div class="cp-statis-list">
                 <statis-item class="cp-statis-item col-xs-4 cp-time" title="出发时间" icon="fa fa-clock-o" :duration="1"><b slot="num"  class="num"><p class="date">{{detailData.time_format.split(' ')[0]}}</p>{{detailData.time_format.split(' ')[1]}}</b></statis-item>
                 <statis-item class="cp-statis-item col-xs-4 cp-distance" title="预计路程" :num="statis.distance" :unit="statis.distance_unit" icon="fa fa-map-signs" :duration="1"></statis-item>
@@ -119,14 +119,14 @@ import {Tab, TabItem} from 'vux'
 
 
 import CpAvatar from '../components/CpAvatar'
-import CpRouteBox from '../components/CpRouteBox'
+import CpTripBox from '../components/CpTripBox'
 
 import StatisItem from '../components/StatisItem'
 
 
 export default {
   components: {
-    CpAvatar,CpRouteBox,StatisItem,Tab,TabItem
+    CpAvatar,CpTripBox,StatisItem,Tab,TabItem
   },
   data () {
     return {
@@ -463,28 +463,28 @@ export default {
        var url,postData,confirmText;
        var successText = "成功"
        var confirmTitle = "请确认"
-       var isJumpToMyroute = false;
+       var isJumpToMytrip = false;
        switch (action) {
          case 'pickup':
            url = config.urls.acceptRequest;
            postData = {id:_this.id};
            confirmText = '是否接受【'+_this.user.name+'】的约车'
            successText = "搭载成功"
-           isJumpToMyroute = true;
+           isJumpToMytrip = true;
            break;
          case 'riding':
            url = config.urls.riding;
            postData = {wid:_this.id};
            confirmText = '是否要坐【'+_this.user.name+'】的车'
            successText = "搭车成功"
-           isJumpToMyroute = true;
+           isJumpToMytrip = true;
            break;
          case 'finish':
            url = config.urls.finishRoute;
            postData = {id:_this.id,from:_this.type};
            confirmText = '是否结束本次行程'
            successText = "本次行程已完成"
-           isJumpToMyroute = false;
+           isJumpToMytrip = false;
            var success = function(rs){
              _this.detailData.status = 3;
              _this.changeStatus(3);
@@ -495,7 +495,7 @@ export default {
            postData = {id:_this.id,from:_this.type};
            confirmText = '您确定要取消本次行程吗？'
            successText = "取消成功"
-           isJumpToMyroute = false;
+           isJumpToMytrip = false;
            var success = function(rs){
              if( _this.uid == _this.user.uid){
                _this.detailData.status = 2;
@@ -526,8 +526,8 @@ export default {
                if(typeof(success)==="function"){
                  success(res.data);
                }
-               if(isJumpToMyroute){
-                 _this.$store.commit('setJumpTo',{name:"carpool_myroute"});
+               if(isJumpToMytrip){
+                 _this.$store.commit('setJumpTo',{name:"carpool_mytrip"});
                  _this.$router.push({name:'carpool'});
                }
 
@@ -592,7 +592,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-  #Page-route-detail {
+  #Page-trip-detail {
     .cp-scroll {top:0;
       section.cp-scroll-inner { top:0}
     }

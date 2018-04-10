@@ -1,5 +1,5 @@
 <template>
-  <div class="page-view"  id="Page-route-add">
+  <div class="page-view"  id="Page-trip-add">
     <div class="page-view-inner" >
       <!-- <title-bar  :left-options="{showBack: true}">{{type=="info"?"发布约车需求":"发布空座位"}}</title-bar> -->
       <cp-goback-btn></cp-goback-btn>
@@ -45,7 +45,7 @@
               </div>
             </div>
             <div class="cp-map-form-inner">
-              <div class="cp-route-wrapper" :class="{'exchanging':exChangeAddressing}">
+              <div class="cp-trip-wrapper" :class="{'exchanging':exChangeAddressing}">
                 <div class="cp-selectbtn-wrap cp-startp-wrap" :class="{'isNull':startIsNull}">
                   <div class="cp-selectbtn"  @click="selectAddress('start')" >
                     <span class="cp-label">
@@ -416,7 +416,7 @@ export default {
               // pageMethods.addAddressToDB(newDatas[i]);
             }
           }
-          _this.$store.commit('setJumpTo',{name:"carpool_myroute"});
+          _this.$store.commit('setJumpTo',{name:"carpool_mytrip"});
           _this.$router.push({name:'carpool'});
         }else{
           _this.$vux.toast.text(res.data.desc);

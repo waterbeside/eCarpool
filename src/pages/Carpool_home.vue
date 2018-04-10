@@ -8,7 +8,7 @@
             <dl class="cp-index-btn-item">
               <dt>行程</dt>
               <dd>
-                <router-link  class="btn btn-ripple" to="/carpool/myroute">
+                <router-link  class="btn btn-ripple" to="/carpool/mytrip">
                   <i class="fa fa-map"></i>我的行程
                 </router-link>
                 </dd>

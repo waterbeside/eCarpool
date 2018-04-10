@@ -1,7 +1,7 @@
 <template>
-  <div class="cp-route-box">
-      <div class="cp-route-line"><div class="cp-line"></div></div>
-      <div class="cp-route-content">
+  <div class="cp-trip-box">
+      <div class="cp-trip-line"><div class="cp-line"></div></div>
+      <div class="cp-trip-content">
         <div class="cp-item cp-start">
           <b class="cp-p"></b>
           <h4>{{start_name}}</h4>
