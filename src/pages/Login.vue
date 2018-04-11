@@ -81,6 +81,7 @@ export default {
             localStorage.setItem('CP_U_TOKEN',data.token);
             localStorage.setItem('CP_uid',data.user.uid);
             data.user.loginname = data.user.loginname.toLowerCase();
+            this.password = "";
             // console.log(data.user)
             // this.$store.commit('setUserBaseData',data.user);
             this.$store.commit('setUserData',data.user);
