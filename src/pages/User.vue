@@ -122,6 +122,10 @@ export default {
 
   },
   mounted () {
+
+
+  },
+  activated (){
     setTimeout(()=>{
       if(typeof(this.$store.state.userData.name)!="undefined"){
         this.avatar = this.$store.state.userAvatar;
@@ -133,10 +137,6 @@ export default {
 
       this.loadUserStatis()
     },600)
-
-  },
-  activated (){
-    // this.loadUserInfo()
   }
 
 
