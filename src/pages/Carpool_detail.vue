@@ -263,8 +263,8 @@ export default {
         case 0:
             _this.alertText = "该乘客正等待被搭载"
             _this.isShowBtn_cancel = _this.uid == _this.user.uid ? true : false;
-            _this.isShowBtn_complete = _this.uid == _this.user.uid ? true : false;
             if(_this.type=="wall"){
+              _this.isShowBtn_complete = _this.uid == _this.user.uid ? true : false;
               if(_this.detailData.hasTake > 0){
                   _this.isShowAlert = true;
                   _this.alertClass  = "alert-info"
@@ -604,6 +604,9 @@ export default {
     this.isSticky   = false;
     this.passengers = [];
     this.passengers_time = 0 ;
+    this.comments          = [];
+    this.comments_time     = 0;
+    this.comments_total    = 0;
     if(path.indexOf('requests')>1){
       this.type =  'info';
     }
