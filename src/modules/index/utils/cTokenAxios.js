@@ -3,7 +3,7 @@ import router from '../router'
 import {ToastPlugin} from 'vux'
 
 import axios from 'axios'
-import config from '../configs'
+import config from '../config'
 import qs from 'qs'
 
 Vue.use(ToastPlugin);

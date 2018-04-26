@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import config from '../configs'
+import config from '../config'
 
 export default {
   components: {

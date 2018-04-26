@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import config from '../configs/index'
+import config from '../config'
 import { Countdown } from 'vux'
 
 export default {

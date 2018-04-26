@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import config from '../configs/index'
+import config from '../config'
 
 var fieldArray = {
   'loginname':{

@@ -1,36 +1,54 @@
 <template>
-  <div class="page-view cp-overhide">
+  <div class="page-view  ">
     <title-bar  :left-options="{showBack: true, preventGoBack:true}" @onClickBack="goHome">
-      <span v-show="!isShowSearchBox">约车需求</span>
+      <span v-show="isShowSearchBox==0">墙上空座位</span>
       <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)" @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch" ></cp-search-box>
+      <!--
+      <div slot="rightContent">
+        <div class="cp-search-box" v-show="isShowSearchBox"><input name="keyword" class="form-control form-control-line" placeholder="请输入关键字查找"  v-model="keyword" @keyup="doSearch" autocomplete="false" ></div>
+        <div class="cp-btn-wrapper">
+          <button class="cp-btn-search" v-show="isShowSearchBox==0" @click="showSearchBox(1)"><i class="fa fa-search"></i></button>
+          <button class="cp-btn-close" v-show="isShowSearchBox" @click="showSearchBox(0)"><i class="fa fa-times"></i></button>
+        </div>
+      </div>-->
     </title-bar>
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
+
          <cp-trip-card
-          v-for="(item,index) in listDatas"
+            v-for="(item,index) in listDatas"
            :key="item.id"
            :id="item.id"
-           :name="item.passenger_info.name"
-           :avatar="item.passenger_info.imgpath"
-           :phone="item.passenger_info.phone"
-           :department="item.passenger_info.Department"
-           :carnumber="item.passenger_info.carnumber"
+           :name="item.owner_info.name"
+           :avatar="item.owner_info.imgpath"
+           :phone="item.owner_info.phone"
+           :department="item.owner_info.Department"
+           :carnumber="item.owner_info.carnumber"
            :start_name="item.start_info.addressname"
            :end_name="item.end_info.addressname"
            :date = "item.time.split(' ')[0]"
            :time = "item.time.split(' ')[1]"
-           :class="[{'cancel':item.status > 0},('item-'+item.id)]"
+           :class="[{'cancel':item.status > 1},('item-'+item.id)]"
            :ref = "'item-'+item.id"
-           data-from="info"
-           typeLabel="乘客"
+           typeLabel="司机"
+           data-from="wall"
            @click.native="goDetail(index)"
-
          >
            <div slot="btnbar" class="cp-btns-wrapper">
-             <a class="cp-btn cp-btn-accept" @click.prevent.stop="acceptRequest(item.id,index)">接受</a>
+              <div class="cp-fabBtn-wrap " :class="[{'hasLike':item.hasLike===1,'doLike':item.id === doLikeId}]">
+                <b class="t">点赞</b>
+                <a href="javascript:void(0);" class="btn  btn-fab" :class="item.hasLike===1 ? 'btn-danger' : 'btn-primary' " @click="likeTrip(item.id,index)">
+                  <i class="fa fa-heart" ></i>
+                </a>
+                <b class="num">{{item.like_count}}</b>
+              </div>
+              <div class="cp-fabBtn-wrap"><b class="t">空位</b><a href="javascript:void(0);" class="btn btn-primary btn-fab "><i class="fa fa-car"></i></a><b class="num">{{item.seat_count - item.took_count}}</b></div>
+              <div class="cp-fabBtn-wrap" :class="[{'hasLike':item.hasTake===1}]">
+                <b class="t">已搭</b>
+                <a href="javascript:void(0);" class="btn btn-fab" :class="item.hasTake===1 ? 'btn-danger' : 'btn-primary' "><i class="fa fa-user"></i></a>
+                <b class="num">{{item.took_count}}</b></div>
            </div>
          </cp-trip-card>
-
 
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
        <div class="text-center">
@@ -45,9 +63,10 @@
 </template>
 
 <script>
-import config from '../configs/index'
-import cFuns from '../utils/cFuns'
-import CpSearchBox from '../components/CpSearchBox'
+import config from '../config'
+import cFuns from '../../../utils/cFuns'
+
+import CpSearchBox from '../../../components/CpSearchBox'
 import CpTripCard from '../components/CpTripCard'
 
 export default {
@@ -56,24 +75,24 @@ export default {
   },
   data () {
     return {
+      doLikeId:null,
       keyword : '',
       keyword_o : '',
-      isShowSearchBox:0,
       page    : 1,
       pageCount:1,
       isLoading : 0,
       listDatas :[],
       noData:0,
+      isShowSearchBox:0,
       scrollData: {
           noFlag: false //暂无更多数据显示
       },
       enableInfinite:false,
-      // msg      : 'Welcome to Your Vue.js App'
+
     }
   },
   methods :{
     init (){
-
       this.keyword = this.$route.params.keyword ? this.$route.params.keyword : '';
       this.page    = this.$route.params.page ? this.$route.params.page : 1;
     },
@@ -88,14 +107,14 @@ export default {
      */
     goDetail (index){
       let _this = this;
-      this.$router.push({name:'carpool_requests_detail',params: { id: this.listDatas[index].id ,from:"info"}});
+      this.$router.push({name:'carpool_rides_detail',params: { id: _this.listDatas[index].id ,from:"wall"}});
     },
     /**
      * [showSearchBox 显示或关闭搜索输入]
      */
     showSearchBox (show){
       this.isShowSearchBox = show ? 1 : 0;
-      if( show==0 && this.keyword != "" ){
+      if(show==0  && this.keyword != "" ){
         this.keyword = '';
         this.getList(1);
       }
@@ -108,44 +127,35 @@ export default {
         this.keyword_o =  this.keyword
         this.getList(1)
       }
+
     },
     /**
-     * [acceptRequest 接受约车需求]
+     * [clickLike 点赞]
      * @param  {integer} id    [需求列表行id (infoid)]
      * @param  {integer} index [需求列表行的索引 ]
      */
-    acceptRequest (id,index){
-
+    likeTrip (id,index){
       var _this = this;
-      var itemData = _this.listDatas[index];
-      // event.stopPropagation();
-      this.$vux.confirm.show({
-        title: '请确认',
-        content: '是否接受【'+itemData.passenger_info.name+'】的约车',
-        onConfirm () {
-          _this.$el.querySelector('.load-more').style.display = 'none';
-          _this.$store.commit('setLoading',{isShow:true,text:"提交中"});
-          // return false;
+      event.stopPropagation();
+      _this.$el.querySelector('.load-more').style.display = 'none';
 
-          _this.$tokenAxios.post(config.urls.acceptRequest,{id:id}).then(res => {
-            _this.$store.commit('setLoading',{isShow:false});
-            if(res.data.code === 0) {
-              _this.listDatas[index].status = 1
-              _this.$vux.toast.text('搭载成功');
-              setTimeout(function(){
-                // this.listDatas.splice(index, 1);
-                _this.listDatas = _this.listDatas.filter(t => t.infoid != id);
-              },600)
-            }else{
-              _this.$vux.toast.text('网络好像不太畅通');
-            }
-          })
-          .catch(error => {
-            _this.$store.commit('setLoading',{isShow:false});
-            console.log(error)
-          })
-        }
-      })
+      if(!_this.listDatas[index].hasLike){
+        _this.listDatas[index].like_count = parseInt(_this.listDatas[index].like_count) + 1
+        _this.listDatas[index].hasLike = 1;
+        _this.doLikeId = id;
+        this.$tokenAxios.post(config.urls.likeTrip,{id:id}).then(res => {
+          if(res.data.code === 0) {
+
+          }else{
+
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+      }
+      return false;
+
 
     },
     /**
@@ -161,12 +171,10 @@ export default {
 
       _this.isLoading = 1;
       _this.noData = 0;
-      _this.$tokenAxios.get(config.urls.getInfoLists,{params:params}).then(res => {
-
+      _this.$tokenAxios.get(config.urls.getWallLists,{params:params}).then(res => {
         let data = res.data.data;
         _this.isLoading = 0;
         if(res.data.code === 0) {
-
           _this.page = data.page.currentPage + 1;
           _this.pageCount = data.page.pageCount;
 

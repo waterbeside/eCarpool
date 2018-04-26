@@ -28,13 +28,13 @@
 </template>
 
 <script>
-import config from '../configs'
-import statisItem from '../components/StatisItem'
-import CpAvatar from '../components/CpAvatar'
+import config from '../config'
+import StatisItem from '../../../components/StatisItem'
+import CpAvatar from '../../../components/CpAvatar'
 
 export default {
   components: {
-    statisItem,CpAvatar
+    StatisItem,CpAvatar
   },
   data () {
     return {

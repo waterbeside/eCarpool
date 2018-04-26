@@ -28,10 +28,10 @@
 </template>
 
 <script>
-import config from '../configs'
+import config from '../../../config'
 
 import CpTripBox from './CpTripBox'
-import CpAvatar from './CpAvatar'
+import CpAvatar from '../../../components/CpAvatar'
 export default {
   components: {
     CpAvatar,CpTripBox,

@@ -34,7 +34,7 @@
 
 <script>
 
-import config from '../configs/index'
+import config from '../config'
 import VueCropper from 'vue-cropper'
 
 export default {

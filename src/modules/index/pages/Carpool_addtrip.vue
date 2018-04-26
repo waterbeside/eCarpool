@@ -107,10 +107,10 @@
 
 <script>
 
-import config from '../configs'
-import cFuns from '../utils/cFuns'
-import cModel from '../utils/cModel'
-import CpAvatar from '../components/CpAvatar'
+import config from '../config'
+import cFuns from '../../../utils/cFuns'
+import cModel from '../../../utils/cModel'
+import CpAvatar from '../../../components/CpAvatar'
 
 import {  XNumber  } from 'vux'
 

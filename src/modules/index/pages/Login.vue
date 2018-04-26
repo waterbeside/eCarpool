@@ -4,7 +4,7 @@
       <div class="page-view-content">
         <div class="page-view-header">
           <div class="cp-loginlogo-wrapper">
-            <img class="cp-logo"  src="../assets/images/login_logo.png">
+            <img class="cp-logo"  src="../../../assets/images/login_logo.png">
           </div>
         </div>
         <div class="container">
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import config from '../configs/index'
+import config from '../config'
 
 export default {
   components: {
@@ -117,12 +117,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  lang="less">
-@import "../assets/styles/cp_base.less";
+@import "../../../assets/css/cp_base.less";
 
 #Page-login {
   @color-placeholder:lighten( desaturate(@color-primary,10%),40%);
   height: 100%;
-  .cp-pagebg {position: absolute; top: 0; left: 0; right:0; bottom: 0;background-image: url(../assets/images/carpool_bg.jpg); background-position: center ; background-size: cover;}
+  .cp-pagebg {position: absolute; top: 0; left: 0; right:0; bottom: 0;background-image: url(../../../assets/images/carpool_bg.jpg); background-position: center ; background-size: cover;}
   .page-view-header { height:120px;  background: none}
   .cp-loginlogo-wrapper {
      padding-top:80px;

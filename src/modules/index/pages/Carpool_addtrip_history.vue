@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import config from '../configs/index'
-import cFuns from '../utils/cFuns'
+import config from '../config'
+import cFuns from '../../../utils/cFuns'
 
 import CpTripCard from '../components/CpTripCard'
 import CpTripBox from '../components/CpTripBox'

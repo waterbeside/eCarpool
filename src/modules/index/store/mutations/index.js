@@ -2,9 +2,9 @@
 // this.$store.commit(method, params)
 
 import store from '../'
-import cookie from '../../utils/cookie'
+import cookie from '../../../../utils/cookie'
 
-import config from '../../configs'
+import config from '../../../../config'
 
 export default {
   //设置用户详细数据

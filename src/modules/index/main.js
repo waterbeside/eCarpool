@@ -12,11 +12,11 @@ import {Group, Cell, XInput, XButton , PopupPicker, Spinner,  Divider, ConfirmPl
 
 
 
-import config from './configs/index'
-import footNavBar from './components/footNavBar'
-import titleBar from './components/titleBar'
-import CpGobackBtn from './components/CpGobackBtn'
-import CpScroller from './components/CpScroller'
+import config from './config'
+import footNavBar from '../../components/footNavBar'
+import titleBar from '../../components/titleBar'
+import CpGobackBtn from '../../components/CpGobackBtn'
+import CpScroller from '../../components/CpScroller'
 
 // 全局注册vux的组件
 Vue.component('FootNavBar', footNavBar)
@@ -61,5 +61,5 @@ new Vue({
   components: { App }
 })
 
-import "./assets/styles/bootstrap/bootstrap.less";
-import "./assets/styles/style.less";
+import "../../assets/css/bootstrap/bootstrap.less";
+import "../../assets/css/carpool.less";

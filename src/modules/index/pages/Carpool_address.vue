@@ -53,10 +53,10 @@
 </template>
 
 <script>
-import config from '../configs/index'
-import cFuns from '../utils/cFuns'
-import CpSearchBox from '../components/CpSearchBox'
-import cModel from '../utils/cModel'
+import config from '../config'
+import cFuns from '../../../utils/cFuns'
+import CpSearchBox from '../../../components/CpSearchBox'
+import cModel from '../../../utils/cModel'
 
 export default {
   components: {

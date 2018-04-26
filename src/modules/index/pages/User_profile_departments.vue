@@ -28,8 +28,8 @@
 </template>
 
 <script>
-import config from '../configs/index'
-import CpScroller from '../components/CpScroller'
+import config from '../config'
+import CpScroller from '../../../components/CpScroller'
 
 export default {
   components: {

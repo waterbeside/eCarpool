@@ -50,9 +50,9 @@
 
 <script>
 
-import config from '../configs'
-import cFuns from '../utils/cFuns'
-import cModel from '../utils/cModel'
+import config from '../config'
+import cFuns from '../../../utils/cFuns'
+import cModel from '../../../utils/cModel'
 
 // import { AMapManager } from 'vue-amap';
 // import { lazyAMapApiLoaderInstance } from 'vue-amap';

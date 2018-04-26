@@ -46,10 +46,10 @@
 </template>
 
 <script>
-import config from '../configs/index'
-import cFuns from '../utils/cFuns'
+import config from '../config'
+import cFuns from '../../../utils/cFuns'
 
-import CpAvatar from '../components/CpAvatar'
+import CpAvatar from '../../../components/CpAvatar'
 
 
 
