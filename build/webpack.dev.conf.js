@@ -58,7 +58,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
 
 
-var pages = utils.getEntry('src/modules/**/*.html');
+var pages = utils.getEntry('src/modules/**/index.html');
 //循环添加 HtmlWebpackPlugin
 for (var pathname in pages) {
   // 配置生成的html文件，定义路径等

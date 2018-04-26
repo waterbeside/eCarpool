@@ -147,7 +147,7 @@ if (config.build.productionGzip) {
 
 
 
-var pages = utils.getEntry('src/modules/**/*.html');
+var pages = utils.getEntry('src/modules/**/index.html');
 
 
 for (var pathname in pages) {

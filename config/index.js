@@ -32,7 +32,7 @@ function getEntry(globPath) {
   return entries;
 }
 
-var pages = getEntry('src/modules/**/*.html');
+var pages = getEntry('src/modules/**/index.html');
 
 //入口 index: path.resolve(__dirname, '../dist/index.html')
 for (var pathname in pages) {
@@ -77,6 +77,6 @@ module.exports = {
     cssSourceMap: false,
   },
 
-  
+
   build: build,
 }
