@@ -1,5 +1,6 @@
 'use strict'
 const path = require('path')
+const glob = require('glob')
 const config = require('../config')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const packageConfig = require('../package.json')
@@ -82,6 +83,22 @@ exports.styleLoaders = function (options) {
 
   return output
 }
+
+//取得入口js文件
+exports.getEntry = function (globPath) {
+  var entries = {},
+  basename, tmp, pathname;
+  glob.sync(globPath).forEach(function (entry) {
+    basename = path.basename(entry, path.extname(entry));
+    // pathname = basename.split("_")[0];  //index_main.js得到index
+    // entries[pathname] = entry;
+    var tmp = entry.split('/').splice(-3)
+    var moduleName = tmp.slice(1, 2).toString().toLowerCase();
+    entries[moduleName] = entry
+  });
+  return entries;
+}
+
 
 exports.createNotifierCallback = () => {
   const notifier = require('node-notifier')
