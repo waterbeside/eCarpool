@@ -7,9 +7,7 @@
               <router-view ></router-view>
           </keep-alive>
         </template>
-        <template v-else>
-          <router-view v-if="!$route.meta.keepAlive"></router-view>
-        </template>
+        <router-view v-if="!$route.meta.keepAlive"></router-view>
       </transition>
       <loading :show="isLoading" :text="loadingText"></loading>
     </div>
