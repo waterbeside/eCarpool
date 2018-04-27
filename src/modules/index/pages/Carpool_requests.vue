@@ -218,22 +218,29 @@ export default {
       done();
     }
   },
-  mounted () {
-
-  },
   created () {
     this.init();
+    this.getList(1);
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
   },
+  mounted () {
+  },
   activated (){
-    if(this.$store.state.isRefreshCarpoolList){
+    /*if(this.$store.state.isRefreshCarpoolList){
       this.listDatas = [];
-      this.getList(1);
       this.$store.commit('setIsRefreshCarpoolList',false);
     }
-    this.$el.querySelector('.load-more').style.display = 'none';
+    this.$el.querySelector('.load-more').style.display = 'none';*/
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name == "carpool_requests_detail"  ) {
+      to.meta.keepAlive = true;
+    }else{
+      to.meta.keepAlive = false;
+    }
+    next();
   }
 }
 
