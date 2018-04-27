@@ -160,9 +160,8 @@ var cFuns = {
       return map;
     },
     addMarker (position,mapObj) {
-      // console.log(position);
       mapObj.setZoomAndCenter(14, position);
-      marker = new AMap.Marker({
+      var marker = new AMap.Marker({
         icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
         // position: [116.405467, 39.907761]
         position: position,
