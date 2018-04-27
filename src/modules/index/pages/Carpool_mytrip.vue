@@ -115,6 +115,9 @@ export default {
         _this.isLoading = 0;
         if(res.data.code === 0) {
           _this.listDatas = [];
+          if(data.lists.length === 0){
+            _this.noData = 1 ;
+          }
           _this.listDatas_o = data.lists;
           _this.listDatas_o.forEach(function(value,index,arr){
             _this.listDatas.push({
