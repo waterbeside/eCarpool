@@ -8,7 +8,8 @@
       <cp-goback-btn v-show="!isSticky" :class="{'cp-sticky':isSticky}"></cp-goback-btn>
 
       <cp-scroller :enableInfinite="false" :enableRefresh="false" id="cp-scroll-wrapper" @on-scroll="onScroll">
-        <el-amap slot="before-inner" class="cp-map-content map-box" :vid="'amap-vue'" :events="mapEvents" :plugin="mapPlugin">  </el-amap>
+        <div  slot="before-inner" id="amapContainer" class="cp-map-content map-box"></div>
+        <!-- <el-amap slot="before-inner" class="cp-map-content map-box" :vid="'amap-vue'" :events="mapEvents" :plugin="mapPlugin">  </el-amap> -->
 
         <div class="cp-main" >
           <div scroll-box="cp-scroll-wrapper" ref="sticky" :offset="0" >
@@ -120,6 +121,7 @@
 import config from '../config'
 import cFuns from '../../../utils/cFuns'
 import {Tab, TabItem} from 'vux'
+import { lazyAMapApiLoaderInstance } from 'vue-amap';
 
 
 import CpAvatar from '../../../components/CpAvatar'
@@ -192,35 +194,9 @@ export default {
       statusIcon        :"fa fa-car",
 
       //地图相关
-      mapObj            :{},
-      mapEvents:{
-        init :(o)=>{
-          let _this = this;
-          this.mapObj = o;
-          // this.getDetail()
-          if(!this.$store.state.localCity){
-            this.mapObj.getCity(function(data) {
-                if (data['province'] && typeof data['province'] === 'string') {
-                  _this.$store.commit('setLocalCity',data);
-                  _this.city = data.city
-                }
-            });
-          }
-        },
-      },
-      mapPlugin: [
-        {
-            pName: 'ToolBar',
-            position:"LT",
-            offset:new AMap.Pixel(-3, 70),
-            autoPosition: true,
-            // ruler:false,
-            locate:false,
-            events: {
-              init(o) {}
-            }
-          }
-      ],
+      mapObj            :null,
+
+
 
     }
 
@@ -238,92 +214,112 @@ export default {
     }
   },
   methods :{
-    init (){
+    mapInit (){
+      return new Promise ((resolve, reject) => {
+        if(!this.mapObj){
+          lazyAMapApiLoaderInstance.load().then(() => {
+            this.mapObj = new AMap.Map('amapContainer', { resizeEnable: true,zoom: 10 });
+            if(!this.$store.state.localCity){
+              this.mapObj.getCity((data)=> {
+                  if (data['province'] && typeof data['province'] === 'string') {
+                    this.$store.commit('setLocalCity',data);
+                    this.city = data.city
+                  }
+              });
+            }
+            resolve(this.mapObj);
+          }).catch((error) => {
+              reject(error);
+            }
+          );
+        }else{
+          this.mapObj.clearMap();
+          resolve(this.mapObj);
+        }
 
+      })
     },
     goBack () {
         this.$router ? this.$router.back() : window.history.back();
     },
     changeStatus(status){
-      console.log(this.type);
-      let _this = this;
-      _this.isShowBtn_phone   = false;
-      _this.isShowBtn_goback  = false;
-      _this.isShowBtn_pickup  = false;
-      _this.isShowBtn_riding  = false;
-      _this.isShowBtn_cancel  = false;
-      _this.isShowBtn_complete= false;
-      _this.isShowBtn_cancel_alert = false;
-      _this.isShowBtn_finish_alert = false;
+      this.isShowBtn_phone   = false;
+      this.isShowBtn_goback  = false;
+      this.isShowBtn_pickup  = false;
+      this.isShowBtn_riding  = false;
+      this.isShowBtn_cancel  = false;
+      this.isShowBtn_complete= false;
+      this.isShowBtn_cancel_alert = false;
+      this.isShowBtn_finish_alert = false;
 
-      _this.isShowBtn_phone = _this.uid == _this.user.uid ? false : true;
-      _this.isShowAlert = _this.type=="info" ? true : false
+      this.isShowBtn_phone = this.uid == this.user.uid ? false : true;
+      this.isShowAlert = this.type=="info" ? true : false
       // console.log(_this.type);
       switch (parseInt(status)) {
         case 0:
-            _this.alertText = "该乘客正等待被搭载"
-            _this.isShowBtn_cancel = _this.uid == _this.user.uid ? true : false;
-            if(_this.type=="wall"){
-              _this.isShowBtn_complete = _this.uid == _this.user.uid ? true : false;
-              if(_this.detailData.hasTake > 0){
-                  _this.isShowAlert = true;
-                  _this.alertClass  = "alert-info"
-                  _this.alertText = "你已搭该司机的车";
-                  _this.isShowBtn_cancel_alert = true;
-                  _this.isShowBtn_finish_alert = true;
-                  _this.isShowBtn_goback =  true;
-              }else if(_this.detailData.hasTake_finish > 0){
-                _this.isShowBtn_goback = true;
+            this.alertText = "该乘客正等待被搭载"
+            this.isShowBtn_cancel = this.uid == this.user.uid ? true : false;
+            if(this.type=="wall"){
+              this.isShowBtn_complete = this.uid == this.user.uid ? true : false;
+              if(this.detailData.hasTake > 0){
+                  this.isShowAlert = true;
+                  this.alertClass  = "alert-info"
+                  this.alertText = "你已搭该司机的车";
+                  this.isShowBtn_cancel_alert = true;
+                  this.isShowBtn_finish_alert = true;
+                  this.isShowBtn_goback =  true;
+              }else if(this.detailData.hasTake_finish > 0){
+                this.isShowBtn_goback = true;
               }else{
-                _this.isShowBtn_riding = _this.uid == _this.user.uid ? false : true;
+                this.isShowBtn_riding = this.uid == this.user.uid ? false : true;
               }
             }
-            if(_this.type=="info"){
-              _this.isShowBtn_pickup = _this.uid == _this.user.uid ? false : true;
+            if(this.type=="info"){
+              this.isShowBtn_pickup = this.uid == this.user.uid ? false : true;
             }
-            _this.statusText  = "等车中";
-            _this.statusIcon  = "fa fa-user";
+            this.statusText  = "等车中";
+            this.statusIcon  = "fa fa-user";
           break;
         case 1:
-            if(_this.type=="wall"){
-              _this.isShowBtn_cancel = _this.uid == _this.user.uid ? true : false;
-              _this.isShowBtn_complete = _this.uid == _this.user.uid ? true : false;
-              if(_this.detailData.hasTake > 0){
-                  _this.isShowAlert = true;
-                  _this.alertClass  = "alert-info"
-                  _this.alertText = "你已搭该司机的车";
-                  _this.isShowBtn_cancel_alert = true;
-                  _this.isShowBtn_finish_alert = true;
-                  _this.isShowBtn_goback =  true;
-              }else if(_this.detailData.hasTake_finish > 0){
-                _this.isShowBtn_goback = true;
+            if(this.type=="wall"){
+              this.isShowBtn_cancel = this.uid == this.user.uid ? true : false;
+              this.isShowBtn_complete = this.uid == this.user.uid ? true : false;
+              if(this.detailData.hasTake > 0){
+                  this.isShowAlert = true;
+                  this.alertClass  = "alert-info"
+                  this.alertText = "你已搭该司机的车";
+                  this.isShowBtn_cancel_alert = true;
+                  this.isShowBtn_finish_alert = true;
+                  this.isShowBtn_goback =  true;
+              }else if(this.detailData.hasTake_finish > 0){
+                this.isShowBtn_goback = true;
               }else{
-                _this.isShowBtn_riding = _this.uid == _this.user.uid ? false : true;
+                this.isShowBtn_riding = this.uid == this.user.uid ? false : true;
               }
 
 
             }
-            if(_this.type=="info"){
-              _this.alertText = "该乘客已被司机 【<img class='cp-avatar' src='"+_this.detailData.owner_info.avatar+"' /> "+_this.detailData.owner_info.name+" 】搭载";
-              _this.isShowBtn_cancel = _this.uid == _this.user.uid || _this.detailData.owner_info.uid == _this.uid ? true : false;
-              _this.isShowBtn_complete = _this.uid == _this.user.uid || _this.detailData.owner_info.uid == _this.uid ? true : false;
+            if(this.type=="info"){
+              this.alertText = "该乘客已被司机 【<img class='cp-avatar' src='"+this.detailData.owner_info.avatar+"' /> "+this.detailData.owner_info.name+" 】搭载";
+              this.isShowBtn_cancel = this.uid == this.user.uid || this.detailData.owner_info.uid == this.uid ? true : false;
+              this.isShowBtn_complete = this.uid == this.user.uid || this.detailData.owner_info.uid == this.uid ? true : false;
             }
 
-            _this.statusText  = "已搭车";
-            _this.statusIcon  = "fa fa-car";
+            this.statusText  = "已搭车";
+            this.statusIcon  = "fa fa-car";
           break;
         case 2:
-            _this.alertText = "行程已取消"
-            _this.isShowBtn_goback =  true;
-            _this.statusText  = "已取消";
-            _this.statusIcon  = "fa fa-times";
+            this.alertText = "行程已取消"
+            this.isShowBtn_goback =  true;
+            this.statusText  = "已取消";
+            this.statusIcon  = "fa fa-times";
 
           break;
         case 3:
-            _this.alertText = "行程已完成"
-            _this.isShowBtn_goback = true;
-            _this.statusText  = "已完成";
-            _this.statusIcon  = "fa fa-check";
+            this.alertText = "行程已完成"
+            this.isShowBtn_goback = true;
+            this.statusText  = "已完成";
+            this.statusIcon  = "fa fa-check";
           break;
         default:
       }
@@ -333,59 +329,69 @@ export default {
      * 取得明细
      */
     getDetail (){
-      var _this = this;
+      // var _this = this;
       let url = this.type == "wall" ? config.urls.getRideDetail : config.urls.getRequestDetail;
-      this.$tokenAxios.get(url,{params:{id:_this.id}}).then(res => {
+      this.$store.commit('setLoading',{isShow:true,text:null});
+
+      this.$tokenAxios.get(url,{params:{id:this.id}}).then(res => {
         // console.log(res);
         if(res.data.code === 0) {
           let data = res.data.data;
-          _this.detailData      = data;
-          _this.uid             = data.uid;
-          _this.detailData.owner_info.avatar = data.owner_info.imgpath ? config.avatarBasePath + data.owner_info.imgpath : _this.defaultAvatar;
-          if( _this.type == "info"){
-            _this.typeLabel           = "乘客"
-            _this.passengers[0]       = data.passenger_info;
-            _this.passengers[0].avatar = data.passenger_info.imgpath ? config.avatarBasePath + _this.passengers[0].imgpath :_this.defaultAvatar ;
-            _this.isShowAlert          = true;
-            _this.user                 = data.passenger_info
+          this.detailData      = data;
+          this.uid             = data.uid;
+          this.detailData.owner_info.avatar = data.owner_info.imgpath ? config.avatarBasePath + data.owner_info.imgpath : this.defaultAvatar;
+          if( this.type == "info"){
+            this.typeLabel           = "乘客"
+            this.passengers[0]       = data.passenger_info;
+            this.passengers[0].avatar = data.passenger_info.imgpath ? config.avatarBasePath + this.passengers[0].imgpath :this.defaultAvatar ;
+            this.isShowAlert          = true;
+            this.user                 = data.passenger_info
 
           }else{
-            _this.typeLabel            = data.owner_info.carnumber;
-            _this.user                 = data.owner_info;
-            _this.statis.seat_count    = data.seat_count;
-            _this.statis.took_count    = data.took_count;
-            _this.statis.surplus_count = data.seat_count - data.took_count;
+            this.typeLabel            = data.owner_info.carnumber;
+            this.user                 = data.owner_info;
+            this.statis.seat_count    = data.seat_count;
+            this.statis.took_count    = data.took_count;
+            this.statis.surplus_count = data.seat_count - data.took_count;
 
           }
           this.changeStatus(data.status)
           // _this.status = data.status;
-          _this.mapObj.clearMap()
+          // _this.mapObj.clearMap()
 
           let start = [data.start_info.longtitude,data.start_info.latitude]
           let end = [data.end_info.longtitude,data.end_info.latitude]
-          setTimeout(function(){
-            cFuns.amap.drawTripLine(start, end,_this.mapObj,function(status,result){
+          this.$store.commit('setLoading',{isShow:false});
+
+          this.mapInit().then((res)=>{
+            cFuns.amap.drawTripLine(start, end,this.mapObj,(status,result)=>{
               if(status == 'complete'){
-                _this.isShowComputebox = true;
+                this.isShowComputebox = true;
                 var distance = result.routes[0].distance; //计出的距离
                 var distanceObj = cFuns.amap.formatDistance(distance,1);
                 // var distanceStr = distanceObj.distance + distanceObj.unit;
                 var dtTime = result.routes[0].time;
                 var dtTimeStr = cFuns.amap.formatTripTime(dtTime);
 
-                _this.statis.distance = parseFloat(distanceObj.distance);
-                _this.statis.distance_unit = distanceObj.unit;
+                this.statis.distance = parseFloat(distanceObj.distance);
+                this.statis.distance_unit = distanceObj.unit;
               }else{
-                _this.statis.distance = 0;
+                this.statis.distance = 0;
               }
             });
-          },1000)
+          })
+
+
+          // setTimeout(function(){
+          //
+          // },1000)
 
         }else{
-
+          this.$store.commit('setLoading',{isShow:false});
         }
       })
       .catch(error => {
+        this.$store.commit('setLoading',{isShow:false});
         console.log(error)
       })
     },
@@ -404,26 +410,25 @@ export default {
      */
     loadPassengers (){
       this.isLoading_pss = true;
-      let _this = this;
       let params = {wallid:this.id}
-      _this.$tokenAxios.get(config.urls.getRidePassengers,{params:params}).then(res => {
+      this.$tokenAxios.get(config.urls.getRidePassengers,{params:params}).then(res => {
 
         let data = res.data.data;
-        _this.isLoading_pss = false;
+        this.isLoading_pss = false;
         if(res.data.code === 0) {
           data.lists.forEach(function(value,index,arr){
-            value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : _this.defaultAvatar;
+            value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : this.defaultAvatar;
           })
-          _this.passengers = data.lists;
-          _this.took_count = _this.passengers.length;
-          _this.passengers_time = new Date().getTime();
+          this.passengers = data.lists;
+          this.took_count = this.passengers.length;
+          this.passengers_time = new Date().getTime();
         }else{
 
         }
       })
       .catch(error => {
         console.log(error)
-        _this.isLoading_pss = false;
+        this.isLoading_pss = false;
 
       })
     },
@@ -432,12 +437,11 @@ export default {
       * 取得评论总数
       */
      getCommentsCount (){
-       var _this = this;
        let params = {wid:this.id,getcount:1}
-       _this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
+       this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
          if(res.data.code == 0){
            var data = res.data.data;
-           _this.comments_total = data.total;
+           this.comments_total = data.total;
            // console.log(_this.comments_total)
          }
        });
@@ -447,28 +451,27 @@ export default {
      * 取得评论列表数据
      */
      getCommentLists (){
-       var _this = this;
        var nowTimestamp = new Date().getTime();
-       if(this.comments.length > 5  || nowTimestamp - _this.comments_time < 60*1000){
+       if(this.comments.length > 5  || nowTimestamp - this.comments_time < 60*1000){
          return false;
        }
        this.isLoading_comments = true;
 
-       let params = {wid:_this.id,num:5}
-       _this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
+       let params = {wid:this.id,num:5}
+       this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
          // console.log(res);
-         _this.isLoading_comments = false;
+         this.isLoading_comments = false;
          if(res.data.code == 0){
            var data = res.data.data;
            data.lists.forEach(function(value,index,arr){
-             value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : _this.defaultAvatar;
+             value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : this.defaultAvatar;
            })
-           _this.comments_total = data.total ? data.total : 0;
-           _this.comments = data.lists;
-           _this.comments_time = nowTimestamp;
+           this.comments_total = data.total ? data.total : 0;
+           this.comments = data.lists;
+           this.comments_time = nowTimestamp;
          }
        }).catch(error => {
-         _this.isLoading_comments = false;
+         this.isLoading_comments = false;
          console.log(error)
        });
      },
@@ -485,60 +488,60 @@ export default {
        switch (action) {
          case 'pickup':
            url = config.urls.acceptRequest;
-           postData = {id:_this.id};
-           confirmText = '是否接受【'+_this.user.name+'】的约车'
+           postData = {id:this.id};
+           confirmText = '是否接受【'+this.user.name+'】的约车'
            successText = "搭载成功"
            isJumpToMytrip = true;
            break;
          case 'riding':
            url = config.urls.riding;
-           postData = {wid:_this.id};
-           confirmText = '是否要坐【'+_this.user.name+'】的车'
+           postData = {wid:this.id};
+           confirmText = '是否要坐【'+this.user.name+'】的车'
            successText = "搭车成功"
            isJumpToMytrip = true;
            break;
          case 'finish':
            url = config.urls.finishTrip;
-           postData = {id:_this.id,from:_this.type};
+           postData = {id:this.id,from:this.type};
            confirmText = '是否结束本次行程'
            successText = "本次行程已完成"
            isJumpToMytrip = false;
-           var success = function(rs){
-             if( _this.uid == _this.user.uid){
-               _this.detailData.status = 3;
-               _this.changeStatus(3);
+           var success = (rs)=>{
+             if( this.uid == this.user.uid){
+               this.detailData.status = 3;
+               this.changeStatus(3);
              }else{
-               _this.statis.took_count      = _this.statis.took_count - 1;
-               _this.detailData.took_count  = _this.detailData.took_count - 1;
-               _this.detailData.hasTake = 0;
+               this.statis.took_count      = this.statis.took_count - 1;
+               this.detailData.took_count  = this.detailData.took_count - 1;
+               this.detailData.hasTake = 0;
                // _this.passengers  = _this.passengers.filter(t => t.uid != _this.uid);
-               _this.passengers_time = 0;
-               _this.isShowBtn_finish_alert = false;
+               this.passengers_time = 0;
+               this.isShowBtn_finish_alert = false;
 
-               _this.changeStatus(_this.detailData.status);
+               this.changeStatus(this.detailData.status);
              }
            }
            break;
          case 'cancel':
            url = config.urls.cancelTrip;
-           postData = {id:_this.id,from:_this.type};
+           postData = {id:this.id,from:this.type};
            confirmText = '您确定要取消本次行程吗？'
            successText = "取消成功"
            isJumpToMytrip = false;
-           var success = function(rs){
-             if( _this.uid == _this.user.uid){
-               _this.detailData.status = 2;
-               _this.changeStatus(2);
+           var success =  (rs)=>{
+             if( this.uid == this.user.uid){
+               this.detailData.status = 2;
+               this.changeStatus(2);
              }else{
-               _this.statis.took_count          = _this.statis.took_count - 1;
-               _this.detailData.took_count      = _this.detailData.took_count - 1;
-               _this.detailData.took_count_all  = _this.detailData.took_count_all - 1;
-               _this.detailData.hasTake = 0;
+               this.statis.took_count          = this.statis.took_count - 1;
+               this.detailData.took_count      = this.detailData.took_count - 1;
+               this.detailData.took_count_all  = this.detailData.took_count_all - 1;
+               this.detailData.hasTake = 0;
                // _this.passengers  = _this.passengers.filter(t => t.uid != _this.uid);
-               _this.passengers_time = 0;
-               _this.isShowBtn_cancel_alert = false;
+               this.passengers_time = 0;
+               this.isShowBtn_cancel_alert = false;
 
-               _this.changeStatus(_this.detailData.status);
+               this.changeStatus(this.detailData.status);
              }
            }
            break;
@@ -547,28 +550,28 @@ export default {
        this.$vux.confirm.show({
          title  : confirmTitle,
          content: confirmText,
-         onConfirm () {
-           _this.$store.commit('setLoading',{isShow:true,text:"提交中"});
+         onConfirm : ()=>{
+           this.$store.commit('setLoading',{isShow:true,text:"提交中"});
            // return false;
-           _this.$tokenAxios.post(url,postData).then(res => {
-             _this.$store.commit('setLoading',{isShow:false});
+           this.$tokenAxios.post(url,postData).then(res => {
+             this.$store.commit('setLoading',{isShow:false});
              if(res.data.code === 0) {
-               _this.$vux.toast.text(successText);
+               this.$vux.toast.text(successText);
                if(typeof(success)==="function"){
                  success(res.data);
                }
                if(isJumpToMytrip){
-                 _this.$store.commit('setJumpTo',{name:"carpool_mytrip"});
-                 _this.$router.push({name:'carpool'});
+                 this.$store.commit('setJumpTo',{name:"carpool_mytrip"});
+                 this.$router.push({name:'carpool'});
                }
 
              }else{
-               _this.$vux.toast.text(res.data.desc,'middle');
+               this.$vux.toast.text(res.data.desc,'middle');
              }
            })
            .catch(error => {
-             _this.$store.commit('setLoading',{isShow:false});
-             _this.$vux.toast.text('网络好像不太畅通');
+             this.$store.commit('setLoading',{isShow:false});
+             this.$vux.toast.text('网络好像不太畅通');
              console.log(error)
            })
          }
@@ -594,12 +597,16 @@ export default {
 
   },
   mounted () {
-
+  //   console.log(lazyAMapApiLoaderInstance)
+  //   lazyAMapApiLoaderInstance.load().then(() => {
+  // // your code ...
+  //   alert(1)
+  //     this.map = new AMap.Map('amapContainer', {
+  //       center: new AMap.LngLat(121.59996, 31.197646)
+  //     });
+  //   });
   },
   activated (){
-    // console.log(this.type)
-
-    let path = this.$route.path;
     this.tabIndex   = 0;
     this.isSticky   = false;
     this.passengers = [];
@@ -607,6 +614,18 @@ export default {
     this.comments          = [];
     this.comments_time     = 0;
     this.comments_total    = 0;
+    this.detailData =  {
+      time_format    : "0000-00-00 00:00",
+      start_info      : {addressname:'-'},
+      end_info        :{addressname:'-'},
+      status          : 0,
+      hasTake         : 0,
+      hasTake_finish  : 0,
+
+    }
+    let path = this.$route.path;
+
+
     if(path.indexOf('requests')>1){
       this.type =  'info';
     }
@@ -616,11 +635,22 @@ export default {
 
     //
     this.id = this.$route.params.id;
+    this.mapInit()
     this.getDetail()
     if(this.type=="wall"){
       this.getCommentsCount();
     }
+  },
+  deactivated () {
+
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name == "carpool_rides"  || to.name == "carpool_requests") {
+        to.meta.keepAlive = true;
+    }
+    next();
   }
+
 }
 </script>
 

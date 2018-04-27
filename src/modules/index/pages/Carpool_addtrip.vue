@@ -8,15 +8,13 @@
 
 
           <div   class="cp-map-wapper cp-map-wapper-addtrip">
-            <el-amap class="amap-box" :vid="'amap-vue'" :events="mapEvents" :plugin="mapPlugin">
-              <el-amap-marker vid="marker-s" :position="marker_start.position"  v-if="marker_start.position.length > 1"></el-amap-marker>
-              <el-amap-marker vid="marker-e" :position="marker_end.position"  v-if="marker_end.position.length > 1" ></el-amap-marker>
-            </el-amap>
-            <!-- <div class="amap-box" id="routeFormMap" style="height:100%"></div> -->
+            <div   id="amapContainer"  class="amap-box"  style="height:100%"></div>
+
+
+
             <div class="cp-tools-wrapper">
               <router-link    :to="'/carpool/addtrip/history/'+type">
                 <svg class="icon" width="200px" height="200.00px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M49.166722 803.556967a44.05248 44.05248 0 1 0 0 88.150118h235.751891a435.173469 435.173469 0 0 1-39.197901-88.150118H49.166722z m0-573.043505h793.441379a44.075059 44.075059 0 1 0 0-88.172698H49.166722a44.075059 44.075059 0 1 0 0 88.172698z m0 440.795748h176.322815c0-30.211285 3.070803-59.677449 8.873718-88.150118H49.166722a44.0299 44.0299 0 1 0 0 88.150118z m617.118564-352.623051c-194.747635 0-352.645631 157.897996-352.645631 352.645631S471.537651 1023.977421 666.285286 1023.977421s352.623051-157.897996 352.623051-352.645631-157.875416-352.645631-352.623051-352.645631z m0 661.193623c-170.429583 0-308.547992-138.140989-308.547992-308.570572 0-170.407003 138.11841-308.570572 308.547992-308.570571s308.570572 138.140989 308.570572 308.570571-138.140989 308.570572-308.570572 308.570572zM49.166722 362.761218a44.0299 44.0299 0 1 0 0 88.150118h235.751891a440.276422 440.276422 0 0 1 66.812551-88.150118h-302.564442z m661.193623 132.247756h-88.150118v220.397875h220.397874v-88.172698H710.360345v-132.225177z"  /></svg>
-                <!-- <svg class="icon"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M938.666667 448V192.042667A42.666667 42.666667 0 0 0 896.042667 149.333333H768v42.666667l128 0.042667V405.333333H128V192.042667L256 192V149.333333H127.957333A42.56 42.56 0 0 0 85.333333 192.042667v703.914666A42.666667 42.666667 0 0 0 127.936 938.666667H490.666667v-42.688l-362.666667-0.021334V448h810.666667zM298.666667 85.333333h42.666666v170.666667h-42.666666V85.333333z m384 0h42.666666v170.666667h-42.666666V85.333333zM384 149.333333h256v42.666667H384V149.333333z"  /><path d="M746.666667 917.333333a170.666667 170.666667 0 1 0 0-341.333333 170.666667 170.666667 0 0 0 0 341.333333z m0 42.666667c-117.824 0-213.333333-95.509333-213.333334-213.333333s95.509333-213.333333 213.333334-213.333334 213.333333 95.509333 213.333333 213.333334-95.509333 213.333333-213.333333 213.333333z" /><path d="M768 759.232v-119.296c0-11.605333-9.557333-21.269333-21.333333-21.269333-11.861333 0-21.333333 9.514667-21.333334 21.269333v128.128a20.992 20.992 0 0 0 6.101334 14.933333l60.629333 60.629334a21.184 21.184 0 0 0 30.016-0.149334 21.333333 21.333333 0 0 0 0.149333-30.016L768 759.232z" /></svg> -->
               </router-link>
             </div>
             <div class="cp-computebox-wrapper" v-show="isShowComputebox">
@@ -111,12 +109,12 @@ import config from '../config'
 import cFuns from '../../../utils/cFuns'
 import cModel from '../../../utils/cModel'
 import CpAvatar from '../../../components/CpAvatar'
+import { lazyAMapApiLoaderInstance } from 'vue-amap';
 
 import {  XNumber  } from 'vux'
 
 
 // import { AMapManager } from 'vue-amap';
-import { lazyAMapApiLoaderInstance } from 'vue-amap';
 
 export default {
   components: {
@@ -132,54 +130,9 @@ export default {
         start:{pid:'',addressname:''},
         end  :{pid:'',addressname:''}
       },
-      mapEvents:{
-        init :(o)=>{
-          let _this = this;
-          this.mapObj = o;
-          if(!this.$store.state.localCity){
-            this.mapObj.getCity(function(data) {
-                if (data['province'] && typeof data['province'] === 'string') {
-                  _this.$store.commit('setLocalCity',data);
-                  _this.city = data.city
-                }
-            });
-          }
-          _this.getDataFormStore()
 
-          if(typeof(_this.formData.time[0])=="undefined"){
-            let d = new Date();
-            _this.formData.time = [cFuns.formatDayItemData(d).value, cFuns.fixZero(d.getHours())+"",cFuns.fixZero(d.getMinutes())+""];
-          }
-
-          if(!_this.formData.seat_count){
-            _this.formData.seat_count = 4;
-          }
-
-          if(_this.formData.time && _this.formData.start.longtitude && _this.formData.end.longtitude &&  ( _this.formData.seat_count || _this.type == "info" ) ){
-            _this.disableSubmitBtn = false ;
-          }
-        },
-      },
-      mapObj:{},
-      mapPlugin: [/*{
-          pName: 'Geolocation',
-          buttonPosition: 'RT',    //定位按钮停靠位置，默认：'LB'，左下角
-          buttonOffset: new AMap.Pixel(12, -100),
-          events: {
-            init(o) {
-              // o 是高德地图定位插件实例
-              o.getCurrentPosition((status, result) => {
-                if (result && result.position) {
-                  self.lng = result.position.lng;
-                  self.lat = result.position.lat;
-                  self.center = [self.lng, self.lat];
-                  self.loaded = true;
-                  self.$nextTick();
-                }
-              });
-            }
-          }
-        },*/
+      mapObj:null,
+      mapPlugin: [
         {
             pName: 'ToolBar',
             position:"LT",
@@ -194,9 +147,7 @@ export default {
             }
           }
       ],
-      /*marker_start:{
-        position:[112.861513, 22.885635]
-      },*/
+
       disableSubmitBtn:true,
       formatDateDisplay: function (value, name) {
         return name.split(" ")[0]+" "+`${value[1]}`+":"+`${value[2]}`
@@ -225,16 +176,6 @@ export default {
     timeDataArray (){
       return cFuns.returnNeedTimeDatas(0,0)
     },
-    marker_start (){
-      let formData = this.formData
-      let pos = formData.start.latitude && formData.start.longtitude ? [parseFloat(formData.start.longtitude),parseFloat(formData.start.latitude)] :[];
-      return {position: pos}
-    },
-    marker_end (){
-      let formData = this.formData
-      let pos = formData.end.latitude && formData.end.longtitude ? [parseFloat(formData.end.longtitude),parseFloat(formData.end.latitude)] :[];
-      return {position: pos}
-    },
     userData (){
       let userData = this.$store.state.userData;
       return userData
@@ -246,9 +187,7 @@ export default {
 
   },
   watch:{
-    marker_start:function(val,oldval){
 
-    },
     'formData.time':function(val,oldval){
       let formData = this.$store.state.tripFormData;
         formData.time = val;
@@ -263,6 +202,32 @@ export default {
     },
   },
   methods: {
+    //地图初始化
+    mapInit (){
+      return new Promise ((resolve, reject) => {
+        if(!this.mapObj){
+          lazyAMapApiLoaderInstance.load().then(() => {
+            this.mapObj = new AMap.Map('amapContainer', { resizeEnable: true,zoom: 10 });
+            if(!this.$store.state.localCity){
+              this.mapObj.getCity((data)=> {
+                  if (data['province'] && typeof data['province'] === 'string') {
+                    this.$store.commit('setLocalCity',data);
+                    this.city = data.city
+                  }
+              });
+            }
+            resolve(this.mapObj);
+          }).catch((error) => {
+              reject(error);
+            }
+          );
+        }else{
+          this.mapObj.clearMap();
+          resolve(this.mapObj);
+        }
+
+      })
+    },
 
     //跳到地址业选地址
     selectAddress (to){
@@ -273,13 +238,10 @@ export default {
      * [getDataFromStore 取得已存的数据]
      */
     getDataFormStore (){
-      var _this = this;
       let formData_s = this.$store.state.tripFormData;
-      // console.log(formData_s)
-      // console.log(this.$store.state.tripFormData)
-      if(formData_s){
-        _this.markerAndDraw(formData_s);
 
+      if(formData_s){
+        this.markerAndDraw(formData_s);
         if(formData_s.time){
           this.formData.time =  formData_s.time
         }
@@ -294,7 +256,6 @@ export default {
      * [exChangeAddress 交换开始结束位置]
      */
     exChangeAddress (){
-      let _this = this;
       if(this.startIsNull && this.endIsNull){
         return false;
       }
@@ -307,17 +268,9 @@ export default {
       formData_o.start = endp;
       this.formData =  Object.assign({}, formData_o);
       this.$store.commit('setTripFormData',formData_o);
-      // return false;
-      // if(formData.start && formData.end ){ //画线
-      //   _this.mapObj.clearMap()
-      //   var start = new AMap.LngLat(parseFloat(formData.start.longtitude), parseFloat(formData.start.latitude));
-      //   var end = new AMap.LngLat(parseFloat(formData.end.longtitude), parseFloat(formData.end.latitude));
-      //
-      //   cFuns.amap.drawTripLine(start, end,_this.mapObj);
-      // }
-      _this.getDataFormStore();
+      this.getDataFormStore();
 
-      setTimeout(function(){_this.exChangeAddressing = false},500)
+      setTimeout(()=>{this.exChangeAddressing = false},500);
     },
 
     /**
@@ -325,39 +278,39 @@ export default {
      * @param  object formData_s 起终点的座标数据
      */
     markerAndDraw (formData_s){
-      var _this = this;
       if(formData_s.start && formData_s.start.latitude ){
         this.formData.start =  formData_s.start
         if(!this.formData.end.latitude){
           cFuns.amap.setCenter([parseFloat(formData_s.start.longtitude),parseFloat(formData_s.start.latitude)],this.mapObj);
+          cFuns.amap.addMarker([parseFloat(formData_s.start.longtitude),parseFloat(formData_s.start.latitude)],this.mapObj);
         }
       }
       if(formData_s.end && formData_s.end.latitude){
         this.formData.end =  formData_s.end
         if(!this.formData.start.latitude){
           cFuns.amap.setCenter([parseFloat(formData_s.end.longtitude),parseFloat(formData_s.end.latitude)],this.mapObj);
+          cFuns.amap.addMarker([parseFloat(formData_s.end.longtitude),parseFloat(formData_s.end.latitude)],this.mapObj);
         }
       }
       if(formData_s.start && formData_s.end && formData_s.start.latitude && formData_s.end.latitude){ //画线
-        _this.mapObj.clearMap()
+        this.mapObj.clearMap()
         var start = new AMap.LngLat(parseFloat(formData_s.start.longtitude), parseFloat(formData_s.start.latitude));
         var end = new AMap.LngLat(parseFloat(formData_s.end.longtitude), parseFloat(formData_s.end.latitude));
 
-        cFuns.amap.drawTripLine(start, end,this.mapObj,function(status,result){
+        cFuns.amap.drawTripLine(start, end,this.mapObj,(status,result)=>{
 
           if(status == 'complete'){
-            _this.isShowComputebox = true;
+            this.isShowComputebox = true;
             var distance = result.routes[0].distance; //计出的距离
             var distanceStr = cFuns.amap.formatDistance(distance);
             var dtTime = result.routes[0].time;
             var dtTimeStr = cFuns.amap.formatTripTime(dtTime);
-            _this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
-            _this.formData.distance = distance;
+            this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
+            this.formData.distance = distance;
           }else{
             var data= '路线过长，无法预测行程时间';
-            _this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
-
-            _this.formData.distance = 0;
+            this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
+            this.formData.distance = 0;
           }
         });
       }
@@ -366,44 +319,27 @@ export default {
      * 提交数据
      */
     doSubmit (){
-      let _this = this;
-      let startData = _this.formData.start;
-      let endData = _this.formData.end;
+      let startData = this.formData.start;
+      let endData = this.formData.end;
       let postData = {
-        datetime:_this.formData.time[0]+" "+_this.formData.time[1]+":"+_this.formData.time[2],
-        startpid:_this.formData.start.addressid,
-        endpid:_this.formData.end.addressid ,
-        start:_this.formData.start,
-        /*{
-          addressid:startData.addressid ? startData.addressid : 0,
-          addressname: startData.addressname,
-          longtitude: startData.longtitude,
-          latitude: startData.latitude,
-          addressname: startData.addressname,
-          address: startData.address ? startData.address : '',
-        },*/
-        end:_this.formData.end,
-      /*  {
-          addressid:endData.addressid ? endData.addressid : 0,
-          addressname: endData.addressname,
-          longtitude: endData.longtitude,
-          latitude: endData.latitude,
-          addressname: endData.addressname,
-          address: endData.address ? endData.address : '',
-        },*/
-        distance : _this.formData.distance,
+        datetime:this.formData.time[0]+" "+this.formData.time[1]+":"+this.formData.time[2],
+        startpid:this.formData.start.addressid,
+        endpid:this.formData.end.addressid ,
+        start:this.formData.start,
+        end:this.formData.end,
+        distance : this.formData.distance,
         from:this.type,
       }
       postData.start['addressid'] = startData.addressid ? startData.addressid : 0
-      if(_this.type == "wall"){
-        postData.seat_count = _this.formData.seat_count
+      if(this.type == "wall"){
+        postData.seat_count = this.formData.seat_count
       }
 
       this.$tokenAxios.post(config.urls.addTrip,postData).then(res => {
 
         var resData = res.data.data
         if(res.data.code === 0) {
-          _this.$vux.toast.text("发布成功");
+          this.$vux.toast.text("发布成功");
           if(resData.createAddress.length>0){
             // console.log(rs.data.createAddress)
             var newDatas = resData.createAddress;
@@ -416,10 +352,10 @@ export default {
               // pageMethods.addAddressToDB(newDatas[i]);
             }
           }
-          _this.$store.commit('setJumpTo',{name:"carpool_mytrip"});
-          _this.$router.push({name:'carpool'});
+          this.$store.commit('setJumpTo',{name:"carpool_mytrip"});
+          this.$router.push({name:'carpool'});
         }else{
-          _this.$vux.toast.text(res.data.desc);
+          this.$vux.toast.text(res.data.desc);
 
         }
       })
@@ -430,25 +366,30 @@ export default {
 
 
   },
-  mounted () {
-    var _this = this;
-    lazyAMapApiLoaderInstance.load().then(() => {
-      // _this.mapObj = cFuns.amap.showMap("routeFormMap")
-
-    });
-  },
   created(){
     // console.log(AMap);
     this.type = this.$route.params.type;
-
-
-
     // console.log(this.mapObj)
     // this.loadUserInfo()
   },
+  mounted () {
+    this.mapInit().then((res)=>{
+      this.getDataFormStore()
+      if(typeof(this.formData.time[0])=="undefined"){
+        let d = new Date();
+        this.formData.time = [cFuns.formatDayItemData(d).value, cFuns.fixZero(d.getHours())+"",cFuns.fixZero(d.getMinutes())+""];
+      }
+      if(!this.formData.seat_count){
+        this.formData.seat_count = 4;
+      }
+      if(this.formData.time && this.formData.start.longtitude && this.formData.end.longtitude &&  ( this.formData.seat_count || this.type == "info" ) ){
+        this.disableSubmitBtn = false ;
+      }
+    })
+
+  },
+
   activated (){
-    var _this = this;
-    // setTimeout(function(){
 
     // },200)
   }
