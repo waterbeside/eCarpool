@@ -23,18 +23,19 @@
             <li><a class="btn btn-ripple" @click="logout" ><i class="fa fa-sign-out"></i>退出登录</a></li>
           </ul>
       </div>
-    <foot-nav-bar current="user"></foot-nav-bar>
+    <cp-foot-nav-bar current="user"></cp-foot-nav-bar>
   </div>
 </template>
 
 <script>
 import config from '../config'
+import CpFootNavBar from '../components/CpFootNavBar'
 import StatisItem from '../../../components/StatisItem'
 import CpAvatar from '../../../components/CpAvatar'
 
 export default {
   components: {
-    StatisItem,CpAvatar
+    StatisItem,CpAvatar,CpFootNavBar
   },
   data () {
     return {

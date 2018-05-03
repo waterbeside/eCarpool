@@ -41,14 +41,18 @@
         <a href="javascript:void(0);" @click="goTripAdd('info')" class="cp-btn-need btn btn-primary  btn-fab  btn-ripple"><i class="fa fa-user-o"></i><p>我要约车</p></a>
       </div>
     </div>
-    <foot-nav-bar current="carpool"></foot-nav-bar>
+    <cp-foot-nav-bar current="carpool"></cp-foot-nav-bar>
   </div>
 </template>
 
 <script>
 
+import CpFootNavBar from '../components/CpFootNavBar'
 
 export default {
+  components: {
+     CpFootNavBar
+  },
   data () {
     return {
       isShowAddBtns : false,
