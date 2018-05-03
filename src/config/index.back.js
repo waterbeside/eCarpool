@@ -2,6 +2,7 @@ let avatarPic = require('../assets/images/avatar.png');
 let baseDomain = ''
 let aMapKey    = ''
 let config = {
+  appScheme     : "io.ultrarich.carpool", //用于启动app的scheme
   baseDomain    : baseDomain ,
   aMapKey       : aMapKey, //高德地图API之KEY。
   avatarBasePath    : '', //头像公共路徑
@@ -41,6 +42,8 @@ let config = {
 
     sendSms           : baseDomain + 'carpool/service/send_code', //发送短信
     checkSmsCode      : baseDomain + 'carpool/service/check_code', //发送短信
+
+    getTripDetail     : baseDomain + 'carpool/assist/get_trip_detail'  //取得行呈现详情（免token）
   }
 }
 
