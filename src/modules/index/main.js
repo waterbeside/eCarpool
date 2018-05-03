@@ -13,13 +13,11 @@ import {Group, Cell, XInput, XButton , PopupPicker, Spinner,  Divider, ConfirmPl
 
 
 import config from './config'
-import footNavBar from '../../components/footNavBar'
 import titleBar from '../../components/titleBar'
 import CpGobackBtn from '../../components/CpGobackBtn'
 import CpScroller from '../../components/CpScroller'
 
 // 全局注册vux的组件
-Vue.component('FootNavBar', footNavBar)
 Vue.component('TitleBar', titleBar)
 Vue.component('CpGobackBtn', CpGobackBtn)
 Vue.component('CpScroller', CpScroller)
