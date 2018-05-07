@@ -101,7 +101,7 @@ export default {
          let data = res.data.data;
          if(data.lists.length > 0){
            this.listData = data.lists;
-           this.listData.forEach(function(value,key,arr){
+           this.listData.forEach((value,key,arr)=>{
              value.is_show = 1;
            })
          }
@@ -124,7 +124,7 @@ export default {
         let keyword = this.keyword.trim().toLowerCase();
         this.isSearching = true;
         let  temp_array = this.listData;
-        this.listData = temp_array.map(function(value,key,arr){
+        this.listData = temp_array.map((value,key,arr)=>{
           let department_name = value.department_name.toLowerCase();
 
           if(department_name.indexOf(keyword)>-1  ){
@@ -141,7 +141,7 @@ export default {
      * @return {[type]} [description]
      */
     showAll(){
-      this.listData = this.listData.map(function(value,key,arr){
+      this.listData = this.listData.map((value,key,arr)=>{
 
         value.is_show = 1
         return value;

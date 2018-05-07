@@ -85,11 +85,11 @@ export default {
      * 点击完成按钮
      */
     done(){
-      var _this = this ;
+
       var postData = {
-        type:_this.field,
+        type:this.field,
       }
-      postData[_this.field] = _this.value ;
+      postData[this.field] = this.value ;
       var userData_o = this.$store.state.userData;
       if(userData_o[postData.type] == postData[postData.type] ){
         this.$router.back();

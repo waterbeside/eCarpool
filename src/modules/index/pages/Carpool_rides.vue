@@ -16,6 +16,7 @@
       <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
 
          <cp-trip-card
+            v-if="listDatas"
             v-for="(item,index) in listDatas"
            :key="item.id"
            :id="item.id"
@@ -81,7 +82,7 @@ export default {
       page    : 1,
       pageCount:1,
       isLoading : 0,
-      listDatas :[],
+      listDatas :null,
       noData:0,
       isShowSearchBox:0,
       scrollData: {
@@ -106,8 +107,7 @@ export default {
      * [goDetail 跳到详细页]
      */
     goDetail (index){
-      let _this = this;
-      this.$router.push({name:'carpool_rides_detail',params: { id: _this.listDatas[index].id ,from:"wall"}});
+      this.$router.push({name:'carpool_rides_detail',params: { id: this.listDatas[index].id ,from:"wall"}});
     },
     /**
      * [showSearchBox 显示或关闭搜索输入]
@@ -135,14 +135,14 @@ export default {
      * @param  {integer} index [需求列表行的索引 ]
      */
     likeTrip (id,index){
-      var _this = this;
-      event.stopPropagation();
-      _this.$el.querySelector('.load-more').style.display = 'none';
 
-      if(!_this.listDatas[index].hasLike){
-        _this.listDatas[index].like_count = parseInt(_this.listDatas[index].like_count) + 1
-        _this.listDatas[index].hasLike = 1;
-        _this.doLikeId = id;
+      event.stopPropagation();
+      this.$el.querySelector('.load-more').style.display = 'none';
+
+      if(!this.listDatas[index].hasLike){
+        this.listDatas[index].like_count = parseInt(this.listDatas[index].like_count) + 1
+        this.listDatas[index].hasLike = 1;
+        this.doLikeId = id;
         this.$tokenAxios.post(config.urls.likeTrip,{id:id}).then(res => {
           if(res.data.code === 0) {
 
@@ -164,32 +164,32 @@ export default {
      * @param  {function} success 取得列表成功后执行。
      */
     getList (page,success){
-      var _this = this;
       // console.log(config.urls.checkLogin)
       // alert(1)
       let params = {keyword:this.keyword,page:page};
 
-      _this.isLoading = 1;
-      _this.noData = 0;
-      _this.$tokenAxios.get(config.urls.getWallLists,{params:params}).then(res => {
+      this.isLoading = 1;
+      this.noData = 0;
+      this.$tokenAxios.get(config.urls.getWallLists,{params:params}).then(res => {
         let data = res.data.data;
-        _this.isLoading = 0;
+        this.isLoading = 0;
         if(res.data.code === 0) {
-          _this.page = data.page.currentPage + 1;
-          _this.pageCount = data.page.pageCount;
+          this.page = data.page.currentPage + 1;
+          this.pageCount = data.page.pageCount;
 
-          if(_this.page > 1 ){
-            var list = _this.listDatas;
+          if(this.page > 1 ){
+            var list = this.listDatas;
             list = list.concat(data.lists);
-            _this.listDatas = list;
+            this.listDatas = list;
 
           }else{
             if(data.lists.length === 0){
-              _this.noData = 1 ;
+              this.noData = 1 ;
             }
-            _this.listDatas = data.lists;
+            this.listDatas = data.lists;
           }
-          _this.enableInfinite = _this.listDatas.length < 4 || _this.pageCount ==1  ? false : true;
+
+          this.enableInfinite = this.listDatas.length < 4 || this.pageCount ==1  ? false : true;
         }else{
 
         }
@@ -198,7 +198,7 @@ export default {
         }
       })
       .catch(error => {
-        _this.isLoading = 0;
+        this.isLoading = 0;
         console.log(error)
       })
     },
@@ -214,14 +214,13 @@ export default {
      * 列表加载更多
      */
     onInfinite(done) {
-      var _this = this;
       if(this.page < this.pageCount){
-        this.getList(this.page+1,function(res){
-          _this.$el.querySelector('.load-more').style.display = 'none';
+        this.getList(this.page+1,(res)=>{
+          this.$el.querySelector('.load-more').style.display = 'none';
         });
       }else{
         this.scrollData.noFlag = true;
-        _this.$el.querySelector('.load-more').style.display = 'none';
+        this.$el.querySelector('.load-more').style.display = 'none';
       }
       done();
     }

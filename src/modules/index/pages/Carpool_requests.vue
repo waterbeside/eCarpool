@@ -7,6 +7,7 @@
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
          <cp-trip-card
+          v-if="listDatas"
           v-for="(item,index) in listDatas"
            :key="item.id"
            :id="item.id"
@@ -62,7 +63,7 @@ export default {
       page    : 1,
       pageCount:1,
       isLoading : 0,
-      listDatas :[],
+      listDatas :null,
       noData:0,
       scrollData: {
           noFlag: false //暂无更多数据显示
@@ -87,7 +88,6 @@ export default {
      * [goDetail 跳到详细页]
      */
     goDetail (index){
-      let _this = this;
       this.$router.push({name:'carpool_requests_detail',params: { id: this.listDatas[index].id ,from:"info"}});
     },
     /**
@@ -116,32 +116,31 @@ export default {
      */
     acceptRequest (id,index){
 
-      var _this = this;
-      var itemData = _this.listDatas[index];
+      var itemData = this.listDatas[index];
       // event.stopPropagation();
       this.$vux.confirm.show({
         title: '请确认',
         content: '是否接受【'+itemData.passenger_info.name+'】的约车',
-        onConfirm () {
-          _this.$el.querySelector('.load-more').style.display = 'none';
-          _this.$store.commit('setLoading',{isShow:true,text:"提交中"});
+        onConfirm : ()=>{
+          this.$el.querySelector('.load-more').style.display = 'none';
+          this.$store.commit('setLoading',{isShow:true,text:"提交中"});
           // return false;
 
-          _this.$tokenAxios.post(config.urls.acceptRequest,{id:id}).then(res => {
-            _this.$store.commit('setLoading',{isShow:false});
+          this.$tokenAxios.post(config.urls.acceptRequest,{id:id}).then(res => {
+            this.$store.commit('setLoading',{isShow:false});
             if(res.data.code === 0) {
-              _this.listDatas[index].status = 1
-              _this.$vux.toast.text('搭载成功');
-              setTimeout(function(){
+              this.listDatas[index].status = 1
+              this.$vux.toast.text('搭载成功');
+              setTimeout(()=>{
                 // this.listDatas.splice(index, 1);
-                _this.listDatas = _this.listDatas.filter(t => t.infoid != id);
+                this.listDatas = this.listDatas.filter(t => t.infoid != id);
               },600)
             }else{
-              _this.$vux.toast.text('网络好像不太畅通');
+              this.$vux.toast.text('网络好像不太畅通');
             }
           })
           .catch(error => {
-            _this.$store.commit('setLoading',{isShow:false});
+            this.$store.commit('setLoading',{isShow:false});
             console.log(error)
           })
         }
@@ -154,34 +153,34 @@ export default {
      * @param  {function} success 取得列表成功后执行。
      */
     getList (page,success){
-      var _this = this;
+
       // console.log(config.urls.checkLogin)
       // alert(1)
       let params = {keyword:this.keyword,page:page};
 
-      _this.isLoading = 1;
-      _this.noData = 0;
-      _this.$tokenAxios.get(config.urls.getInfoLists,{params:params}).then(res => {
+      this.isLoading = 1;
+      this.noData = 0;
+      this.$tokenAxios.get(config.urls.getInfoLists,{params:params}).then(res => {
 
         let data = res.data.data;
-        _this.isLoading = 0;
+        this.isLoading = 0;
         if(res.data.code === 0) {
 
-          _this.page = data.page.currentPage + 1;
-          _this.pageCount = data.page.pageCount;
+          this.page = data.page.currentPage + 1;
+          this.pageCount = data.page.pageCount;
 
-          if(_this.page > 1 ){
-            var list = _this.listDatas;
+          if(this.page > 1 ){
+            var list = this.listDatas;
             list = list.concat(data.lists);
-            _this.listDatas = list;
+            this.listDatas = list;
 
           }else{
             if(data.lists.length === 0){
-              _this.noData = 1 ;
+              this.noData = 1 ;
             }
-            _this.listDatas = data.lists;
+            this.listDatas = data.lists;
           }
-          _this.enableInfinite = _this.listDatas.length < 4 || _this.pageCount ==1  ? false : true;
+          this.enableInfinite = this.listDatas.length < 4 || this.pageCount ==1  ? false : true;
         }else{
 
         }
@@ -190,7 +189,7 @@ export default {
         }
       })
       .catch(error => {
-        _this.isLoading = 0;
+        this.isLoading = 0;
         console.log(error)
       })
     },
@@ -206,14 +205,13 @@ export default {
      * 列表加载更多
      */
     onInfinite(done) {
-      var _this = this;
       if(this.page < this.pageCount){
-        this.getList(this.page+1,function(res){
-          _this.$el.querySelector('.load-more').style.display = 'none';
+        this.getList(this.page+1,(res)=>{
+          this.$el.querySelector('.load-more').style.display = 'none';
         });
       }else{
         this.scrollData.noFlag = true;
-        _this.$el.querySelector('.load-more').style.display = 'none';
+        this.$el.querySelector('.load-more').style.display = 'none';
       }
       done();
     }

@@ -92,10 +92,9 @@ export default {
      * @param  {integer} index 数据索引
      */
     goDetail (index){
-      let _this = this;
       let goName = this.listDatas[index].from =="wall" || this.listDatas[index].love_wall_ID ? "carpool_rides_detail" :'carpool_requests_detail' ;
       let goId = this.listDatas[index].love_wall_ID ? this.listDatas[index].love_wall_ID : this.listDatas[index].id;
-      this.$router.push({name:goName,params: { id: goId ,from:_this.listDatas[index].from}});
+      this.$router.push({name:goName,params: { id: goId ,from:this.listDatas[index].from}});
 
     },
     /**
@@ -103,24 +102,24 @@ export default {
      * @param  {function} success 取得列表成功后执行。
      */
     getList (success){
-      var _this = this;
+
       // console.log(config.urls.checkLogin)
       // alert(1)
       let params = {};
 
-      _this.isLoading = 1;
-      _this.noData = 0;
-      _this.$tokenAxios.get(config.urls.getMytrip,{params:params}).then(res => {
+      this.isLoading = 1;
+      this.noData = 0;
+      this.$tokenAxios.get(config.urls.getMytrip,{params:params}).then(res => {
         let data = res.data.data;
-        _this.isLoading = 0;
+        this.isLoading = 0;
         if(res.data.code === 0) {
-          _this.listDatas = [];
+          this.listDatas = [];
           if(data.lists.length === 0){
-            _this.noData = 1 ;
+            this.noData = 1 ;
           }
-          _this.listDatas_o = data.lists;
-          _this.listDatas_o.forEach(function(value,index,arr){
-            _this.listDatas.push({
+          this.listDatas_o = data.lists;
+          this.listDatas_o.forEach((value,index,arr)=>{
+            this.listDatas.push({
               from : value.from,
               id : value.id,
               love_wall_ID : value.love_wall_ID,
@@ -144,7 +143,7 @@ export default {
         }
       })
       .catch(error => {
-        _this.isLoading = 0;
+        this.isLoading = 0;
         console.log(error)
       })
     },

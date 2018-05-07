@@ -91,7 +91,7 @@ export default {
         // console.log(data)
         let userData = this.$store.state.userData;
         let loginname = userData.loginname;
-        let _this = this;
+
         let param = new FormData(); //创建form对象
         param.append('upload',data);//通过append向form对象添加数据
         param.append('loginname',loginname);//添加form表单中其他数据

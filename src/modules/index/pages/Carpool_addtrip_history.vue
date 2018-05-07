@@ -68,19 +68,18 @@ export default {
      * @param  {function} success 取得列表成功后执行。
      */
     getList (success){
-      var _this = this;
       // console.log(config.urls.checkLogin)
       // alert(1)
       let params = {limit:20};
 
-      _this.isLoading = 1;
-      _this.noData = 0;
-      _this.$tokenAxios.get(config.urls.getMytrip,{params:params}).then(res => {
+      this.isLoading = 1;
+      this.noData = 0;
+      this.$tokenAxios.get(config.urls.getMytrip,{params:params}).then(res => {
 
         let data = res.data.data;
-          _this.isLoading = 0;
+          this.isLoading = 0;
           if(res.data.code === 0) {
-              _this.listDatas = data.lists;
+              this.listDatas = data.lists;
           }else{
 
           }
@@ -89,7 +88,7 @@ export default {
           }
         })
         .catch(error => {
-          _this.isLoading = 0;
+          this.isLoading = 0;
           console.log(error)
         })
     },

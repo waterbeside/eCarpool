@@ -94,33 +94,32 @@ export default {
     * 取得评论列表数据
     */
     getCommentLists (){
-      var _this = this;
       var nowTimestamp = new Date().getTime();
-      if(this.comments.length > 5  || nowTimestamp - _this.comments_time < 60*1000){
+      if(this.comments.length > 5  || nowTimestamp - this.comments_time < 60*1000){
         return false;
       }
       this.isLoading = true;
 
-      let params = {wid:_this.id};
-      _this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
+      let params = {wid:this.id};
+      this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
 
-        _this.isLoading = false;
+        this.isLoading = false;
         if(res.data.code == 0){
           var data = res.data.data;
           if(!data.lists.length){
             this.noData = true;
           }
-          data.lists.forEach(function(value,index,arr){
-            value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : _this.defaultAvatar;
+          data.lists.forEach((value,index,arr)=>{
+            value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : this.defaultAvatar;
             value.isSubmiting = false;
           })
-          _this.comments_total = data.total ? data.total : 0;
-          _this.comments = data.lists;
+          this.comments_total = data.total ? data.total : 0;
+          this.comments = data.lists;
         }else{
           this.noData = true;
         }
       }).catch(error => {
-        _this.isLoading = false;
+        this.isLoading = false;
         this.noData = true;
         console.log(error)
       });
@@ -136,17 +135,17 @@ export default {
     },
 
     submitComment(){
-      let _this = this;
+
       if(this.content.trim()==''){
         this.$vux.toast.text('请填写内容。');
         return false;
       }
-      let userData =  _this.$store.state.userData;
+      let userData =  this.$store.state.userData;
       // console.log(userData)
       var newData = {
         content : this.content.trim(),
         time : cFuns.formatDate((new Date()),"yyyy-mm-dd hh:ii"),
-        avatar : _this.$store.state.userAvatar,
+        avatar : this.$store.state.userAvatar,
         name : userData.name,
         className:'cp-newAdd',
         isSubmiting : true,
