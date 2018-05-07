@@ -186,7 +186,6 @@ export default {
 
       var timeout = 2300, timer = null;
       var clientType = this.clientType;
-
       var startTime = Date.now();
       //如果客户端是安卓
       if(clientType.android) {
@@ -252,9 +251,6 @@ export default {
   },
   mounted () {
     this.loadDetail();
-    /*setTimeout(()=>{
-      this.init();
-    },100)*/
   },
 
 
