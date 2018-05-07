@@ -9,14 +9,14 @@ import {Group, Cell, ConfirmPlugin,ToastPlugin,Loading} from 'vux'
 
 
 import config from './config'
+import CpViewBox from '../../components/CpViewBox'
 
 
 // 全局注册vux的组件
 Vue.component('Group', Group)
 Vue.component('Cell', Cell)
-
-
 Vue.component('Loading', Loading)
+Vue.component('CpViewBox', CpViewBox)
 
 Vue.use(ToastPlugin);
 Vue.use(ConfirmPlugin);

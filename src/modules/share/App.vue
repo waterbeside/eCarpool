@@ -6,62 +6,64 @@
   		    <img class="arrow-pic" src="../../assets/images/arrow-topright-s.png" >
   		    <h3>如果您无法启动或下载APP，请在右上角的按钮，选择【在浏览器中打开】”。</h3>
       </div>
-      <div class="container">
-        <div class="cp-main">
+      <cp-view-box>
+        <div class="container ">
+          <div class="cp-main" ref="mainbox">
 
-          <div class="cp-tripDetail-wrapper" v-if="(r=='info'||r=='lovewall')&& detailData">
-            <div class="cp-heading-wrapper"  v-if="user"  >
-              <div class="cp-heading " >
-                  <cp-avatar :src="user.avatar"></cp-avatar>
-                  <div class="cp-txt">
-                    <h3>{{user.name}}</h3>
-                  </div>
-                  <h6>{{typeLabel}}</h6>
-                  <h4 class="department">{{user.Department}}</h4>
+            <div class="cp-tripDetail-wrapper" v-if="(r=='info'||r=='lovewall')&& detailData">
+              <div class="cp-heading-wrapper"  v-if="user"  >
+                <div class="cp-heading " >
+                    <cp-avatar :src="user.avatar"></cp-avatar>
+                    <div class="cp-txt">
+                      <h3>{{user.name}}</h3>
+                    </div>
+                    <h6>{{typeLabel}}</h6>
+                    <h4 class="department">{{user.Department}}</h4>
+                </div>
+                <div class="cp-heading-bg" ></div>
               </div>
-              <div class="cp-heading-bg" ></div>
+              <cp-trip-box v-if="detailData" :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname"></cp-trip-box>
+              <div class="cp-cell cp-cell-time">
+                  <div class="la"><i class="fa fa-clock-o"></i></div>
+                  <span class="cp-time">{{detailData.time_format}}</span>
+                  <small class="cp-label">出发时间</small>
+              </div>
+              <div class="cp-cell ">
+                  <div class="la"><i class="fa fa-info"></i></div>
+                  <span v-html="statusText"></span>
+              </div>
             </div>
-            <cp-trip-box v-if="detailData" :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname"></cp-trip-box>
-            <div class="cp-cell cp-cell-time">
-                <div class="la"><i class="fa fa-clock-o"></i></div>
-                <span class="cp-time">{{detailData.time_format}}</span>
-                <small class="cp-label">出发时间</small>
+
+            <div class="alert alert-warning" style="box-shadow: 0 0 10px rgba(0,0,0,.1);">
+              您已打开分享页面，App将会自动启动，<br />如果没有安装【溢起拼车】，可点击底部的下载按钮安装使用，你亦可使用H5使进行体验。
             </div>
-            <div class="cp-cell ">
-                <div class="la"><i class="fa fa-info"></i></div>
-                <span v-html="statusText"></span>
-            </div>
+
           </div>
-
-          <div class="alert alert-warning" style="box-shadow: 0 0 10px rgba(0,0,0,.1);">
-            您已打开分享页面，App将会自动启动，<br />如果没有安装【溢起拼车】，可点击底部的下载按钮安装使用，你亦可使用H5使进行体验。
+          <!-- 如果启动app失败则显示 -->
+          <div class="cp-share-footer"  id="footer">
+              <div class="router-link cp-bar-tab-item "  >
+                <a href="http://m.esquel.cn/apps/gek/Carpool/downloadandroid.php">
+                  <i class="cp-iconfont fa fa-android"></i>
+                  <div class="cp-bar-tab-label">安卓手机下载</div>
+                </a>
+              </div>
+              <div   class="router-link cp-bar-tab-item">
+                <a href="http://m.esquel.cn/apps/gek/Carpool/downloadios.php">
+                  <i class="cp-iconfont fa fa-apple"></i>
+                  <div class="cp-bar-tab-label">苹果手机下载</div>
+                </a>
+              </div>
+              <div   class="router-link cp-bar-tab-item" >
+                <a :href="h5Url">
+                  <i class="cp-iconfont fa fa-html5"></i>
+                  <div class="cp-bar-tab-label">进入H5版</div>
+                </a>
+              </div>
           </div>
-
-        </div>
-        <!-- 如果启动app失败则显示 -->
-        <div class="cp-share-footer"  id="footer">
-            <div class="router-link cp-bar-tab-item "  >
-              <a href="http://m.esquel.cn/apps/gek/Carpool/downloadandroid.php">
-                <i class="cp-iconfont fa fa-android"></i>
-                <div class="cp-bar-tab-label">安卓手机下载</div>
-              </a>
-            </div>
-            <div   class="router-link cp-bar-tab-item">
-              <a href="http://m.esquel.cn/apps/gek/Carpool/downloadios.php">
-                <i class="cp-iconfont fa fa-apple"></i>
-                <div class="cp-bar-tab-label">苹果手机下载</div>
-              </a>
-            </div>
-            <div   class="router-link cp-bar-tab-item" >
-              <a :href="h5Url">
-                <i class="cp-iconfont fa fa-html5"></i>
-                <div class="cp-bar-tab-label">进入H5版</div>
-              </a>
-            </div>
         </div>
 
+      </cp-view-box>
 
-      </div>
 
       <loading :show="isLoading" :text="loadingText"></loading>
     </div>
@@ -74,11 +76,12 @@ import cFuns from '../../utils/cFuns'
 import config from './config'
 import CpAvatar from '../../components/CpAvatar'
 import CpTripBox from '../index/components/CpTripBox'
+import CpViewBox from '../../components/CpViewBox'
 
 export default {
   name: 'app',
   components: {
-    CpTripBox,CpAvatar
+    CpTripBox,CpAvatar,CpViewBox
   },
   data () {
     return {
@@ -145,6 +148,24 @@ export default {
 
   },
   methods :{
+    setMainMT(){
+      //重新设定 mainbox的离顶高度
+      let h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      let mainHeight = this.$refs.mainbox.offsetHeight;
+      let surHeight = h - mainHeight -100;
+      console.log(mainHeight);
+
+      if(surHeight > 0 ){
+        let marginTop = 0.382 * surHeight;
+
+        marginTop = marginTop > 50 ? marginTop : 50;
+
+        this.$refs.mainbox.style.marginTop = marginTop + "px";
+        console.log(this.$refs.mainbox.style.marginTop);
+      }
+    },
+
+    //取得行程信息
     loadDetail(){
       let url =   config.urls.getTripDetail;
       this.$http.get(url,{params:{type:this.r,id:this.id}}).then(res => {
@@ -157,6 +178,9 @@ export default {
             this.user                 = data.owner_info;
           }
         }
+        setTimeout(()=>{
+          this.setMainMT()
+        },200)
       });
     },
 
@@ -175,7 +199,6 @@ export default {
             var ifr = document.createElement('iframe');
             ifr.src = myurl;
             ifr.style.display = 'none';
-            document.body.appendChild(ifr);
             timer = setTimeout(()=>{
                 var endTime = Date.now();
                 if(!startTime || endTime - startTime < timeout + 300) {
@@ -184,6 +207,7 @@ export default {
                     // window.open("唤起失败跳转的链接");
                 }
             }, timeout);
+            document.body.appendChild(ifr);
         }
         //如果客户端是苹果
         if(clientType.ios || clientType.iPhone || clientType.iPad) {
@@ -191,18 +215,17 @@ export default {
               //提示在浏览器打开的蒙板
               this.isShowWxTips = true;
             } else {
+                //document.body.appendChild(ifr);
+                timer = setTimeout(()=>{
+                   this.isLoading = false;
+                    // window.location.href = "ios下载的链接";
+                }, timeout);
                 /*
                 var ifr = document.createElement("iframe");
                 ifr.src = myurl;
                 ifr.style.display = "none"; //iOS9+不支持iframe唤起app
                 */
                 window.location.href = myurl;
-                //document.body.appendChild(ifr);
-                timer = setTimeout(()=>{
-
-                   this.isLoading = false;
-                    // window.location.href = "ios下载的链接";
-                }, timeout);
             }
         }
         if(!clientType.mobile){
@@ -226,16 +249,21 @@ export default {
         break;
       default:
     }
-    this.loadDetail();
+    this.launchApp();
   },
   mounted () {
-    this.launchApp();
+    this.loadDetail();
+
     /*setTimeout(()=>{
       this.init();
     },100)*/
   },
 
 
-  activated () {}
+  activated () {
+
+
+
+  }
 }
 </script>
