@@ -92,7 +92,7 @@
             <div class="text-center"  v-show="isLoading_pss">
               <spinner type="dots" size="60px"></spinner>
             </div>
-            <ul class="cp-wallView-passenger" v-if="passengers.length">
+            <ul class="cp-wallView-passenger" v-if="passengers">
               <li class="cp-item " :class="{'cp-finish':item.status==3}" v-for="(item,index) in passengers ">
                 <cp-avatar :src="item.avatar" ></cp-avatar>
                 <div class="cp-txt">
@@ -167,7 +167,7 @@ export default {
 
       //乘客相关
       isLoading_pss     :true,
-      passengers        :[],
+      passengers        :null,
       passengers_time   : 0,
 
       //用户相关
@@ -254,7 +254,7 @@ export default {
 
       this.isShowBtn_phone = this.uid == this.user.uid ? false : true;
       this.isShowAlert = this.type=="info" ? true : false
-      // console.log(_this.type);
+      // console.log(this.type);
       switch (parseInt(status)) {
         case 0:
             this.alertText = "该乘客正等待被搭载"
@@ -329,7 +329,6 @@ export default {
      * 取得明细
      */
     getDetail (){
-      // var _this = this;
       let url = this.type == "wall" ? config.urls.getRideDetail : config.urls.getRequestDetail;
       this.$store.commit('setLoading',{isShow:true,text:null});
 
@@ -356,8 +355,8 @@ export default {
 
           }
           this.changeStatus(data.status)
-          // _this.status = data.status;
-          // _this.mapObj.clearMap()
+          // this.status = data.status;
+          // this.mapObj.clearMap()
 
           let start = [data.start_info.longtitude,data.start_info.latitude]
           let end = [data.end_info.longtitude,data.end_info.latitude]
@@ -416,7 +415,7 @@ export default {
         let data = res.data.data;
         this.isLoading_pss = false;
         if(res.data.code === 0) {
-          data.lists.forEach(function(value,index,arr){
+          data.lists.forEach((value,index,arr)=>{
             value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : this.defaultAvatar;
           })
           this.passengers = data.lists;
@@ -442,7 +441,7 @@ export default {
          if(res.data.code == 0){
            var data = res.data.data;
            this.comments_total = data.total;
-           // console.log(_this.comments_total)
+           // console.log(this.comments_total)
          }
        });
      },
@@ -463,7 +462,7 @@ export default {
          this.isLoading_comments = false;
          if(res.data.code == 0){
            var data = res.data.data;
-           data.lists.forEach(function(value,index,arr){
+           data.lists.forEach((value,index,arr)=>{
              value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : this.defaultAvatar;
            })
            this.comments_total = data.total ? data.total : 0;
@@ -480,7 +479,6 @@ export default {
       * [btnAction]
       */
      btnAction (action){
-       var _this = this;
        var url,postData,confirmText;
        var successText = "成功"
        var confirmTitle = "请确认"
@@ -514,7 +512,6 @@ export default {
                this.statis.took_count      = this.statis.took_count - 1;
                this.detailData.took_count  = this.detailData.took_count - 1;
                this.detailData.hasTake = 0;
-               // _this.passengers  = _this.passengers.filter(t => t.uid != _this.uid);
                this.passengers_time = 0;
                this.isShowBtn_finish_alert = false;
 
@@ -537,7 +534,7 @@ export default {
                this.detailData.took_count      = this.detailData.took_count - 1;
                this.detailData.took_count_all  = this.detailData.took_count_all - 1;
                this.detailData.hasTake = 0;
-               // _this.passengers  = _this.passengers.filter(t => t.uid != _this.uid);
+               // this.passengers  = this.passengers.filter(t => t.uid != this.uid);
                this.passengers_time = 0;
                this.isShowBtn_cancel_alert = false;
 
