@@ -153,15 +153,11 @@ export default {
       let h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
       let mainHeight = this.$refs.mainbox.offsetHeight;
       let surHeight = h - mainHeight -100;
-      console.log(mainHeight);
 
       if(surHeight > 0 ){
         let marginTop = 0.382 * surHeight;
-
         marginTop = marginTop > 50 ? marginTop : 50;
-
         this.$refs.mainbox.style.marginTop = marginTop + "px";
-        console.log(this.$refs.mainbox.style.marginTop);
       }
     },
 
@@ -190,49 +186,47 @@ export default {
 
       var timeout = 2300, timer = null;
       var clientType = this.clientType;
-      if(clientType.weixin) {
-        this.isShowWxTips = true;
-      } else {
-        var startTime = Date.now();
-        //如果客户端是安卓
-        if(clientType.android) {
-            var ifr = document.createElement('iframe');
-            ifr.src = myurl;
-            ifr.style.display = 'none';
-            timer = setTimeout(()=>{
-                var endTime = Date.now();
-                if(!startTime || endTime - startTime < timeout + 300) {
-                    document.body.removeChild(ifr);
-                    this.isLoading = false;
-                    // window.open("唤起失败跳转的链接");
-                }
-            }, timeout);
-            document.body.appendChild(ifr);
-        }
-        //如果客户端是苹果
-        if(clientType.ios || clientType.iPhone || clientType.iPad) {
-            if(clientType.qq) {
-              //提示在浏览器打开的蒙板
-              this.isShowWxTips = true;
-            } else {
-                //document.body.appendChild(ifr);
-                timer = setTimeout(()=>{
-                   this.isLoading = false;
-                    // window.location.href = "ios下载的链接";
-                }, timeout);
-                /*
-                var ifr = document.createElement("iframe");
-                ifr.src = myurl;
-                ifr.style.display = "none"; //iOS9+不支持iframe唤起app
-                */
-                window.location.href = myurl;
-            }
-        }
-        if(!clientType.mobile){
 
-          this.isLoading =  false;
-        }
+      var startTime = Date.now();
+      //如果客户端是安卓
+      if(clientType.android) {
+          var ifr = document.createElement('iframe');
+          ifr.src = myurl;
+          ifr.style.display = 'none';
+          timer = setTimeout(()=>{
+              var endTime = Date.now();
+              if(!startTime || endTime - startTime < timeout + 300) {
+                  document.body.removeChild(ifr);
+                  this.isLoading = false;
+                  // window.open("唤起失败跳转的链接");
+              }
+          }, timeout);
+          document.body.appendChild(ifr);
       }
+      //如果客户端是苹果
+      if(clientType.ios || clientType.iPhone || clientType.iPad) {
+          if(clientType.qq) {
+            //提示在浏览器打开的蒙板
+            this.isShowWxTips = true;
+          } else {
+              //document.body.appendChild(ifr);
+              timer = setTimeout(()=>{
+                 this.isLoading = false;
+                  // window.location.href = "ios下载的链接";
+              }, timeout);
+              /*
+              var ifr = document.createElement("iframe");
+              ifr.src = myurl;
+              ifr.style.display = "none"; //iOS9+不支持iframe唤起app
+              */
+              window.location.href = myurl;
+          }
+      }
+      if(!clientType.mobile){
+
+        this.isLoading =  false;
+      }
+
     },
   },
   created () {
@@ -249,11 +243,15 @@ export default {
         break;
       default:
     }
-    this.launchApp();
+    if(this.clientType.weixin) {
+      this.isShowWxTips = true;
+      this.isLoading = false;
+    } else {
+      this.launchApp();
+    }
   },
   mounted () {
     this.loadDetail();
-
     /*setTimeout(()=>{
       this.init();
     },100)*/
