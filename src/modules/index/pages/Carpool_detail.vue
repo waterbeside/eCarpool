@@ -9,6 +9,7 @@
 
       <cp-scroller :enableInfinite="false" :enableRefresh="false" id="cp-scroll-wrapper" @on-scroll="onScroll">
         <div  slot="before-inner" id="amapContainer" class="cp-map-content map-box"></div>
+
         <!-- <el-amap slot="before-inner" class="cp-map-content map-box" :vid="'amap-vue'" :events="mapEvents" :plugin="mapPlugin">  </el-amap> -->
 
         <div class="cp-main" >
@@ -49,16 +50,17 @@
                 <statis-item class="cp-statis-item col-xs-4" v-if="type=='wall'" title="剩余空位" :num="statis.surplus_count" icon="fa fa-car" :duration="1"></statis-item>
                 <statis-item class="cp-statis-item col-xs-4 cp-status" v-if="type=='info'" title="状态"   :icon="statusIcon" ><b slot="num"  class="num">{{statusText}}</b></b></statis-item>
               </div>
-              <div class="cp-btns-wrap">
+            <!--  <div class="cp-btns-wrap">
                 <a v-show="isShowBtn_phone"  class="cp-btn cp-btn-phone " :href="'tel:'+user.phone"><i class="cp-icon fa fa-phone"></i>电 话</a>
                 <a v-show="isShowBtn_goback" class="cp-btn cp-btn-back "  @click="goBack"><i class="cp-icon fa fa-arrow-left"></i>返 回</a>
                 <a v-show="isShowBtn_pickup" class="cp-btn cp-btn-pickup " @click="btnAction('pickup')"><i class="cp-icon fa fa-car"></i>接受请求</a>
                 <a v-show="isShowBtn_riding" class="cp-btn cp-btn-riding " @click="btnAction('riding')"><i class="cp-icon fa fa-car"></i>搭 车</a>
                 <a v-show="isShowBtn_cancel" class="cp-btn cp-btn-cancel "  @click="btnAction('cancel')"><i class="cp-icon fa fa-times"></i>取消行程</a>
-                <a v-show="isShowBtn_complete" class="cp-btn cp-btn-ok "  @click="btnAction('finish')"><i class="cp-icon fa fa-check"></i>结束行程</a>
-              </div>
+                <a v-show="isShowBtn_finish" class="cp-btn cp-btn-ok "  @click="btnAction('finish')"><i class="cp-icon fa fa-check"></i>结束行程</a>
+              </div>-->
 
           </div>
+
           <!-- /详情 -->
           <div class="cp-content-item" :key="1" v-show="tabIndex == 1" >
             <div class="text-center"  v-show="isLoading_comments">
@@ -113,6 +115,15 @@
 
         </div>
       </cp-scroller>
+      <div  class="cp-btns-wrapper">
+        <a v-show="isShowBtn_goback" class="cp-btn-i cp-btn-back "  @click="goBack"><i class="cp-icon fa fa-chevron-left"></i><span>返 回</span></a>
+        <a v-show="isShowBtn_phone"  class="cp-btn-i cp-btn-phone " :href="'tel:'+user.phone"><i class="cp-icon fa fa-phone"></i><span>电 话</span></a>
+        <a v-show="isShowBtn_pickup" class="cp-btn-p cp-btn-pickup " @click="btnAction('pickup')"><i class="cp-icon fa fa-car"></i><span>接受请求</span></a>
+        <a v-show="isShowBtn_riding" class="cp-btn-p cp-btn-riding " @click="btnAction('riding')"><i class="cp-icon fa fa-car"></i><span>搭 车</span></a>
+        <a v-show="isShowBtn_cancel" class="cp-btn-p cp-btn-cancel "  @click="btnAction('cancel')"><i class="cp-icon fa fa-times"></i><span>取消行程</span></a>
+        <a v-show="isShowBtn_finish" class="cp-btn-p cp-btn-ok "  @click="btnAction('finish')"><i class="cp-icon fa fa-check"></i><span>结束行程</span></a>
+        <b v-show="isShowBtn_status" class="cp-btn-p cp-btn-disable "  @click="false"><i class="cp-icon fa fa-check"></i><span>{{alertText}}</span></b>
+      </div>
     </div>
   </div>
 </template>
@@ -181,9 +192,10 @@ export default {
       isShowBtn_pickup  :false,
       isShowBtn_riding  :false,
       isShowBtn_cancel  :false,
-      isShowBtn_complete :false,
+      isShowBtn_finish :false,
       isShowBtn_cancel_alert:false,
       isShowBtn_finish_alert: false,
+      isShowBtn_status : false,
 
       //statis-item组件相关
       statis            :{
@@ -195,7 +207,6 @@ export default {
 
       //地图相关
       mapObj            :null,
-
 
 
     }
@@ -244,13 +255,14 @@ export default {
     },
     changeStatus(status){
       this.isShowBtn_phone   = false;
-      this.isShowBtn_goback  = false;
+      this.isShowBtn_goback  = true;
       this.isShowBtn_pickup  = false;
       this.isShowBtn_riding  = false;
       this.isShowBtn_cancel  = false;
-      this.isShowBtn_complete= false;
+      this.isShowBtn_finish= false;
       this.isShowBtn_cancel_alert = false;
       this.isShowBtn_finish_alert = false;
+      this.isShowBtn_status = false;
 
       this.isShowBtn_phone = this.uid == this.user.uid ? false : true;
       this.isShowAlert = this.type=="info" ? true : false
@@ -260,13 +272,15 @@ export default {
             this.alertText = "该乘客正等待被搭载"
             this.isShowBtn_cancel = this.uid == this.user.uid ? true : false;
             if(this.type=="wall"){
-              this.isShowBtn_complete = this.uid == this.user.uid ? true : false;
+              this.isShowBtn_finish = this.uid == this.user.uid ? true : false;
               if(this.detailData.hasTake > 0){
-                  this.isShowAlert = true;
+                  // this.isShowAlert = true;
                   this.alertClass  = "alert-info"
                   this.alertText = "你已搭该司机的车";
                   this.isShowBtn_cancel_alert = true;
+                  this.isShowBtn_cancel = true;
                   this.isShowBtn_finish_alert = true;
+                  this.isShowBtn_finish = true;
                   this.isShowBtn_goback =  true;
               }else if(this.detailData.hasTake_finish > 0){
                 this.isShowBtn_goback = true;
@@ -283,13 +297,15 @@ export default {
         case 1:
             if(this.type=="wall"){
               this.isShowBtn_cancel = this.uid == this.user.uid ? true : false;
-              this.isShowBtn_complete = this.uid == this.user.uid ? true : false;
+              this.isShowBtn_finish = this.uid == this.user.uid ? true : false;
               if(this.detailData.hasTake > 0){
-                  this.isShowAlert = true;
+                  // this.isShowAlert = true;
                   this.alertClass  = "alert-info"
                   this.alertText = "你已搭该司机的车";
                   this.isShowBtn_cancel_alert = true;
+                  this.isShowBtn_cancel = true;
                   this.isShowBtn_finish_alert = true;
+                  this.isShowBtn_finish = true;
                   this.isShowBtn_goback =  true;
               }else if(this.detailData.hasTake_finish > 0){
                 this.isShowBtn_goback = true;
@@ -302,7 +318,7 @@ export default {
             if(this.type=="info"){
               this.alertText = "该乘客已被司机 【<img class='cp-avatar' src='"+this.detailData.owner_info.avatar+"' /> "+this.detailData.owner_info.name+" 】搭载";
               this.isShowBtn_cancel = this.uid == this.user.uid || this.detailData.owner_info.uid == this.uid ? true : false;
-              this.isShowBtn_complete = this.uid == this.user.uid || this.detailData.owner_info.uid == this.uid ? true : false;
+              this.isShowBtn_finish = this.uid == this.user.uid || this.detailData.owner_info.uid == this.uid ? true : false;
             }
 
             this.statusText  = "已搭车";
@@ -313,13 +329,15 @@ export default {
             this.isShowBtn_goback =  true;
             this.statusText  = "已取消";
             this.statusIcon  = "fa fa-times";
-
+            this.isShowBtn_status = true;
           break;
         case 3:
             this.alertText = "行程已完成"
             this.isShowBtn_goback = true;
             this.statusText  = "已完成";
             this.statusIcon  = "fa fa-check";
+            this.isShowBtn_status = true;
+
           break;
         default:
       }

@@ -1009,9 +1009,17 @@
   .page-view-title { z-index: 200}
   .cp-map-content { position: fixed; top:0; height: 280px; width:100%; z-index: 1;}
   .cp-scroll {transition: all .5s;}
-  .cp-scroll-inner { z-index: 2 ; margin-top: 240px; transition: all .5s;}
-  .cp-main { position: relative; min-height: 520px; background: #FFF; height: 100%; box-shadow: 0 -4px 4px rgba(0,0,0,0.1)}
-   @avatar-width : 74px;
+  .cp-scroll-inner { z-index: 2 ; margin-top: 240px; padding-bottom: 0;transition: all .5s;}
+  .cp-main { position: relative; min-height: 320px; background: #FFF; padding-bottom: 50px;height: 100%; box-shadow: 0 -4px 4px rgba(0,0,0,0.1)}
+  //返回按钮
+  .cp-btn-goback-wrapper{
+    transition: all .5s;
+    &.cp-sticky {transform: translate(0,-2px);
+      .cp-btn-goback {background: rgba(0,0,0,.3);}
+    }
+  }
+   @avatar-width : 68px;
+   //用户信息栏
   .cp-heading  {
     position: absolute; top:  -@avatar-width/2 ;clear:both;
     width: 100%;   text-align: center; z-index: 2;
@@ -1027,13 +1035,35 @@
     }
     .department {  left:4px; right: auto; }
   }
-  .cp-heading-bg { margin-top:@avatar-width/2  ; border-top:20px solid @color-primary ;  height:84px; background: url(../images/carpool_bg.jpg); background-size: cover;}
+  .cp-heading-bg { margin-top:@avatar-width/2  ; border-top:20px solid @color-primary ;  height:80px; background: url(../images/carpool_bg.jpg); background-size: cover;}
 
-  .cp-btn-goback-wrapper{
-    transition: all .5s;
-    &.cp-sticky {transform: translate(0,-2px);
-      .cp-btn-goback {background: rgba(0,0,0,.3);}
-    }
+
+  // 按键
+  .cp-btns-wrapper {
+     @btn-height:48px;
+     height: @btn-height;
+      position: absolute; bottom: 0;  clear: both; left:0; right:0; display: flex; height:@btn-height; z-index: 2000; background: #FFF; box-shadow: 0 0 20px rgba(0,0,0,.2);
+      .cp-btn-i { padding:0 16px; font-size: 16px; text-align: center; text-decoration: none;
+         color: lighten(@color-primary,20%); background: #FFF;
+        .cp-icon {
+           width: 22px; text-align: center;   line-height: @btn-height - 12;  font-size: 22px; display: block; text-align: center; width: 100%;
+        }
+        span {display: block;font-size: 12px; transform: scale(.9,.9); margin-top: -3px;}
+        &:active { box-shadow: inset 0 0 60px rgba(0,0,0,0.2);}
+      }
+      .cp-btn-p { flex:1; font-size: 15px; text-align: center; text-decoration: none;
+         color: lighten(@color-primary,20%); background: #FFF; line-height: @btn-height;
+        .cp-icon { display: none;
+           margin-right: 8px;
+        }
+        span {  margin-top: -3px;}
+        &:active { box-shadow: inset 0 0 60px rgba(0,0,0,0.2);}
+      }
+      .cp-btn-cancel {   background:lighten(@color-danger,8%);color:#FFF;}
+      .cp-btn-ok {   background:lighten(@color-success,1%); color:#FFF;}
+      .cp-btn-pickup {   background:lighten(@color-primary,15%); color:#FFF; }
+      .cp-btn-riding {   background:lighten(@color-primary,15%); color:#FFF; }
+      .cp-btn-disable  { background: lighten(desaturate(@color-primary,20%),20%); color: #FFF;}
   }
 
   .cp-heading-wrapper.cp-sticky {
@@ -1056,14 +1086,19 @@
   }
 
 
+  // 路线盒
+  .cp-trip-box {
+    h4 { margin: 8px 0;font-size: 15px;}
+  }
+
   .cp-cell {
-     padding: 12px 10px 10px 0;border-bottom: 1px dotted #ddd;
+     padding: 10px 10px 8px 0;border-bottom: 1px dotted #ddd;
      font-size: 16px; color:lighten(@color-primary,25%); font-weight: 700; //text-align: right;
     .la { float: left; display: inline-block;  min-width: 50px;color:#666; text-align: left;
       i.fa { min-width: 30px; text-align: center; margin:0 0 0 10px;   color:lighten(@color-primary,30%)}
     }
   }
-  .cp-cell-time { border-top:1px dotted #e6e6e6;}
+  .cp-cell-time { border-top:1px dotted #e6e6e6; display: none}
   .cp-btns-wrap { clear: both;padding: 10px;
     @btn-height : 44px;
     .cp-btn { display: block; position: relative; margin-bottom: 10px; height: @btn-height; line-height: @btn-height;
@@ -1081,6 +1116,7 @@
     .cp-btn-riding { border-color: lighten(@color-primary,10%); background:lighten(@color-primary,15%); color:#FFF; }
 
   }
+
   .cp-statis-list { clear: both;
     margin-bottom: 10px;
     border-bottom:1px solid #eee;
@@ -1088,9 +1124,9 @@
   .cp-statis-item {
     border-left:1px solid #eee;
     &:first-child { border-left: none; }
-    .title {color:lighten(@color-primary,18%)}
-    .cp-iconfont {color:lighten(@color-primary,18%)}
-    .num_unit_wrapper { margin-top: 3px;}
+    .title {color:lighten(@color-primary,18%); font-size: 11px;}
+    .cp-iconfont {color:lighten(@color-primary,18%); font-size: 19px}
+    .num_unit_wrapper { margin-top: 2px;}
     .num { display: inline;  font-weight: 700; color:lighten(@color-primary,18%)}
     &.cp-time .num { font-size: 18px; padding-top: 0px; line-height: 1; font-weight: 700}
     .date { font-size: 11px; margin: 0; line-height: 1; font-weight: 400; color: lighten(@color-primary,20%);white-space:nowrap}
@@ -1110,9 +1146,9 @@
 .cp-wallView-passenger {
   list-style: none;margin: 0; padding: 0;
 
-  .cp-item { position: relative; list-style: none; padding: 12px 15px; border-bottom: 1px dotted #ddd;
-    .cp-avatar { float: left;width: 46px; height: 46px; margin:-2px 15px 0 0; border-radius: 50%}
-    .media-heading { font-size: 18px; margin-top: 1px; margin-bottom: 5px;color: #666; font-weight: 400}
+  .cp-item { position: relative; list-style: none; padding: 12px 15px; border-bottom: 1px dotted #ddd; font-size: 12px;
+    .cp-avatar { float: left;width: 40px; height: 40px; margin:-2px 15px 0 0; border-radius: 50%}
+    .media-heading { font-size: 15px; margin-top: 1px; margin-bottom: 5px;color: #666; font-weight: 400}
     p {margin: 0; color:#999}
     &.cp-finish {
       background: #fafafa; color: #DDD;
@@ -1123,8 +1159,8 @@
     }
 
   }
-  .cp-btns-wrap { position: absolute; right:12px; top:12px; padding: 0 !important;}
-  .btn-fab-mini {line-height: 40px; box-shadow: none; background-color:lighten(@color-primary,50%); color:lighten(@color-primary,10%)}
+  .cp-btns-wrap { position: absolute; right:12px; top:10px; padding: 0 !important;}
+  .btn-fab-mini {width: 40px; height: 40px; line-height: 40px; box-shadow: none; background-color:lighten(@color-primary,55%); color:lighten(@color-primary,10%)}
 }
 
 /* 评论列表 */
