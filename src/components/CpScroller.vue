@@ -19,6 +19,7 @@
             </div>
             <div class="nullData" v-show="enableInfinite   && dataList.noFlag">暂无更多数据</div>
         </section>
+        <slot name="after-inner"></slot>
     </div>
 </template>
 
