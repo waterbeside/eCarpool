@@ -7,12 +7,12 @@
       </title-bar>
       <cp-goback-btn v-show="!isSticky" :class="{'cp-sticky':isSticky}"></cp-goback-btn>
 
-      <cp-scroller :enableInfinite="false" :enableRefresh="false" id="cp-scroll-wrapper" @on-scroll="onScroll">
-        <div  slot="before-inner" id="amapContainer" class="cp-map-content map-box"></div>
+      <cp-scroller :enableInfinite="false" :enableRefresh="false" id="cp-scroll-wrapper" @on-scroll="onScroll" :innerStyle="{marginTop:(mapHeight-40)+'px'}">
+        <div  slot="before-inner" id="amapContainer" class="cp-map-content map-box" :style="{height:mapHeight+'px'}"></div>
 
         <!-- <el-amap slot="before-inner" class="cp-map-content map-box" :vid="'amap-vue'" :events="mapEvents" :plugin="mapPlugin">  </el-amap> -->
 
-        <div class="cp-main" >
+        <div class="cp-main" ref="mainbox">
           <div scroll-box="cp-scroll-wrapper" ref="sticky" :offset="0" >
             <div class="cp-heading-wrapper" :class="{'cp-sticky':isSticky}" >
               <div class="cp-heading " >
@@ -155,6 +155,8 @@ export default {
       isSticky          : false,
       type              : "",
 
+      mapHeight         : 220,
+
       detailData        : {
         time_format    : "0000-00-00 00:00",
         start_info      : {addressname:'-'},
@@ -225,6 +227,20 @@ export default {
     }
   },
   methods :{
+    /**
+     * 设置地图高度
+     */
+    setMapHeight(){
+      let h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      let mainHeight = this.$refs.mainbox.offsetHeight;
+      let surHeight = h - mainHeight  ;
+
+      this.mapHeight = surHeight > 220 ? surHeight : 220;
+
+    },
+    /**
+     * 初始化地图
+     */
     mapInit (){
       return new Promise ((resolve, reject) => {
         if(!this.mapObj){
@@ -250,9 +266,15 @@ export default {
 
       })
     },
+    /**
+     * 返回按钮动作
+     */
     goBack () {
         this.$router ? this.$router.back() : window.history.back();
     },
+    /**
+     * 改变状态后界面所做的变化
+     */
     changeStatus(status){
       this.isShowBtn_phone   = false;
       this.isShowBtn_goback  = true;
@@ -494,7 +516,7 @@ export default {
      },
      /******* 按钮相关方法 *******/
      /**
-      * [btnAction]
+      * 按钮动作
       */
      btnAction (action){
        var url,postData,confirmText;
@@ -592,10 +614,12 @@ export default {
          }
        })
      },
-
+     /**
+      * 滚动事件
+      */
      onScroll(e){
        let sTop = e.target.scrollTop;
-       if(sTop > 280){
+       if(sTop > this.mapHeight){
          this.isSticky = true;
        }else{
          this.isSticky = false;
@@ -608,7 +632,6 @@ export default {
   },
 
   created () {
-
 
   },
   mounted () {
@@ -655,6 +678,10 @@ export default {
     if(this.type=="wall"){
       this.getCommentsCount();
     }
+    setTimeout(()=>{
+      this.setMapHeight();
+    },400)
+
   },
   deactivated () {
 
