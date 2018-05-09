@@ -44,19 +44,25 @@
               <div class="router-link cp-bar-tab-item "  >
                 <a href="http://m.esquel.cn/apps/gek/Carpool/downloadandroid.php">
                   <i class="cp-iconfont fa fa-android"></i>
-                  <div class="cp-bar-tab-label">安卓手机下载</div>
+                  <div class="cp-bar-tab-label">安卓下载</div>
                 </a>
               </div>
               <div   class="router-link cp-bar-tab-item">
                 <a href="http://m.esquel.cn/apps/gek/Carpool/downloadios.php">
                   <i class="cp-iconfont fa fa-apple"></i>
-                  <div class="cp-bar-tab-label">苹果手机下载</div>
+                  <div class="cp-bar-tab-label">苹果下载</div>
                 </a>
               </div>
               <div   class="router-link cp-bar-tab-item" >
                 <a :href="h5Url">
                   <i class="cp-iconfont fa fa-html5"></i>
                   <div class="cp-bar-tab-label">进入H5版</div>
+                </a>
+              </div>
+              <div   class="router-link cp-bar-tab-item cp-btn-go" >
+                <a @click="launchApp" >
+                  <i class="cp-iconfont fa fa-caret-right"></i>
+                  <div class="cp-bar-tab-label">启动APP</div>
                 </a>
               </div>
           </div>
@@ -140,6 +146,9 @@ export default {
         }
 
       }
+    },
+    jumpAppUrl (){
+      return config.appScheme+"://"+this.r+"?id="+this.id;
     }
 
   },
@@ -180,27 +189,31 @@ export default {
       });
     },
 
+
     //跳转到对应页
     launchApp () {
-      var myurl = config.appScheme+"://"+this.r+"?id="+this.id;
-
+      this.isLoading = true;
+      var myurl = this.jumpAppUrl;
       var timeout = 2300, timer = null;
       var clientType = this.clientType;
       var startTime = Date.now();
       //如果客户端是安卓
       if(clientType.android) {
-          var ifr = document.createElement('iframe');
+          window.location.href = myurl;
+          /*var ifr = document.createElement('iframe');
           ifr.src = myurl;
-          ifr.style.display = 'none';
+          document.body.appendChild(ifr);
+          ifr.style.display ="none"*/
+          // ifr.style.visibility = 'hidden';
           timer = setTimeout(()=>{
               var endTime = Date.now();
-              if(!startTime || endTime - startTime < timeout + 300) {
-                  document.body.removeChild(ifr);
+              this.isLoading = false;
+              /*if(!startTime || endTime - startTime < timeout + 300) {
+                  // document.body.removeChild(ifr);
                   this.isLoading = false;
                   // window.open("唤起失败跳转的链接");
-              }
+              }*/
           }, timeout);
-          document.body.appendChild(ifr);
       }
       //如果客户端是苹果
       if(clientType.ios || clientType.iPhone || clientType.iPad) {
@@ -208,13 +221,13 @@ export default {
             //提示在浏览器打开的蒙板
             this.isShowWxTips = true;
           } else {
-              //document.body.appendChild(ifr);
               timer = setTimeout(()=>{
                  this.isLoading = false;
                   // window.location.href = "ios下载的链接";
               }, timeout);
               /*
               var ifr = document.createElement("iframe");
+              //document.body.appendChild(ifr);
               ifr.src = myurl;
               ifr.style.display = "none"; //iOS9+不支持iframe唤起app
               */
