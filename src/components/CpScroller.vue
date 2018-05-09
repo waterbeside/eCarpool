@@ -1,7 +1,7 @@
 <template lang="html">
     <div class="cp-scroll"  :class="{'down':(state===0),'up':(state==1),refresh:(state===2),touch:touching}" :style="style"  @touchstart="touchStart($event)" @touchmove="touchMove($event)" @touchend="touchEnd($event)" @scroll="scroll($event)">
         <slot name="before-inner"></slot>
-        <section :id="innerID" class="cp-scroll-inner" :class="{'cp-enableRefresh':enableRefresh}" :style="{ transform: 'translate3d(0, ' + top + 'px, 0)' }" >
+        <section :id="innerID" class="cp-scroll-inner" :class="{'cp-enableRefresh':enableRefresh}" :style="innerStyleEX"  >
             <div class="pull-refresh" v-show="enableRefresh">
                 <slot name="pull-refresh">
                     <span class="down-tip">下拉更新</span>
@@ -26,6 +26,10 @@
 <script>
     export default {
         props: {
+            innerStyle:{
+              type: Object,
+              default: ()=>{return {}}
+            },
             position:{
               type:Object,
               default: ()=>{
@@ -72,6 +76,10 @@
             styleStr +=  this.position.left  ? "left:"+this.position.left+";" : "";
 
             return styleStr;
+          },
+          innerStyleEX (){
+            return Object.assign({transform: 'translate3d(0, ' + this.top + 'px, 0)' },this.innerStyle)
+
           }
         },
         data() {
