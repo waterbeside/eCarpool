@@ -76,7 +76,6 @@ export default {
           // 登录成功
           if(res.data.code === 0) {
             this.$vux.toast.text('登入成功');
-
             let data = res.data.data;
             localStorage.setItem('CP_U_TOKEN',data.token);
             localStorage.setItem('CP_uid',data.user.uid);
@@ -86,14 +85,12 @@ export default {
             // this.$store.commit('setUserBaseData',data.user);
             this.$store.commit('setUserData',data.user);
             // console.log(config.avatarBasePath + data.user.imgpath)
-            if(data.user.avatar.trim()!=''){
+            if(data.user.avatar && data.user.avatar.trim()!=''){
               this.$store.commit('setUserAvatar',config.avatarBasePath + data.user.avatar);
             }
-
             this.errorTips = res.data.desc;
             // this.isShowToast = true;
             this.$router.push({name:'carpool'});
-
           }else{
             // alert(res.data.msg);
             let errorMsg = res.data.code === 10001 ? "用户名或密码错误" : res.data.desc;
