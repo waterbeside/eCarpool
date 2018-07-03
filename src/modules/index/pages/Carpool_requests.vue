@@ -30,6 +30,10 @@
            <div slot="btnbar" class="cp-btns-wrapper">
              <a class="cp-btn cp-btn-accept" @click.prevent.stop="acceptRequest(item.id,index)">接受</a>
            </div>
+           <!-- <div slot="btnbar" class="cp-btns-wrapper cp-goDetail-wrapper">
+             <span class="pull-right">详请 <i class="fa fa-arrow-circle-right"></i></span>
+             <span class="tips-text" v-if="item.status ==0 && item.from=='info'">等待车主接受</span>
+           </div> -->
          </cp-trip-card>
 
 
@@ -74,7 +78,6 @@ export default {
   },
   methods :{
     init (){
-
       this.keyword = this.$route.params.keyword ? this.$route.params.keyword : '';
       this.page    = this.$route.params.page ? this.$route.params.page : 1;
     },
