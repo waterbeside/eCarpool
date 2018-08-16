@@ -106,8 +106,9 @@ export default {
        title  : '请确认',
        content: '是否退出',
        onConfirm: ()=>{
-         this.$tokenAxios.get(config.urls.logout).then(res => { });
          let uid = localStorage.getItem('CP_uid');
+         this.$tokenAxios.delete(config.urls.passport).then(res => { });
+         // this.$tokenAxios.get(config.urls.logout).then(res => { });
 
          window.localStorage.removeItem('CP_U_TOKEN');
          window.localStorage.removeItem('CP_uid');

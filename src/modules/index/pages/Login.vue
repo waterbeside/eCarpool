@@ -70,7 +70,8 @@ export default {
       let postData = {username:this.username,password:this.password,client:'h5'};
       this.isSubmiting = true;
       this.subBtnText = '登 入 中'
-      this.$tokenAxios.post(config.urls.login,postData).then(res => {
+      this.$tokenAxios.post(config.urls.passport,postData).then(res => {
+      // this.$tokenAxios.post(config.urls.login,postData).then(res => {
           this.isSubmiting = false;
           this.subBtnText = '登 入'
           // 登录成功
