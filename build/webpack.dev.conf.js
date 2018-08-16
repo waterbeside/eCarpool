@@ -1,4 +1,6 @@
 'use strict'
+const path = require('path')
+const glob = require('glob')
 const utils = require('./utils')
 const webpack = require('webpack')
 const config = require('../config')
@@ -45,13 +47,29 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
+  /*  new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
       inject: true
-    }),
+    }),*/
   ]
 })
+
+
+
+
+var pages = utils.getEntry('src/modules/**/index.html');
+//循环添加 HtmlWebpackPlugin
+for (var pathname in pages) {
+  // 配置生成的html文件，定义路径等
+  var conf = {
+    filename: pathname + '.html',
+    template: pages[pathname],   // 模板路径
+    inject: true,              // js插入位置
+    chunks:[pathname]
+  };
+  devWebpackConfig.plugins.push(new HtmlWebpackPlugin(conf));
+}
 
 module.exports = new Promise((resolve, reject) => {
   portfinder.basePort = process.env.PORT || config.dev.port

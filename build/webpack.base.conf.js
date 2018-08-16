@@ -1,10 +1,11 @@
 'use strict'
 const path = require('path')
+const glob = require('glob')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
-
 const vuxLoader = require('vux-loader')
+const entries = utils.getEntry('./src/modules/**/main.js')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -14,9 +15,10 @@ function resolve (dir) {
 
 const webpackConfig = {
   context: path.resolve(__dirname, '../'),
-  entry: {
+  /*entry: {
     app: './src/main.js'
-  },
+  },*/
+  entry: entries,
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
@@ -99,7 +101,7 @@ module.exports = vuxLoader.merge(webpackConfig, {
     },
     {
       name: 'less-theme',
-      path: 'src/assets/styles/theme_wei.less'
+      path: 'src/assets/css/theme_wei.less'
     }
   ]
 })

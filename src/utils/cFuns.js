@@ -1,11 +1,54 @@
-import config from '../configs'
+import config from '../config'
 import axios from 'axios';
 
 
 var scrollTimer = null
 
 var cFuns = {
+  /**
+   * 取得客户端（浏览器）信息
+   */
+  getClientType (){
+    var  browser  =   {
+        versions:   function()  {
+            var  u  =  window.navigator.userAgent;
+            return  {
+                trident:  u.indexOf('Trident')  >  -1, //IE内核
+                presto:  u.indexOf('Presto')  >  -1, //opera内核
+                Alipay:  u.indexOf('Alipay')  >  -1, //支付宝
+                webKit:  u.indexOf('AppleWebKit')  >  -1, //苹果、谷歌内核
+                gecko:  u.indexOf('Gecko')  >  -1  &&  u.indexOf('KHTML')  ==  -1, //火狐内核
+                mobile:  !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+                ios:  !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                android:  u.indexOf('Android')  >  -1  , //android终端
+                linux:   u.indexOf('Linux')  >  -1, //linux
+                iPhone:  u.indexOf('iPhone')  >  -1   , //是否为iPhone
+                mac:    u.indexOf('Mac')  >  -1, //是否为mac
+                //iPhone: u.match(/iphone|ipod|ipad/),//
+                iPad:  u.indexOf('iPad')  >  -1, //是否为iPad
+                webApp:  u.indexOf('Safari')  ==  -1, //是否为web应用程序，没有头部与底部
+                weixin:  u.indexOf('MicroMessenger')  >  -1, //是否为微信浏览器
+                qq: u.match(/\sQQ/i) !== null, //是否QQ
+                Safari:  u.indexOf('Safari')  >  -1,
+                  ///Safari浏览器,
+            };
+        }()
+    };
+    return  browser.versions;
+  },
 
+  /**
+   * 取得连接参数
+   * @param  String name 参数key
+   */
+  getRequest (name){
+    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) {
+        return unescape(r[2]);
+    }
+    return null;
+},
 
   // 切换页面，并错误提示
   turnPage: (message, url) => {
@@ -160,9 +203,8 @@ var cFuns = {
       return map;
     },
     addMarker (position,mapObj) {
-      // console.log(position);
       mapObj.setZoomAndCenter(14, position);
-      marker = new AMap.Marker({
+      var marker = new AMap.Marker({
         icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
         // position: [116.405467, 39.907761]
         position: position,
@@ -176,7 +218,7 @@ var cFuns = {
       mapObj.setZoomAndCenter(zoom, position);
     },
     //画线
-    drawRouteLine(start,end,mapObj,callBack){
+    drawTripLine(start,end,mapObj,callBack){
       console.log(mapObj)
       // mapObj.clearMap();
       AMap.service('AMap.Driving',function(){//回调函数
@@ -219,7 +261,7 @@ var cFuns = {
     },
 
     // 格式化行程用时
-   formatRouteTime (dtTime){
+   formatTripTime (dtTime){
     	var dtTimeStr = '';
     	if(dtTime > 3600){
     		dtTimeStr = Math.floor(dtTime/3600)+'小时' + Math.floor((dtTime%3600)/60)+'分钟';
