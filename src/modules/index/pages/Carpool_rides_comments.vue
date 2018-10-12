@@ -1,6 +1,6 @@
 <template>
   <div class="page-view " id="Page-comment-lists">
-    <title-bar  >评论  </title-bar>
+    <title-bar  >{{$t("message['carpool.comments.title']" )}}  </title-bar>
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}"  :on-refresh="onRefresh"  :dataList="scrollData" :enableInfinite="enableInfinite" id="cp-scroll-wrapper" innerID="cp-scroll-inner">
         <ul v-if="comments.length" class="cp-comment-list">
@@ -25,7 +25,7 @@
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
        <div class="text-center">
          <div class="cp-nodata-tips" v-show="noData">
-           暂时没有留言
+           {{ $t("message['carpool.detail.noComment']" )}}
          </div>
          <spinner type="dots" size="60px" v-show="page==1 && isLoading"></spinner>
        </div>
@@ -34,11 +34,11 @@
         <form class="form" onsubmit="return false;">
         <div class="cp-input-wrapper" v-show="isShowAddBox">
             <textarea class="form-control" name="content" v-model="content" v-focus="isFocusContent" @focus="isFocusContent=true" @blur="isFocusContent=false"></textarea>
-            <button class="btn-submit btn btn-default" :disabled="isDisabledSubmit || isSubmiting"   @click="submitComment">提交</button>
+            <button class="btn-submit btn btn-default" :disabled="isDisabledSubmit || isSubmiting"   @click="submitComment">{{ $t("message.submit" )}} </button>
         </div>
         </form>
         <div class="cp-startBtn-wrapper" v-show="!isShowAddBox">
-          <button class="btn btn-block btn-default" @click="isShowAddBox=true;isFocusContent=true">发表评论</button>
+          <button class="btn btn-block btn-default" @click="isShowAddBox=true;isFocusContent=true">{{ $t("message['placeholder.comment']" )}}</button>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="page-view cp-page-history-select">
     <title-bar  :left-options="{showBack: true}" >
-      <span >选择历史路线</span>
+      <span >{{$t("message['share.commonroute']")}}</span>
     </title-bar>
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh"  :dataList="scrollData" :enableInfinite="false">
@@ -19,7 +19,7 @@
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
        <div class="text-center">
          <div class="cp-nodata-tips" v-show="noData">
-           暂时没有数据 ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
+           {{$t("message.noMore")}} ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
          </div>
          <spinner type="dots" size="60px" v-show="page==1 && isLoading"></spinner>
        </div>

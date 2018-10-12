@@ -23,13 +23,13 @@
     <div   class="router-link cp-bar-tab-item" :class="{'active' : current=='carpool'}">
       <router-link :to="{ name: 'carpool' }">
         <i class="cp-iconfont fa fa-car"></i>
-        <div class="cp-bar-tab-label">拼车</div>
+        <div class="cp-bar-tab-label">{{ $t("message['main.carpool']" )}}</div>
       </router-link>
     </div>
     <div   class="router-link cp-bar-tab-item" :class="{'active' : current=='user'}">
       <router-link :to="{ name: 'user' }">
         <i class="cp-iconfont fa fa-user"></i>
-        <div class="cp-bar-tab-label">我的</div>
+        <div class="cp-bar-tab-label">{{ $t("message['main.me']" )}}</div>
       </router-link>
     </div>
   </div>

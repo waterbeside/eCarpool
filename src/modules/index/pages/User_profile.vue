@@ -1,7 +1,7 @@
 <template>
   <div class="page-view  " id ="Page-user-profile" :class="{isScrollDown:isScrollDown}">
     <title-bar  v-show="isScrollDown">
-      <span  >我的资料</span>
+      <span  > {{ $t("message['setting.personalInfo']" )}}  </span>
     </title-bar>
     <div class="page-view-main"   >
       <cp-goback-btn  v-show="!isScrollDown" ></cp-goback-btn>
@@ -14,30 +14,36 @@
           </div>
         </div>
         <group class="cp-group">
-          <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-id-card"></i>个人信息</group-title>
-          <cell title="姓名" @click.native="goEdit('name')" :is-loading="false" :value="userData.name" is-link></cell>
+          <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-id-card"></i> {{ $t("message['setting.personalInfo']")}}   </group-title>
+          <cell :title="$t('message.name')"  @click.native="goEdit('name')" :is-loading="false" :value="userData.name" is-link></cell>
 
           <!-- <cell title="姓名"  :is-loading="false" :value="userData.name"></cell> -->
-          <popup-radio class="cp-select" title="性别" :options="sexs" v-model="userData.sex" placeholder="请选择性别" @on-change="onChangeSex"></popup-radio>
+          <popup-radio class="cp-select" :title="$t('message.sex')"   :options="sexs" v-model="userData.sex" :placeholder="$t('message[\'setting.choiceSex\']')" @on-change="onChangeSex"></popup-radio>
           <!-- <popup-picker title="性别" :data="sexs" v-model="sex"   @on-change="onChangeSex" :display-format="formatSexDisplay"  ></popup-picker> -->
-          <cell title="手机" @click.native="$router.push({name:'user_profile_phone'})" :is-loading="false" :value="userData.phone" is-link></cell>
+          <cell :title="$t('message.phone')"   @click.native="$router.push({name:'user_profile_phone'})" :is-loading="false" :value="userData.phone" is-link></cell>
         </group>
         <group class="cp-group">
           <!-- <cell title="公司" @click.native="goEdit('company')" :is-loading="false" :value="company" is-link></cell> -->
-          <popup-picker title="公司" :data="companys" v-model="company"    @on-change="onChangeCompany" :display-format="formatCompanyDisplay"  ></popup-picker>
+          <popup-picker
+          :title="$t('message[\'setting.currentCompany\']')"
+          :data="companys" v-model="company"
+           @on-change="onChangeCompany" :display-format="formatCompanyDisplay"
+           :cancelText="$t('message.cancel')"
+           :confirmText="$t('message.done')">
+          </popup-picker>
 
-          <cell title="部门" @click.native="$router.push({name:'user_profile_departments'})" :is-loading="false" :value="userData.Department" is-link v-show="userData.company_id > 0"></cell>
+          <cell :title="$t('message[\'setting.currentDepartment\']')" @click.native="$router.push({name:'user_profile_departments'})" :is-loading="false" :value="userData.Department" is-link v-show="userData.company_id > 0"></cell>
           <!-- <cell title="工号" @click.native="goEdit('loginname')" :is-loading="false" :value="userData.loginname" is-link></cell> -->
         </group>
         <group  class="cp-group">
-          <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-car"></i>车辆信息</group-title>
-          <cell title="车牌号" class="cp-profile-item"    @click.native="goEdit('carnumber')" :is-loading="false" :value="userData.carnumber" is-link></cell>
-          <cell title="汽车颜色" class="cp-profile-item"  @click.native="goEdit('carcolor')" :is-loading="false" :value="userData.carcolor" is-link></cell>
+          <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-car"></i>{{$t("message['setting.carinformation']")}}</group-title>
+          <cell :title="$t('message[\'setting.licensePlateNo\']')" class="cp-profile-item"    @click.native="goEdit('carnumber')" :is-loading="false" :value="userData.carnumber" is-link></cell>
+          <cell :title="$t('message[\'setting.carColor\']')"   class="cp-profile-item"  @click.native="goEdit('carcolor')" :is-loading="false" :value="userData.carcolor" is-link></cell>
         </group>
         <group  class="cp-group">
-          <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-map-marker"></i>常用站点</group-title>
-          <cell title="家" class="cp-profile-item"   @click.native="selectAddress('home')" :is-loading="false" :value="userData.home_address" is-link></cell>
-          <cell title="公司" class="cp-profile-item"   @click.native="selectAddress('work')" :is-loading="false" :value="userData.company_address" is-link></cell>
+          <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-map-marker"></i>{{ $t("message['setting.address']")}} </group-title>
+          <cell :title="$t('message[\'setting.home\']')"  class="cp-profile-item"   @click.native="selectAddress('home')" :is-loading="false" :value="userData.home_address" is-link></cell>
+          <cell :title="$t('message[\'setting.company\']')" class="cp-profile-item"   @click.native="selectAddress('work')" :is-loading="false" :value="userData.company_address" is-link></cell>
         </group>
 
       </cp-scroller>
@@ -69,13 +75,13 @@ export default {
       //性别
       sexs: [{
         key: '1',
-        value: '男'
+        value: this.$t('message.male'),
       }, {
         key: '2',
-        value: '女'
+        value: this.$t('message.female'),
       }],
       formatSexDisplay: function (value, name) {
-        return value!=="0" ? name : "选择性别";
+        return value!=="0" ? name : this.$t("message['setting.choiceSex']");
       },
 
       company:['0'],
@@ -181,10 +187,10 @@ export default {
                name: vStr,
              }  ;
            });
-           companys.push({
+          /* companys.push({
              value:'0',
-             name: '其它',
-           });
+             name: this.$t("message.other"),
+           });*/
            this.companys = [companys];
          }
          // console.log(this.companys);

@@ -74,6 +74,25 @@ var cFuns = {
     lct.href = url;
   },
 
+  getLanguage (){
+    let lang = "";
+    if(localStorage){
+      lang = localStorage.getItem('language');
+      lang = lang ?  lang : localStorage.getItem('lang');
+      lang = lang ?  lang : localStorage.getItem('lag');
+    }
+    if(lang){
+      return lang;
+    }
+    var _language = "en";
+    if (navigator.language) {
+      _language = navigator.language;
+    }else {
+      _language = navigator.browserLanguage;
+    }
+    return _language;
+  },
+
   /**
    * 验证反回码是否未登入
    * @param  int code      [返回码]
@@ -140,8 +159,9 @@ var cFuns = {
    * @param  boolean type      1 日期 2 时 3 分
    * @param  boolean onlyNow   取现时
    */
-  returnNeedTimeDatas (type,onlyNow){
+  returnNeedTimeDatas (type,onlyNow,texts){
     type = type || 0;
+    texts = texts || ['今天','明天','后天'];
     onlyNow = onlyNow || 0;
     var nowDate = new Date();
     // console.log(nowDate.getTimezoneOffset());
@@ -163,9 +183,9 @@ var cFuns = {
       for(let i=0; i<howManyDay;i++){
         var date = getNextDate(i);
         var text = '';
-        if(i==0){text='今天';}
-        if(i==1){text='明天';}
-        if(i==2){text='后天';}
+        if(i==0){text=texts[0];}
+        if(i==1){text=texts[1];}
+        // if(i==2){text=texts[2];}
         data_dates[i] = this.formatDayItemData(date,text);
       }
       if(type>0){return data_dates;}
@@ -244,13 +264,13 @@ var cFuns = {
     // 格式化行程距离
     formatDistance (distance,returnType){
     	returnType = returnType || 0
-    	var distanceStr = distance + '米';
+    	var distanceStr = distance + 'M';
     	var unit = 'M';
     	var dtTimeStr = '';
     	if(distance > 1000){
     		distance = (distance/1000).toFixed(1);
     		unit = 'KM'
-    		distanceStr = distance + '公里';
+    		distanceStr = distance + 'KM';
     	}
     	if(returnType){
     		return {unit:unit,distance:distance};
@@ -261,12 +281,14 @@ var cFuns = {
     },
 
     // 格式化行程用时
-   formatTripTime (dtTime){
+   formatTripTime (dtTime,texts){
+     texts = texts || ['小时','分钟'];
     	var dtTimeStr = '';
     	if(dtTime > 3600){
-    		dtTimeStr = Math.floor(dtTime/3600)+'小时' + Math.floor((dtTime%3600)/60)+'分钟';
+        dtTimeStr = (dtTime/3600).toFixed(2)+texts[0];
+    		// dtTimeStr = Math.floor(dtTime/3600)+texts[0] + Math.floor((dtTime%3600)/60)+texts[1];
     	}else if(dtTime > 60){
-    		dtTimeStr =  Math.floor((dtTime)/60)+'分钟';
+    		dtTimeStr =  Math.floor((dtTime)/60)+texts[1];
     	}
     	return dtTimeStr;
     }

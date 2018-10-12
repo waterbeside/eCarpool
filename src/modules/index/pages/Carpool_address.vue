@@ -12,10 +12,10 @@
         <ul id="J-getAddress" class="cp-list-wrap cp-list-points " :class="{'doSearch':isSearching}"  >
           <li v-for="(item,index) in listDatas" class="cp-item" :class="'cp-type-'+item.address_type"  @click="onSelectAddress(index,0)" v-show="item.is_show">
             <template v-if="item.address_type=='Home'">
-              <i class="fa fa-home"></i><h6>家</h6>
+              <i class="fa fa-home"></i><h6>{{$t("message['setting.home']")}}</h6>
             </template>
             <template v-else-if="item.address_type=='Work'">
-              <i class="fa fa-suitcase"></i><h6>公司</h6>
+              <i class="fa fa-suitcase"></i><h6>{{$t("message['setting.company']")}}</h6>
             </template>
             <template v-else>
               <i class="fa fa-map-pin"></i>
@@ -36,7 +36,7 @@
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
        <div class="text-center">
          <div class="cp-nodata-tips" v-show="noData">
-           暂时没有数据 ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
+           {{$t("message['scroller.noData']")}} ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
          </div>
          <spinner type="dots" size="60px" v-show="isLoading"></spinner>
        </div>
@@ -82,10 +82,10 @@ export default {
   computed:{
     pageTitle (){
       let titlesArray = {
-        "start":"请选择开始地点",
-        "end":"请选择结束地点",
-        "home":"请选择家地址",
-        "work":"请选公司地址",
+        "start": this.$t("message['label.from']"),
+        "end": this.$t("message['label.to']"),
+        "home":this.$t("message['setting.home']"),
+        "work":this.$t("message['setting.company']"),
       }
       return typeof(titlesArray[this.to]!=="undefault") ? titlesArray[this.to] : "请选择地址"
     },
