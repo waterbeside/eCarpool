@@ -2079,7 +2079,7 @@ message: {
   "btn.driverpublish": "Post seats",
 
   "carpool.addtrip.tooLong":"The route is too long to predict the journey time",
-  "carpool.addtrip.toEstimate":"ước tính",
+  "carpool.addtrip.estimate":"ước tính",
   "carpool.whetherAccept":"Dù chấp nhận yêu cầu",
   "carpool.emptySeat":"Empty",
   "carpool.takenSeat":"Taken",
