@@ -7,8 +7,11 @@ import store from './store'
 import axios from 'axios';
 import { focus } from 'vue-focus';
 import tokenAxios from './utils/cTokenAxios';
+import cFuns from '@/utils/cFuns';
 import VueAMap from 'vue-amap';
 import {Group, Cell, XInput, XButton , PopupPicker, Spinner,  Divider, ConfirmPlugin,ToastPlugin,Loading,Toast} from 'vux'
+import VueI18n from 'vue-i18n'
+
 
 
 
@@ -50,11 +53,33 @@ Vue.config.productionTip = false
 Vue.prototype.$http = axios;
 // Vue.prototype.$tokenAxios = tokenAxios;
 Vue.use(tokenAxios)
+
+
+Vue.use(VueI18n)
+
+
+
+
+var _language = cFuns.getLanguage();
+localStorage.setItem('language',_language);
+
+
+
+const i18n = new VueI18n({
+  // locale: _language, // 语言标识
+    locale: _language, // 语言标识
+    messages: {
+       'zh': require('@/../static/lang/zh'),
+       'vi': require('@/../static/lang/vi'),
+       'en': require('@/../static/lang/en')
+   }
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   template: '<App/>',
   components: { App }
 })

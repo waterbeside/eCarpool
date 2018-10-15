@@ -11,7 +11,7 @@
               <div class="help-block" v-html="helpText"> </div>
           </div>
           <div>
-            <button class="btn btn-success btn-lg btn-block" @click="done">完成</button>
+            <button class="btn btn-success btn-lg btn-block" @click="done">{{$t("message.done")}}</button>
           </div>
         </div>
 
@@ -25,31 +25,6 @@
 <script>
 import config from '../config'
 
-var fieldArray = {
-  'loginname':{
-    title : "修改工号",
-    placeholder:"请输入帐号/工号",
-    tips:'请输入你所在公司的工号，可使用该工号进行登入',
-    len:6
-  },
-  'carnumber':{
-    title : "修改车牌号",
-    placeholder:"请输入车牌号",
-    tips:'',
-    len:0
-
-  },
-  'carcolor':{
-    title : "修改汽车颜色",
-    placeholder:"汽车颜色",
-    tips:''
-  },
-  'name':{
-    title : "修改姓名",
-    placeholder:"请输入您的姓名",
-    tips:''
-  },
-}
 export default {
   components: {
 
@@ -58,6 +33,24 @@ export default {
     return {
       field:this.$route.params.field,
       fieldSetting:{},
+      fieldArray : {
+        'carnumber':{
+          title : this.$t("message['setting.carNumber']"),
+          placeholder:this.$t("message['placeholder.carNumber']") ,
+          tips:'',
+          len:0
+        },
+        'carcolor':{
+          title : this.$t("message['setting.carColor']"),
+          placeholder:this.$t("message['placeholder.carColor']") ,
+          tips:''
+        },
+        'name':{
+          title : this.$t("message['setting.editName']"),
+          placeholder:this.$t("message['placeholder.carColor']") ,
+          tips:''
+        },
+      },
       isEnableSubmit : false,
       isSubmiting : false,
       title : '',
@@ -76,7 +69,7 @@ export default {
   methods:{
     init (){
       this.field = this.$route.params.field;
-      this.fieldSetting = fieldArray[this.field] ;
+      this.fieldSetting = this.fieldArray[this.field] ;
 
       this.userData = this.$store.state.userData;
       this.value = this.userData[this.field];
@@ -105,11 +98,13 @@ export default {
           this.$store.commit('setUserData',userData_o);
           this.$router.back();
         }else{
-          this.$vux.toast.text("更改失败，请稍候再试");
+          let errMsg = this.$t("message['NetWord.FailTips']");
+          this.$vux.toast.text(errMsg);
           return false;
         }
       }).catch(error => {
-        this.$vux.toast.text("更改失败，请稍候再试");
+        let errMsg = this.$t("message['NetWord.FailTips']");
+        this.$vux.toast.text(errMsg);
         this.isSubmiting = false;
         return false;
       })

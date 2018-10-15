@@ -1,20 +1,20 @@
 <template>
   <div class="page-view " id="Page-downloadapp" >
-    <title-bar >下载APP</title-bar>
+    <title-bar >{{$t("message['downloadapp.title']")}}</title-bar>
     <div class="page-view-main   " >
       <cp-scroller :position="{top:'46px'}"  :enableRefresh="false" :enableInfinite="false">
         <div class="alert alert-default">
           <p class="text-center">
-            欢迎下载手机APP，以获得更多功能和更好的体验。
+            {{$t("message['downloadapp.welcomeDownload']")}}
           </p>
           <qrcode value="http://m.esquel.cn/apps/gek/Carpool/" type="img" style=" text-align:center" :size="120"></qrcode>
         </div>
         <div class="container">
           <p>
-            <a class="btn btn-primary btn-block btn-lg" href="http://m.esquel.cn/apps/gek/Carpool/downloadandroid.php" target="_blank"><i class="fa fa-android"></i> 安卓下载</a>
+            <a class="btn btn-primary btn-block btn-lg" href="http://m.esquel.cn/apps/gek/Carpool/downloadandroid.php" target="_blank"><i class="fa fa-android"></i> {{$t("message['downloadapp.android']")}}</a>
           </p>
           <p>
-            <a class="btn btn-primary  btn-block btn-lg" href="http://m.esquel.cn/apps/gek/Carpool/downloadios.php"  target="_blank"><i class="fa fa-apple"></i> 苹果下载</a>
+            <a class="btn btn-primary  btn-block btn-lg" href="http://m.esquel.cn/apps/gek/Carpool/downloadios.php"  target="_blank"><i class="fa fa-apple"></i> {{$t("message['downloadapp.ios']")}}</a>
           </p>
         </div>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="page-view page-view-profile-edit" id="Page-user-profile-avatar">
-    <title-bar >修改头像</title-bar>
+    <title-bar >{{$t("message['user.avatar.title']")}}</title-bar>
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}"  :enableRefresh="false" :enableInfinite="false">
         <div  class="cp-cropper-wrapper"  v-show="isSelected">
@@ -17,10 +17,10 @@
           ></vueCropper>
         </div>
         <div class="cp-btn-wrapper">
-          <button text="完成"   @click="done"  class="cp-btn-submit btn btn-success btn-lg btn-block" :disabled="isSubmiting"  v-show="isSelected">完成</button>
+          <button   @click="done"  class="cp-btn-submit btn btn-success btn-lg btn-block" :disabled="isSubmiting"  v-show="isSelected">{{$t("message.done")}}</button>
 
           <div class="cp-selectpic-btn">
-            <label class="btn btn-default btn-block btn-lg" for="uploads" >选择图片</label>
+            <label class="btn btn-default btn-block btn-lg" for="uploads" >{{$t("message['user.avatar.selectImage']")}}</label>
   					<input type="file" id="uploads" style="position:absolute; clip:rect(0 0 0 0);" accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg($event)" >
           </div>
 
@@ -50,14 +50,14 @@ export default {
       avatar_img: config.defaultAvatar,
     }
   },
-
+  
   methods: {
     uploadImg (e) {
 			//上传图片
 			// this.option.img
 			var file = e.target.files[0]
 			if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
-				 alert('图片类型必须是.gif,jpeg,jpg,png,bmp中的一种')
+				 alert(this.$t("message['user.avatar.imageFormat']"));
 				 return false
 			 }
 			var reader = new FileReader()
@@ -116,12 +116,12 @@ export default {
             userData.imgpath = picname;
             this.$store.commit('setUserData',userData);
           }else{
-            this.$vux.toast.text("更改失败，请稍候再试");
+            this.$vux.toast.text(this.$t("message['user.avatar.failed']"));
           }
           this.$router.back();
         }).catch(error => {
           this.isSubmiting = false;
-          this.$vux.toast.text("更改失败，请稍候再试");
+          this.$vux.toast.text(this.$t("message['user.avatar.failed']"));
           this.$router.back();
           return false;
         })

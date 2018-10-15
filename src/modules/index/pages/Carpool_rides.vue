@@ -1,8 +1,10 @@
 <template>
   <div class="page-view  ">
     <title-bar  :left-options="{showBack: true, preventGoBack:true}" @onClickBack="goHome">
-      <span v-show="isShowSearchBox==0">墙上空座位</span>
-      <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)" @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch" ></cp-search-box>
+      <span v-show="isShowSearchBox==0">{{$t("message['discover.ridesharewall']")}}</span>
+      <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)"
+      @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch"
+      :placeholder="$t('message[\'placeholder.keyword\']')"></cp-search-box>
       <!--
       <div slot="rightContent">
         <div class="cp-search-box" v-show="isShowSearchBox"><input name="keyword" class="form-control form-control-line" placeholder="请输入关键字查找"  v-model="keyword" @keyup="doSearch" autocomplete="false" ></div>
@@ -31,21 +33,22 @@
            :time = "item.time.split(' ')[1]"
            :class="[{'cancel':item.status > 1},('item-'+item.id)]"
            :ref = "'item-'+item.id"
-           typeLabel="司机"
+           :typeLabel="$t('message.driver')"
            data-from="wall"
            @click.native="goDetail(index)"
          >
            <div slot="btnbar" class="cp-btns-wrapper">
               <div class="cp-fabBtn-wrap " :class="[{'hasLike':item.hasLike===1,'doLike':item.id === doLikeId}]">
-                <b class="t">点赞</b>
+                <b class="t">{{$t("message['location.clickLike']")}}</b>
                 <a href="javascript:void(0);" class="btn  btn-fab" :class="item.hasLike===1 ? 'btn-danger' : 'btn-primary' " @click="likeTrip(item.id,index)">
                   <i class="fa fa-heart" ></i>
                 </a>
                 <b class="num">{{item.like_count}}</b>
               </div>
-              <div class="cp-fabBtn-wrap"><b class="t">空位</b><a href="javascript:void(0);" class="btn btn-primary btn-fab "><i class="fa fa-car"></i></a><b class="num">{{item.seat_count - item.took_count}}</b></div>
+              <div class="cp-fabBtn-wrap"><b class="t">{{$t("message['carpool.emptySeat']")}}</b><a href="javascript:void(0);" class="btn btn-primary btn-fab "><i class="fa fa-car"></i></a><b class="num">{{item.seat_count - item.took_count}}</b></div>
               <div class="cp-fabBtn-wrap" :class="[{'hasLike':item.hasTake===1}]">
-                <b class="t">已搭</b>
+                <b class="t">{{$t("message['carpool.takenSeat']")}}</b>
+
                 <a href="javascript:void(0);" class="btn btn-fab" :class="item.hasTake===1 ? 'btn-danger' : 'btn-primary' "><i class="fa fa-user"></i></a>
                 <b class="num">{{item.took_count}}</b></div>
            </div>
@@ -54,7 +57,7 @@
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
        <div class="text-center">
          <div class="cp-nodata-tips" v-show="noData">
-           暂时没有数据 ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
+           {{$t("message['scroller.noData']")}} ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
          </div>
          <spinner type="dots" size="60px" v-show="page==1 && isLoading"></spinner>
        </div>
@@ -191,6 +194,10 @@ export default {
 
           this.enableInfinite = this.listDatas.length < 4 || this.pageCount ==1  ? false : true;
         }else{
+          if(res.data.code === 20002 && this.page < 2){
+            this.noData = 1 ;
+            this.listDatas = data.lists;
+          }
 
         }
         if(typeof(success)==="function"){

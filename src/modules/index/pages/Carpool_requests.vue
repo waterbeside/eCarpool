@@ -1,8 +1,10 @@
 <template>
   <div class="page-view cp-overhide">
     <title-bar  :left-options="{showBack: true, preventGoBack:true}" @onClickBack="goHome">
-      <span v-show="!isShowSearchBox">约车需求</span>
-      <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)" @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch" ></cp-search-box>
+      <span v-show="!isShowSearchBox">{{$t("message['discover.request']")}}</span>
+      <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)"
+      @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch"
+      :placeholder="$t('message[\'placeholder.keyword\']')"></cp-search-box>
     </title-bar>
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
@@ -23,24 +25,24 @@
            :class="[{'cancel':item.status > 0},('item-'+item.id)]"
            :ref = "'item-'+item.id"
            data-from="info"
-           typeLabel="乘客"
+           :typeLabel="$t('message.passenger')"
            @click.native="goDetail(index)"
-
          >
-           <div slot="btnbar" class="cp-btns-wrapper">
-             <a class="cp-btn cp-btn-accept" @click.prevent.stop="acceptRequest(item.id,index)">接受</a>
-           </div>
-           <!-- <div slot="btnbar" class="cp-btns-wrapper cp-goDetail-wrapper">
-             <span class="pull-right">详请 <i class="fa fa-arrow-circle-right"></i></span>
-             <span class="tips-text" v-if="item.status ==0 && item.from=='info'">等待车主接受</span>
+           <!-- <div slot="btnbar" class="cp-btns-wrapper">
+             <a class="cp-btn cp-btn-accept" @click.prevent.stop="acceptRequest(item.id,index)">{{$t("message.accept")}}</a>
            </div> -->
+           <div slot="btnbar" class="cp-btns-wrapper cp-goDetail-wrapper">
+             <span class="pull-right">{{$t("message.detail")}}  <i class="fa fa-arrow-circle-right"></i></span>
+             <!-- <span class="tips-text" v-if="item.status ==0 && item.from=='info'">等待车主接受</span> -->
+           </div>
          </cp-trip-card>
 
 
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
        <div class="text-center">
          <div class="cp-nodata-tips" v-show="noData">
-           暂时没有数据 ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
+           {{$t("message['scroller.noData']")}} ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
+           <!-- 暂时没有数据 ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾ -->
          </div>
          <spinner type="dots" size="60px" v-show="page==1 && isLoading"></spinner>
        </div>
@@ -122,24 +124,26 @@ export default {
       var itemData = this.listDatas[index];
       // event.stopPropagation();
       this.$vux.confirm.show({
-        title: '请确认',
-        content: '是否接受【'+itemData.passenger_info.name+'】的约车',
+        title: this.$t("message.AreYouSure"),
+        content: this.$t("message['carpool.whetherAccept']",{"username":itemData.passenger_info.name}),
+        confirmText: this.$t("message.sure"),
+        cancelText: this.$t("message.cancel"),
         onConfirm : ()=>{
           this.$el.querySelector('.load-more').style.display = 'none';
-          this.$store.commit('setLoading',{isShow:true,text:"提交中"});
+          this.$store.commit('setLoading',{isShow:true,text:this.$t("message.submitting")});
           // return false;
 
           this.$tokenAxios.post(config.urls.acceptRequest,{id:id}).then(res => {
             this.$store.commit('setLoading',{isShow:false});
             if(res.data.code === 0) {
               this.listDatas[index].status = 1
-              this.$vux.toast.text('搭载成功');
+              this.$vux.toast.text(this.$t("message.acceptSuccess"));
               setTimeout(()=>{
                 // this.listDatas.splice(index, 1);
                 this.listDatas = this.listDatas.filter(t => t.infoid != id);
               },600)
             }else{
-              this.$vux.toast.text('网络好像不太畅通');
+              this.$vux.toast.text(res.data.desc);
             }
           })
           .catch(error => {
@@ -183,9 +187,13 @@ export default {
             }
             this.listDatas = data.lists;
           }
+
           this.enableInfinite = this.listDatas.length < 4 || this.pageCount ==1  ? false : true;
         }else{
-
+          if(res.data.code === 20002 && this.page < 2){
+            this.noData = 1 ;
+            this.listDatas = data.lists;
+          }
         }
         if(typeof(success)==="function"){
           success(res);

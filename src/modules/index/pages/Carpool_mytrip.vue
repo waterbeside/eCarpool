@@ -1,7 +1,7 @@
 <template>
   <div class="page-view  ">
     <title-bar  :left-options="{showBack: true, preventGoBack:true}" @onClickBack="goHome">
-      <span  >我的行程</span>
+      <span  >{{$t("message['discover.currenttrip']")}}</span>
     </title-bar>
     <div class="page-view-main"   >
       <cp-scroller  :position="{top:'46px'}"  :on-refresh="onRefresh"   :dataList="scrollData" :enableInfinite="false">
@@ -27,18 +27,15 @@
            @click.native="goDetail(index)"
          >
          <div slot="btnbar" class="cp-btns-wrapper cp-goDetail-wrapper">
-           <span class="pull-right">详请 <i class="fa fa-arrow-circle-right"></i></span>
-           <span class="tips-text" v-if="item.status ==0 && item.from=='info'">等待车主接受</span>
+           <span class="pull-right">{{$t("message.detail")}} <i class="fa fa-arrow-circle-right"></i></span>
+           <span class="tips-text" v-if="item.status ==0 && item.from=='info'">{{$t("message['carpool.status.waitingCar']")}}</span>
          </div>
-
-
-
          </cp-trip-card>
 
        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
        <div class="text-center">
          <div class="cp-nodata-tips" v-show="noData">
-           暂时没有数据 ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
+           {{$t("message['scroller.noData']")}} ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
          </div>
          <spinner type="dots" size="60px" v-show="isLoading"></spinner>
        </div>
@@ -128,7 +125,7 @@ export default {
               start_info:value.start_info,
               end_info:value.end_info,
               user : value.from == "wall" || value.show_owner ? value.owner_info : value.passenger_info,
-              typeLabel : value.from == "wall" || value.show_owner ? "司机" : "乘客",
+              typeLabel : value.from == "wall" || value.show_owner ? this.$t('message.driver') : this.$t('message.passenger'),
               like_count:value.like_count,
               took_count:value.took_count,
               seat_count:value.seat_count
@@ -136,6 +133,10 @@ export default {
           })
 
         }else{
+          if(res.data.code === 20002 && this.page < 2){
+            this.noData = 1 ;
+            this.listDatas = data.lists;
+          }
 
         }
         if(typeof(success)==="function"){
