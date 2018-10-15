@@ -210,7 +210,10 @@ export default {
       return new Promise ((resolve, reject) => {
         if(!this.mapObj){
           lazyAMapApiLoaderInstance.load().then(() => {
-            this.mapObj = new AMap.Map('amapContainer', { resizeEnable: true,zoom: 10 });
+            this.mapObj = new AMap.Map('amapContainer', {
+              gridMapForeign:true,
+              resizeEnable: true,zoom: 10
+            });
             if(!this.$store.state.localCity){
               this.mapObj.getCity((data)=> {
                   if (data['province'] && typeof data['province'] === 'string') {

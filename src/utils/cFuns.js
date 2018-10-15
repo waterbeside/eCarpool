@@ -215,6 +215,7 @@ var cFuns = {
   amap:{
     showMap (target){
       var map = new AMap.Map(target, {
+        gridMapForeign:true,
       // resizeEnable: true,
       //zoom:11,
       // center: [112.903921, 22.884658]

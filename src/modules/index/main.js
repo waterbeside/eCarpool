@@ -43,9 +43,12 @@ Vue.use(ConfirmPlugin);
 
 Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
-  key: config.aMapKey,
+  // key: config.aMapKey,
+  key: config.aMapKey_overseas,
   plugin: ['AMap.Autocomplete','AMap.Geolocation','AMap.Driving', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
 });
+
+
 
 Vue.config.productionTip = false
 

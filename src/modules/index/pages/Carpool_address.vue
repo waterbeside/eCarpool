@@ -2,7 +2,7 @@
   <div class="page-view cp-page-points  " id="Page-address-select" >
     <title-bar  :left-options="{showBack: true}">
       <span v-show="isShowSearchBox==0">{{pageTitle}}</span>
-      <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)" @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch" ></cp-search-box>
+      <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)" @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch"   :placeholder="$t('message[\'placeholder.keyword\']')" ></cp-search-box>
 
     </title-bar>
 
