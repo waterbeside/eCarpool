@@ -21,7 +21,7 @@
                 <div class="form-horizontal">
                   <form @submit.prevent="searchMap(0)">
                     <div class="cp-form-group ">
-                      <label  class="control-label"  for="addressname"><i class="fa fa-map-marker"></i>站点名称</label>
+                      <label  class="control-label"  for="addressname"><i class="fa fa-map-marker"></i>{{$t("message['address.stationName']")}}</label>
                       <input class="form-control form-control-line" type="text" name="keyword"  ref="keywordBox"  v-model="keyword"   v-focus="isFocusKeyword" @focus="isFocusKeyword=true" @blur="isFocusKeyword=false"/>
                       <span class="cp-search-btn" @click="searchMap(0)"><i class="fa fa-search"></i></span>
                     </div>
@@ -32,7 +32,7 @@
                   <div class="">
                     {{infoWin_address}}
                   </div>
-                  <x-button type="primary" class=" btn-submit" @click.native="doSubmit" :disabled="isSubmiting">确 定</x-button>
+                  <x-button type="primary" class=" btn-submit" @click.native="doSubmit" :disabled="isSubmiting">{{$t("message.done")}}</x-button>
                 </div>
               </div>
 

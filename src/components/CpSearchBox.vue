@@ -38,7 +38,7 @@ export default {
   },
   props: {
     placeholder : {
-      default:"请输入关键字查找"
+      default: "请输入关键字查找"
     },
     isInputDefaultShow : {
       default:0

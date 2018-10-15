@@ -773,6 +773,36 @@
   }
 }
 
+.mix-selectbtn-wrap(@btn-height:44px,@title-color:#888,) {
+  border-bottom: 1px solid #eaeaea; clear: both;
+  .weui-cell {padding: 0;}
+  .vux-cell-box {padding: 0 4px}
+  .vux-cell-box:before { border:none; }
+  .weui-cell__hd { float: left; color: @title-color;
+    // i {   }
+  }
+  .vux-popup-picker-value { font-size: 14px;  color: #444}
+  .vux-number-round { margin-top: 2px; * {box-sizing: content-box;}}
+  .vux-number-selector {
+    // width: 26px; height: 26px; line-height: 0; text-align: center;  margin-top: -2px; margin-right: 0;
+    border-color:#FF9900;
+    svg {fill:#FF9900}
+  }
+  .vux-number-input {
+    font-size: 14px; line-height: 14px;
+  }
+  .cp-selectbtn { display: block;   color: #444; height: @btn-height; line-height: @btn-height; padding:0 8px 0 0; text-align: left; background: none; box-shadow: none;  margin: 0;
+
+  }
+  &.isNull .cp-selectbtn {
+    .cp-text {color: #777;}
+  }
+  .cp-label { font-size:14px;
+    i {display: inline-block;width: 26px; text-align: center;   }
+    .cp-title { color:@title-color; vertical-align:middle; text-align: left}
+  }
+}
+
 #Page-trip-add {
   .cp-tools-wrapper { position: absolute; z-index: 100;right:12px; top:12px;  width: 32px; height: 32px;
     line-height: 34px;text-align: center; background: rgba(0,0,0,.75); border-radius: 4px;
@@ -798,35 +828,8 @@
     .form-group { margin-top: 8px;  }
     .form-control  { padding: 3px 0; }
 
-    .cp-selectbtn-wrap {
-      border-bottom: 1px solid #eaeaea; clear: both;
-      .weui-cell {padding: 0;}
-      .vux-cell-box {padding: 0 4px}
-      .vux-cell-box:before { border:none; }
-      .weui-cell__hd { float: left; color: #888;
-        // i {   }
-      }
-      .vux-popup-picker-value { font-size: 14px;  color: #444}
-      .vux-number-round { margin-top: 2px; * {box-sizing: content-box;}}
-      .vux-number-selector {
-        // width: 26px; height: 26px; line-height: 0; text-align: center;  margin-top: -2px; margin-right: 0;
-        border-color:#FF9900;
-        svg {fill:#FF9900}
-      }
-      .vux-number-input {
-        font-size: 14px; line-height: 14px;
-      }
-      .cp-selectbtn { display: block;   color: #444; height: @btn-height; line-height: @btn-height; padding:0 8px 0 0; text-align: left; background: none; box-shadow: none;  margin: 0;
+    .cp-selectbtn-wrap {.mix-selectbtn-wrap(@btn-height);}
 
-      }
-      &.isNull .cp-selectbtn {
-        .cp-text {color: #777;}
-      }
-      .cp-label { font-size:14px;
-        i {display: inline-block;width: 26px; text-align: center;   }
-        .cp-title { color: #777; vertical-align:middle; text-align: left}
-      }
-    }
 
 
 
@@ -1267,6 +1270,15 @@
     .num { color:lighten(@color-primary,20%); font-size: 18px;}
   }
   .cp-options-list { li{ background: #FFF;} }
+  .cp-selectbtn-wrap {
+    .mix-selectbtn-wrap(44px,  lighten(desaturate(@color-primary,16%),20%));
+    overflow: hidden;
+    padding-right: 10px;
+    .cp-label .fa { font-size: 18px; width: 18px;}
+    .weui-cell__hd {padding: 0 10px 0 20px; overflow: hidden;  }
+    .weui-cell__ft { display: none}
+  }
+
 }
 
 

@@ -8,7 +8,7 @@ export default {
   // 正在加载中
   loading: {
     isShow:false,
-    text:"加载中"
+    text:"Loading"
   },
 
   //是否刷新拼车页面

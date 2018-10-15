@@ -26,9 +26,9 @@
               <div class="cp-heading-bg" ></div>
               <!-- / heading -->
               <tab class="cp-tab-wrapper" :line-width="2" active-color='#8877ba' v-model="tabIndex" v-if="type=='wall'" >
-                <tab-item class="cp-tab-item"  :key="0"><div class="cp-inner">详情</div></tab-item>
-                <tab-item class="cp-tab-item"  :key="1" @on-item-click="getCommentLists"><div class="cp-inner">留言<b class="bage" v-show="comments_total>0">{{comments_total}}</b></div></tab-item>
-                <tab-item class="cp-tab-item"  :key="2" @on-item-click="onShowPassengers" ><div class="cp-inner">乘客列表<b class="bage" v-show="detailData.took_count_all>0">{{detailData.took_count_all}}</b></div></tab-item>
+                <tab-item class="cp-tab-item"  :key="0"><div class="cp-inner">{{$t("message.detail")}}</div></tab-item>
+                <tab-item class="cp-tab-item"  :key="1" @on-item-click="getCommentLists"><div class="cp-inner">{{$t("message['carpool.leaveMessage']")}}<b class="bage" v-show="comments_total>0">{{comments_total}}</b></div></tab-item>
+                <tab-item class="cp-tab-item"  :key="2" @on-item-click="onShowPassengers" ><div class="cp-inner">{{$t("message['carpool.passengers']")}}<b class="bage" v-show="detailData.took_count_all>0">{{detailData.took_count_all}}</b></div></tab-item>
               </tab>
             </div>
 
@@ -36,8 +36,8 @@
           <div class="cp-content-item" :key="0" v-show="tabIndex == 0">
 
               <div class="alert " :class="alertClass" v-show="isShowAlert" ><span v-html="alertText"></span>
-                <a v-show="isShowBtn_cancel_alert" @click="btnAction('cancel')" style='margin-left:4px' class='btn btn-sm btn-info'>取消</a>
-                <a v-show="isShowBtn_finish_alert" @click="btnAction('finish')" style='margin-left:4px' class='btn btn-sm btn-info'>结束</a>
+                <a v-show="isShowBtn_cancel_alert" @click="btnAction('cancel')" style='margin-left:4px' class='btn btn-sm btn-info'>{{$t("message.cancel")}}</a>
+                <a v-show="isShowBtn_finish_alert" @click="btnAction('finish')" style='margin-left:4px' class='btn btn-sm btn-info'>{{$t("message.finish")}}</a>
               </div>
               <div class="cp-cell cp-cell-time">
                   <div class="la"><i class="fa fa-clock-o"></i></div>
@@ -45,10 +45,10 @@
               </div>
               <cp-trip-box :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname"></cp-trip-box>
               <div class="cp-statis-list">
-                <statis-item class="cp-statis-item col-xs-4 cp-time" title="出发时间" icon="fa fa-clock-o" :duration="1"><b slot="num"  class="num"><p class="date">{{detailData.time_format.split(' ')[0]}}</p>{{detailData.time_format.split(' ')[1]}}</b></statis-item>
-                <statis-item class="cp-statis-item col-xs-4 cp-distance" title="预计路程" :num="statis.distance" :unit="statis.distance_unit" icon="fa fa-map-signs" :duration="1"></statis-item>
-                <statis-item class="cp-statis-item col-xs-4" v-if="type=='wall'" title="剩余空位" :num="statis.surplus_count" icon="fa fa-car" :duration="1"></statis-item>
-                <statis-item class="cp-statis-item col-xs-4 cp-status" v-if="type=='info'" title="状态"   :icon="statusIcon" ><b slot="num"  class="num">{{statusText}}</b></b></statis-item>
+                <statis-item class="cp-statis-item col-xs-4 cp-time" :title="$t('message[\'label.startTime\']')"   icon="fa fa-clock-o" :duration="1"><b slot="num"  class="num"><p class="date">{{detailData.time_format.split(' ')[0]}}</p>{{detailData.time_format.split(' ')[1]}}</b></statis-item>
+                <statis-item class="cp-statis-item col-xs-4 cp-distance" :title="$t('message[\'carpool.detail.EstimatedDistance\']')"   :num="statis.distance" :unit="statis.distance_unit" icon="fa fa-map-signs" :duration="1"></statis-item>
+                <statis-item class="cp-statis-item col-xs-4" v-if="type=='wall'"  :title="$t('message[\'carpool.detail.seatsLeft\']')"   :num="statis.surplus_count" icon="fa fa-car" :duration="1"></statis-item>
+                <statis-item class="cp-statis-item col-xs-4 cp-status" v-if="type=='info'" :title="$t('message[\'carpool.detail.status\']')"     :icon="statusIcon" ><b slot="num"  class="num">{{statusText}}</b></b></statis-item>
               </div>
             <!--  <div class="cp-btns-wrap">
                 <a v-show="isShowBtn_phone"  class="cp-btn cp-btn-phone " :href="'tel:'+user.phone"><i class="cp-icon fa fa-phone"></i>电 话</a>
@@ -80,13 +80,13 @@
                     <div class="cp-content">{{item.content}}</div>
                   </div>
                 </li>
-                <li class="cp-commentLists-tips" ><router-link   :to="{ name:'carpool_rides_comments', params: {id: id} }">共{{comments_total}}条评论，查看全部</router-link></li>
+                <li class="cp-commentLists-tips" ><router-link   :to="{ name:'carpool_rides_comments', params: {id: id} }">{{$t("message['carpool.detail.seeAllComments']",{"num":comments_total})}}</router-link></li>
               </ul>
 
             </template>
 
-            <p class="cp-nodata-tips" v-else v-show="!isLoading_comments">还未有人评论   (´°̥̥̥̥̥̥̥̥ω°̥̥̥̥̥̥̥̥｀)</p>
-            <div class="text-center"><router-link class="btn btn-default"  :to="{ name:'carpool_rides_comments', params: {id: id} }"><i class="fa fa-edit"></i> 我要评论</router-link></div>
+            <p class="cp-nodata-tips" v-else v-show="!isLoading_comments">{{$t("message['carpool.detail.noComment']")}}   (´°̥̥̥̥̥̥̥̥ω°̥̥̥̥̥̥̥̥｀)</p>
+            <div class="text-center"><router-link class="btn btn-default"  :to="{ name:'carpool_rides_comments', params: {id: id} }"><i class="fa fa-edit"></i> {{$t("message['carpool.detail.addComment']")}}</router-link></div>
           </div>
           <!-- /留言 -->
 
@@ -94,7 +94,7 @@
             <div class="text-center"  v-show="isLoading_pss">
               <spinner type="dots" size="60px"></spinner>
             </div>
-            <ul class="cp-wallView-passenger" v-if="passengers">
+            <ul class="cp-wallView-passenger" v-if="passengers.length > 0">
               <li class="cp-item " :class="{'cp-finish':item.status==3}" v-for="(item,index) in passengers ">
                 <cp-avatar :src="item.avatar" ></cp-avatar>
                 <div class="cp-txt">
@@ -106,7 +106,7 @@
                 </div>
              </li>
             </ul>
-            <p class="cp-nodata-tips" v-else v-show="!isLoading_pss">未有乘客</p>
+            <p class="cp-nodata-tips" v-else v-show="!isLoading_pss">{{$t("message['carpool.detail.noPassenger']")}}</p>
           </div>
           <!-- /乘客 -->
 
@@ -116,12 +116,12 @@
         </div>
       </cp-scroller>
       <div  class="cp-btns-wrapper">
-        <a v-show="isShowBtn_goback" class="cp-btn-i cp-btn-back "  @click="goBack"><i class="cp-icon fa fa-chevron-left"></i><span>返 回</span></a>
-        <a v-show="isShowBtn_phone"  class="cp-btn-i cp-btn-phone " :href="'tel:'+user.phone"><i class="cp-icon fa fa-phone"></i><span>电 话</span></a>
-        <a v-show="isShowBtn_pickup" class="cp-btn-p cp-btn-pickup " @click="btnAction('pickup')"><i class="cp-icon fa fa-car"></i><span>接受请求</span></a>
-        <a v-show="isShowBtn_riding" class="cp-btn-p cp-btn-riding " @click="btnAction('riding')"><i class="cp-icon fa fa-car"></i><span>搭 车</span></a>
-        <a v-show="isShowBtn_cancel" class="cp-btn-p cp-btn-cancel "  @click="btnAction('cancel')"><i class="cp-icon fa fa-times"></i><span>取消行程</span></a>
-        <a v-show="isShowBtn_finish" class="cp-btn-p cp-btn-ok "  @click="btnAction('finish')"><i class="cp-icon fa fa-check"></i><span>结束行程</span></a>
+        <a v-show="isShowBtn_goback" class="cp-btn-i cp-btn-back "  @click="goBack"><i class="cp-icon fa fa-chevron-left"></i><span>{{$t("message['carpool.detail.btn.goback']")}}</span></a>
+        <a v-show="isShowBtn_phone"  class="cp-btn-i cp-btn-phone " :href="'tel:'+user.phone"><i class="cp-icon fa fa-phone"></i><span>{{$t("message['carpool.detail.btn.phone']")}}</span></a>
+        <a v-show="isShowBtn_pickup" class="cp-btn-p cp-btn-pickup " @click="btnAction('pickup')"><i class="cp-icon fa fa-car"></i><span>{{$t("message['carpool.detail.btn.pickup']")}}</span></a>
+        <a v-show="isShowBtn_riding" class="cp-btn-p cp-btn-riding " @click="btnAction('riding')"><i class="cp-icon fa fa-car"></i><span>{{$t("message['carpool.detail.btn.riding']")}}</span></a>
+        <a v-show="isShowBtn_cancel" class="cp-btn-p cp-btn-cancel "  @click="btnAction('cancel')"><i class="cp-icon fa fa-times"></i><span>{{$t("message['carpool.detail.btn.cancel']")}}</span></a>
+        <a v-show="isShowBtn_finish" class="cp-btn-p cp-btn-ok "  @click="btnAction('finish')"><i class="cp-icon fa fa-check"></i><span>{{$t("message['carpool.detail.btn.finish']")}}</span></a>
         <b v-show="isShowBtn_status" class="cp-btn-p cp-btn-disable "  @click="false"><i class="cp-icon fa fa-check"></i><span>{{alertText}}</span></b>
       </div>
     </div>
@@ -180,7 +180,7 @@ export default {
 
       //乘客相关
       isLoading_pss     :true,
-      passengers        :null,
+      passengers        :[],
       passengers_time   : 0,
 
       //用户相关
@@ -291,14 +291,15 @@ export default {
       // console.log(this.type);
       switch (parseInt(status)) {
         case 0:
-            this.alertText = "该乘客正等待被搭载"
+            this.alertText = this.$t("message['carpool.status.alert.waitingCar']");
             this.isShowBtn_cancel = this.uid == this.user.uid ? true : false;
             if(this.type=="wall"){
               this.isShowBtn_finish = this.uid == this.user.uid ? true : false;
               if(this.detailData.hasTake > 0){
                   // this.isShowAlert = true;
                   this.alertClass  = "alert-info"
-                  this.alertText = "你已搭该司机的车";
+                  this.alertText = this.$t("message['carpool.status.alert.youAlreadyTake']");
+
                   this.isShowBtn_cancel_alert = true;
                   this.isShowBtn_cancel = true;
                   this.isShowBtn_finish_alert = true;
@@ -313,7 +314,7 @@ export default {
             if(this.type=="info"){
               this.isShowBtn_pickup = this.uid == this.user.uid ? false : true;
             }
-            this.statusText  = "等车中";
+            this.statusText  = this.$t("message['carpool.status.waitingDriver']");;
             this.statusIcon  = "fa fa-user";
           break;
         case 1:
@@ -323,7 +324,7 @@ export default {
               if(this.detailData.hasTake > 0){
                   // this.isShowAlert = true;
                   this.alertClass  = "alert-info"
-                  this.alertText = "你已搭该司机的车";
+                  this.alertText = this.$t("message['carpool.status.alert.youAlreadyTake']");
                   this.isShowBtn_cancel_alert = true;
                   this.isShowBtn_cancel = true;
                   this.isShowBtn_finish_alert = true;
@@ -338,25 +339,25 @@ export default {
 
             }
             if(this.type=="info"){
-              this.alertText = "该乘客已被司机 【<img class='cp-avatar' src='"+this.detailData.owner_info.avatar+"' /> "+this.detailData.owner_info.name+" 】搭载";
+              this.alertText = this.$t("message['carpool.status.alert.hasTakenBy']",{"user":"<img class='cp-avatar' src='"+this.detailData.owner_info.avatar+"' /> "+this.detailData.owner_info.name+""});
               this.isShowBtn_cancel = this.uid == this.user.uid || this.detailData.owner_info.uid == this.uid ? true : false;
               this.isShowBtn_finish = this.uid == this.user.uid || this.detailData.owner_info.uid == this.uid ? true : false;
             }
 
-            this.statusText  = "已搭车";
+            this.statusText  = this.$t("message['carpool.status.hasTaken']");
             this.statusIcon  = "fa fa-car";
           break;
         case 2:
-            this.alertText = "行程已取消"
+            this.alertText = this.$t("message['carpool.status.alert.hasCanceled']");
             this.isShowBtn_goback =  true;
-            this.statusText  = "已取消";
+            this.statusText  = this.$t("message['carpool.status.hasCanceled']");
             this.statusIcon  = "fa fa-times";
             this.isShowBtn_status = true;
           break;
         case 3:
-            this.alertText = "行程已完成"
+            this.alertText = this.$t("message['carpool.status.alert.hasFinished']");
             this.isShowBtn_goback = true;
-            this.statusText  = "已完成";
+            this.statusText  = this.$t("message['carpool.status.hasFinished']");
             this.statusIcon  = "fa fa-check";
             this.isShowBtn_status = true;
 
@@ -380,7 +381,7 @@ export default {
           this.uid             = data.uid;
           this.detailData.owner_info.avatar = data.owner_info.imgpath ? config.avatarBasePath + data.owner_info.imgpath : this.defaultAvatar;
           if( this.type == "info"){
-            this.typeLabel           = "乘客"
+            this.typeLabel           = this.$t("message.passenger")
             this.passengers[0]       = data.passenger_info;
             this.passengers[0].avatar = data.passenger_info.imgpath ? config.avatarBasePath + this.passengers[0].imgpath :this.defaultAvatar ;
             this.isShowAlert          = true;
@@ -520,29 +521,29 @@ export default {
       */
      btnAction (action){
        var url,postData,confirmText;
-       var successText = "成功"
-       var confirmTitle = "请确认"
+       var successText = this.$t("message.success");
+       var confirmTitle = this.$t("message.AreYouSure");
        var isJumpToMytrip = false;
        switch (action) {
          case 'pickup':
            url = config.urls.acceptRequest;
            postData = {id:this.id};
-           confirmText = '是否接受【'+this.user.name+'】的约车'
-           successText = "搭载成功"
+           confirmText = this.$t("message['carpool.confirm.accept']",{"usernname":this.user.name});
+           successText = this.$t("message['carpool.acceptSuccess']") ;
            isJumpToMytrip = true;
            break;
          case 'riding':
            url = config.urls.riding;
            postData = {wid:this.id};
-           confirmText = '是否要坐【'+this.user.name+'】的车'
-           successText = "搭车成功"
+           confirmText = this.$t("message['carpool.confirm.riding']",{"usernname":this.user.name});
+           successText = this.$t("message['carpool.ridingSuccess']") ;
            isJumpToMytrip = true;
            break;
          case 'finish':
            url = config.urls.finishTrip;
            postData = {id:this.id,from:this.type};
-           confirmText = '是否结束本次行程'
-           successText = "本次行程已完成"
+           confirmText = this.$t("message['carpool.confirm.finish']");
+           successText = this.$t("message['carpool.finishSuccess']") ;
            isJumpToMytrip = false;
            var success = (rs)=>{
              if( this.uid == this.user.uid){
@@ -562,8 +563,8 @@ export default {
          case 'cancel':
            url = config.urls.cancelTrip;
            postData = {id:this.id,from:this.type};
-           confirmText = '您确定要取消本次行程吗？'
-           successText = "取消成功"
+           confirmText = this.$t("message['carpool.confirm.cancel']");
+           successText = this.$t("message['carpool.cancelSuccess']") ;
            isJumpToMytrip = false;
            var success =  (rs)=>{
              if( this.uid == this.user.uid){
@@ -588,7 +589,7 @@ export default {
          title  : confirmTitle,
          content: confirmText,
          onConfirm : ()=>{
-           this.$store.commit('setLoading',{isShow:true,text:"提交中"});
+           this.$store.commit('setLoading',{isShow:true,text:this.$t("message.submitting")});
            // return false;
            this.$tokenAxios.post(url,postData).then(res => {
              this.$store.commit('setLoading',{isShow:false});
@@ -608,7 +609,7 @@ export default {
            })
            .catch(error => {
              this.$store.commit('setLoading',{isShow:false});
-             this.$vux.toast.text('网络好像不太畅通');
+             this.$vux.toast.text(t.message['networkFail']);
              console.log(error)
            })
          }

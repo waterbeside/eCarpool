@@ -1,10 +1,10 @@
 <template>
   <div class="page-view page-view-profile-edit" id="Page-user-profile-departments">
-    <title-bar >请选择部门</title-bar>
+    <title-bar >{{$t("message['department.title']")}}</title-bar>
 
     <div class="page-view-main"   >
       <group   class="cp-search-bar">
-            <x-input title="<i class='fa fa-search'></i>"   class="form-control-line" :show-clear="true"   placeholder="请输入关键字查找" name="Department"  v-model="keyword" ref="input" @on-change="doSearch"></x-input>
+            <x-input title="<i class='fa fa-search'></i>"   class="form-control-line" :show-clear="true"  :placeholder="$t('message[\'placeholder.keyword\']')"   name="Department"  v-model="keyword" ref="input" @on-change="doSearch"></x-input>
       </group>
       <cp-scroller :position="{top:'90px'}"  :enableRefresh="false" :enableInfinite="false" id="cp-scroll-wrapper">
 
@@ -16,7 +16,7 @@
         </ul>
         <div class="text-center">
           <div class="cp-nodata-tips" v-show="!listData.length>0">
-            无须选择部门，请返回。
+            {{$t("message['department.noData']")}}
           </div>
           <spinner type="dots" size="60px" v-show="isLoading"></spinner>
         </div>

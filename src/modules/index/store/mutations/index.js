@@ -38,7 +38,7 @@ export default {
   setLoading(state,datas){
     let defaults = {
       isShow:false,
-      text:"加载中"
+      text:"Loading"
     }
     var obj = Object.assign(defaults, datas);
     state.loading = obj ;

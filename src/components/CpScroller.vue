@@ -4,20 +4,20 @@
         <section :id="innerID" class="cp-scroll-inner" :class="{'cp-enableRefresh':enableRefresh}" :style="innerStyleEX"  >
             <div class="pull-refresh" v-show="enableRefresh">
                 <slot name="pull-refresh">
-                    <span class="down-tip">下拉更新</span>
-                    <span class="up-tip">松开刷新数据</span>
-                    <span class="refresh-tip">加载中……</span>
+                    <span class="down-tip">{{$t("message['scroller.pullToRefresh']")}}</span>
+                    <span class="up-tip">{{$t("message['scroller.refreshing']")}}</span>
+                    <span class="refresh-tip">{{$t("message['scroller.loosenToRefresh']")}}</span>
                 </slot>
             </div>
             <slot>
             </slot>
             <div class="load-more-wrapper" v-show="enableInfinite">
               <div class="load-more">
-                      <span v-show="downFlag === false"><slot name="loadmore-text">上拉加载更多</slot></span>
-                      <span v-show="downFlag === true"><slot name="loading-text">加载中……</slot></span>
+                      <span v-show="downFlag === false"><slot name="loadmore-text">{{$t("message['scroller.pullUpGetMore']")}}</slot></span>
+                      <span v-show="downFlag === true"><slot name="loading-text">{{$t("message['scroller.loadingMore']")}}</slot></span>
               </div>
             </div>
-            <div class="nullData" v-show="enableInfinite   && dataList.noFlag">暂无更多数据</div>
+            <div class="nullData" v-show="enableInfinite && dataList.noFlag">{{$t("message.noMore")}} ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾</div>
         </section>
         <slot name="after-inner"></slot>
     </div>

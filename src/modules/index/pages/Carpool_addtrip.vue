@@ -19,7 +19,7 @@
             </div>
             <div class="cp-computebox-wrapper" v-show="isShowComputebox">
               <div class="cp-computebox-inner">
-                <h5>预计</h5>
+                <h5>{{$t("message['carpool.addtrip.estimate']")}}</h5>
                 <div class="cp-content">
                   <div class="cp-item"><i class="fa fa-map-signs"></i><b>{{computeBoxData.distance}}</b></div>
                   <div class="cp-item"><i class="fa fa-clock-o"></i><b>{{computeBoxData.time}}</b></div>
@@ -39,7 +39,8 @@
               </div>
               <div class="cp-userinfo">
                 <span class="cp-username">{{userData.name}}</span>
-                <span class="cp-pull-right">{{type=="info"?"发布约车需求":"发布空座位"}}</span>
+
+                <span class="cp-pull-right">{{type=="info"? $t("message['title.addTrip']") : $t("message['share.shareemptyseat']") }}</span>
               </div>
             </div>
             <div class="cp-map-form-inner">
@@ -47,7 +48,7 @@
                 <div class="cp-selectbtn-wrap cp-startp-wrap" :class="{'isNull':startIsNull}">
                   <div class="cp-selectbtn"  @click="selectAddress('start')" >
                     <span class="cp-label">
-                      <i class="fa fa-map-marker"></i><span class="cp-title">起点</span>
+                      <i class="fa fa-map-marker"></i><span class="cp-title">{{$t("message['label.from']")}}</span>
                     </span>
                     <span class="cp-text">{{startName}}</span>
                   </div>
@@ -58,7 +59,7 @@
                 <div class="cp-selectbtn-wrap cp-endp-wrap" :class="{'isNull':endIsNull}">
                   <div class="cp-selectbtn"  @click="selectAddress('end')">
                     <span class="cp-label">
-                      <i class="fa fa-map-marker"></i><span class="cp-title">终点</span>
+                      <i class="fa fa-map-marker"></i><span class="cp-title">{{$t("message['label.to']")}}</span>
                     </span>
 
                     <span class="cp-text">{{endName}}</span>
@@ -67,10 +68,12 @@
               </div>
               <div class="cp-selectbtn-wrap cp-needTime-sWrap" id="J-needTime" >
 
-                <popup-picker class="cp-selectbtn"    v-model="formData.time" :data="timeDataArray" :display-format="formatDateDisplay"  >
+                <popup-picker class="cp-selectbtn"    v-model="formData.time" :data="timeDataArray" :display-format="formatDateDisplay"
+                :cancelText="$t('message.cancel')"
+                :confirmText="$t('message.done')">
                   <template slot="title" slot-scope="props">
                     <span class="cp-label">
-                      <i class="fa fa-clock-o"></i><span class="cp-title" style="vertical-align:middle;">出发时间</span>
+                      <i class="fa fa-clock-o"></i><span class="cp-title" style="vertical-align:middle;">{{$t("message['label.startTime']")}}</span>
                     </span>
                   </template>
                 </popup-picker>
@@ -78,7 +81,7 @@
 
               <div class="cp-selectbtn-wrap cp-seatCount-sWrap" id="J-pick-seatCount" v-if="type=='wall'">
                 <div class="cp-selectbtn" >
-                  <x-number :title="'<span class=\'cp-label\'><i class=\'fa fa-users\'></i><span class=\'cp-title\' style=\'vertical-align:middle;\'>空座位数</span></span>'"    v-model="formData.seat_count" button-style="round" :min="1" :max="10" fillable ></x-number>
+                  <x-number :title="'<span class=\'cp-label\'><i class=\'fa fa-users\'></i><span class=\'cp-title\' style=\'vertical-align:middle;\'>'+$t('message[\'label.needseats\']')+'</span></span>'"    v-model="formData.seat_count" button-style="round" :min="1" :max="10" fillable ></x-number>
                 </div>
 
                 <!--<popup-picker class=""     v-model="formData.seat_count" :data="[[1,2,3,4,5,6,7,8,9,10]]"  >
@@ -92,7 +95,7 @@
               </div>
 
 
-              <button class="cp-btn  cp-btn-submit "   :disabled="disableSubmitBtn" style="border-radius:99px;" @click="doSubmit"><i class="cp-icon fa fa-paper-plane"></i>发布</button>
+              <button class="cp-btn  cp-btn-submit "   :disabled="disableSubmitBtn" style="border-radius:99px;" @click="doSubmit"><i class="cp-icon fa fa-paper-plane"></i>{{$t("message['share.publish']")}}</button>
 
             </div>
           </form>
@@ -106,9 +109,9 @@
 <script>
 
 import config from '../config'
-import cFuns from '../../../utils/cFuns'
-import cModel from '../../../utils/cModel'
-import CpAvatar from '../../../components/CpAvatar'
+import cFuns from '@/utils/cFuns'
+import cModel from '@/utils/cModel'
+import CpAvatar from '@/components/CpAvatar'
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
 
 import {  XNumber  } from 'vux'
@@ -162,10 +165,10 @@ export default {
   },
   computed:{
     startName (){
-      return this.formData.start.addressname ? this.formData.start.addressname : "请选择出发地"
+      return this.formData.start.addressname ? this.formData.start.addressname : this.$t("message['placeholder.startp']");
     },
     endName (){
-      return this.formData.end.addressname ? this.formData.end.addressname : "请选择目的地"
+      return this.formData.end.addressname ? this.formData.end.addressname : this.$t("message['placeholder.endp']");
     },
     startIsNull (){
       return this.formData.start.addressname ? false : true;
@@ -174,7 +177,7 @@ export default {
       return this.formData.end.addressname ? false : true;
     },
     timeDataArray (){
-      return cFuns.returnNeedTimeDatas(0,0)
+      return cFuns.returnNeedTimeDatas(0,0,[this.$t("message.today"),this.$t("message.tomorrow")])
     },
     userData (){
       let userData = this.$store.state.userData;
@@ -304,11 +307,11 @@ export default {
             var distance = result.routes[0].distance; //计出的距离
             var distanceStr = cFuns.amap.formatDistance(distance);
             var dtTime = result.routes[0].time;
-            var dtTimeStr = cFuns.amap.formatTripTime(dtTime);
+            var dtTimeStr = cFuns.amap.formatTripTime(dtTime,[this.$t('message.hours'),this.$t('message.minutes')]);
             this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
             this.formData.distance = distance;
           }else{
-            var data= '路线过长，无法预测行程时间';
+            var data= this.$t("message['carpool.addtrip.tooLong']");
             this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
             this.formData.distance = 0;
           }
@@ -339,7 +342,7 @@ export default {
 
         var resData = res.data.data
         if(res.data.code === 0) {
-          this.$vux.toast.text("发布成功");
+          this.$vux.toast.text(this.$t("message.publishSuccess"));
           if(resData.createAddress.length>0){
             // console.log(rs.data.createAddress)
             var newDatas = resData.createAddress;

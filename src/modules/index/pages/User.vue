@@ -11,35 +11,66 @@
       </div>
       <div class="page-view-content" style="margin-bottom:80px;" >
           <div class=" cp-statis-list">
-            <statis-item class="cp-statis-item col-xs-4" :num="statis.people" unit="人次" icon="fa fa-male" :duration="1"></statis-item>
-            <statis-item class="cp-statis-item col-xs-4" :num="statis.distance" unit="公里" icon="fa fa-map" :duration="1"></statis-item>
-            <statis-item class="cp-statis-item col-xs-4" :num="statis.carbon" unit="千克碳" icon="fa fa-leaf" :duration="1"></statis-item>
+            <statis-item class="cp-statis-item col-xs-4" :num="statis.people" :unit="$t('message.personTime')" icon="fa fa-male" :duration="1"></statis-item>
+            <statis-item class="cp-statis-item col-xs-4" :num="statis.distance" :unit="$t('message.kilometre')" icon="fa fa-map" :duration="1"></statis-item>
+            <statis-item class="cp-statis-item col-xs-4" :num="statis.carbon" :unit="$t('message.kilogramsCarbon')" icon="fa fa-leaf" :duration="1"></statis-item>
           </div>
           <ul class="cp-options-list">
-            <li><router-link  class="btn btn-ripple" :to="{ name:'user_profile'}"><i class="fa fa-cog"></i>个人信息</router-link></li>
-            <li><router-link  class="btn btn-ripple" :to="{ name:'user_profile_password'}"><i class="fa fa-key"></i>更改密码</router-link></li>
-            <li><router-link  class="btn btn-ripple" to="/disclaimer"><i class="fa fa-legal"></i>免责声明</router-link></li>
-            <li><router-link  class="btn btn-ripple" to="/downloadapp"><i class="fa fa-download"></i>下载APP</router-link></li>
-            <li><a class="btn btn-ripple" @click="logout" ><i class="fa fa-sign-out"></i>退出登录</a></li>
+            <li><router-link  class="btn btn-ripple" :to="{ name:'user_profile'}"><i class="fa fa-cog"></i> {{ $t("message['setting.personalInfo']" )}} </router-link></li>
+            <li><router-link  class="btn btn-ripple" :to="{ name:'user_profile_password'}"><i class="fa fa-key"></i> {{ $t("message['setting.modifypassword']" )}} </router-link></li>
+            <li><router-link  class="btn btn-ripple" to="/disclaimer"><i class="fa fa-legal"></i>{{ $t("message['setting.disclaimer']" )}} </router-link></li>
+            <li class="cp-selectbtn-wrap ">
+              <popup-picker class="cp-selectbtn"    v-model="language" :data="languages"   @on-change="onChangeLang" :display-format="formatLangDisplay"
+              :cancelText="$t('message.cancel')"
+              :confirmText="$t('message.done')">
+                <template slot="title" slot-scope="props">
+                  <span class="cp-label">
+                    <i class="fa fa-language"></i><span class="cp-title" style="vertical-align:middle;">{{$t("message.languages")}}</span>
+                  </span>
+                </template>
+              </popup-picker>
+            </li>
+
+            <li><router-link  class="btn btn-ripple" to="/downloadapp"><i class="fa fa-download"></i>{{ $t("message['about.downloadEntrance']" )}}</router-link></li>
+            <li><a class="btn btn-ripple" @click="logout" ><i class="fa fa-sign-out"></i>{{ $t("message['setting.logout']" )}}</a></li>
           </ul>
       </div>
+
     <cp-foot-nav-bar current="user"></cp-foot-nav-bar>
   </div>
 </template>
 
 <script>
+import cFuns from '@/utils/cFuns';
 import config from '../config'
 import CpFootNavBar from '../components/CpFootNavBar'
 import StatisItem from '../../../components/StatisItem'
 import CpAvatar from '../../../components/CpAvatar'
+import {PopupRadio} from 'vux'
 
 export default {
   components: {
-    StatisItem,CpAvatar,CpFootNavBar
+    StatisItem,CpAvatar,CpFootNavBar,PopupRadio
   },
   data () {
     return {
       avatar: config.defaultAvatar,
+      language :["en"],
+      languages: [[{
+        name: 'ENGILSH',
+        value: 'en',
+      }, {
+        name: '中文',
+        value: "zh",
+      },
+      {
+       name: 'Việt Nam',
+       value: "vi",
+     }]],
+      formatLangDisplay:  (value, name)=> {
+        let returnName = '';
+        return name ? name : value
+      },
       statis:{
         people:0,
         distance:0,
@@ -103,8 +134,10 @@ export default {
    logout (){
 
      this.$vux.confirm.show({
-       title  : '请确认',
-       content: '是否退出',
+       title  : this.$t("message.AreYouSure"),
+       content: this.$t("message.isLogout"),
+       confirmText: this.$t("message.sure"),
+       cancelText: this.$t("message.cancel"),
        onConfirm: ()=>{
          let uid = localStorage.getItem('CP_uid');
          this.$tokenAxios.delete(config.urls.passport).then(res => { });
@@ -119,15 +152,19 @@ export default {
 
        }
      })
+   },
+
+   onChangeLang (){
+    localStorage.setItem('language',this.language[0]);
+    this.$i18n.locale= this.language[0]
    }
-
-
   },
   mounted () {
 
 
   },
   activated (){
+    this.language = [cFuns.getLanguage()];
     setTimeout(()=>{
       if(typeof(this.$store.state.userData.name)!="undefined"){
         this.avatar = this.$store.state.userAvatar;
