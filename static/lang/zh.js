@@ -2050,6 +2050,8 @@ message: {
   "placeholder.newPassword" :"请输入新密码",
   "placeholder.confirmPassword" :"请再次输入新密码",
   "placeholder.comment" :"发表评论",
+  "placeholder.username" :"用户名",
+  "placeholder.password" :"密码",
 
 
 
@@ -2135,6 +2137,25 @@ message: {
   "carpool.status.hasFinished": "已结束",
   "carpool.status.alert.hasFinished": "行程已结束",
 
+  "department.title":"选择部门",
+  "department.noData":"无须选择部门，请返回。",
+
+  "user.avatar.title":"更改头像",
+  "user.avatar.selectImage":"选择图片",
+  "user.avatar.imageFormat":"图片类型必须是.gif,jpeg,jpg,png,bmp中的一种",
+  "user.avatar.failed":"更改失败，请稍候再试",
+
+  "login.btn":"登 入",
+  "login.logging" : "登入中",
+  "login.success" : "登入成功",
+  "login.usernameOrPasswordError" : "用户名或密码错误",
+  "login.clickMeansRead" : "点击“登入”按钮即代表阅读并同意《使用协议》",
+  "login.disclaimer" : "使用协议",
+
+  "downloadapp.title" : "下载APP",
+  "downloadapp.welcomeDownload" : "欢迎下载手机APP，以获得更多功能和更好的体验。",
+  "downloadapp.android" : "安卓下载",
+  "downloadapp.ios" : "苹果下载",
 
 
 

@@ -2039,6 +2039,8 @@ message: {
   "placeholder.newPassword" :"Vui lòng nhập mật khẩu mới",
   "placeholder.confirmPassword" :"Nhập lại",
   "placeholder.comment" :"Để lại một bình luận",
+  "placeholder.username" :"Tên người dùng",
+  "placeholder.password" :"Mật khẩu",
 
 
   "label.from" : "từ",
@@ -2121,7 +2123,25 @@ message: {
   "carpool.status.hasFinished": "Nó đã kết thúc",
   "carpool.status.alert.hasFinished": "Cuộc hành trình đã kết thúc",
 
+  "department.title":"Chọn bộ phận",
+  "department.noData":"Không cần phải chọn, xin vui lòng quay trở lại.",
 
+  "user.avatar.title":"Thay đổi hình đại diện",
+  "user.avatar.selectImage":"Chọn ảnh",
+  "user.avatar.imageFormat":"Loại hình ảnh phải là một trong các gif, jpeg, jpg, png, bmp",
+  "user.avatar.failed":"Không thành công, vui lòng thử lại sau",
+
+  "login.btn":"Đăng nhập",
+  "login.logging" : "Vui lòng đợi",
+  "login.success" : "Đăng nhập thành công",
+  "login.usernameOrPasswordError" : "Tên người dùng hoặc mật khẩu không chính xác",
+  "login.clickMeansRead" : "Nhấp vào nút \"Đăng nhập\" có nghĩa là đọc và đồng ý với \"Sử dụng thỏa thuận\"",
+  "login.disclaimer" : "Sử dụng thỏa thuận",
+
+  "downloadapp.title" : "Tải xuống ứng dụng",
+  "downloadapp.welcomeDownload" : "Chào mừng bạn đến tải xuống ứng dụng dành cho thiết bị di động để có nhiều tính năng hơn và trải nghiệm tốt hơn.",
+  "downloadapp.android" : "Android download",
+  "downloadapp.ios" : "iOS download",
 
 
 }

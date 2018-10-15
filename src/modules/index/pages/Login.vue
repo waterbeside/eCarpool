@@ -12,14 +12,14 @@
             <div class="cp-form-wrap">
               <form class="form form-login form-horizontal"　 method="post"  @submit.prevent="login">
                 <group class="cp-form-group">
-                  <x-input   title="<i class='fa fa-id-card'></i>" placeholder="用户名" name="username"  v-model="username"   novalidate  @on-change="resetError"></x-input>
+                  <x-input   title="<i class='fa fa-id-card'></i>" :placeholder="$t('message[\'placeholder.username\']')"  name="username"  v-model="username"   novalidate  @on-change="resetError"></x-input>
                 </group>
                 <group class="cp-form-group">
-                  <x-input     title="<i class='fa fa-key'></i>" placeholder="密码" name="password" type="password"  v-model="password" novalidate @on-change="resetError" ></x-input>
+                  <x-input     title="<i class='fa fa-key'></i>" :placeholder="$t('message[\'placeholder.password\']')"  name="password" type="password"  v-model="password" novalidate @on-change="resetError" ></x-input>
                 </group>
                 <div class="cp-error-tips"    v-if="isShowError" ><i class="fa fa-exclamation-circle"></i> {{errorTips}}</div>
 
-                <div class="cp-tips-disclaimer">点击“登入”按钮即代表阅读并同意<a href="#/disclaimer">《使用协议》</a></div>
+                <div class="cp-tips-disclaimer"><a href="#/disclaimer">{{$t("message['login.clickMeansRead']")}} </a></div>
 
                 <x-button  type="primary" :disabled="subBtnIsDisabled" >{{subBtnText}}</x-button>
                 <!-- <button class="btn btn-primary btn-lg J-btn-submit" type="submit" data-loading-text="登 入 中...">登 入</button> -->
@@ -47,7 +47,7 @@ export default {
       password:'',
       isShowError: false,
       errorTips:'',
-      subBtnText:'登 入',
+      subBtnText: this.$t("message['login.btn']"),
       isSubmiting: false,
       iconType:'',
     }
@@ -69,14 +69,14 @@ export default {
       // alert(1)
       let postData = {username:this.username,password:this.password,client:'h5'};
       this.isSubmiting = true;
-      this.subBtnText = '登 入 中'
+      this.subBtnText = this.$t("message['login.logging']");
       this.$tokenAxios.post(config.urls.passport,postData).then(res => {
       // this.$tokenAxios.post(config.urls.login,postData).then(res => {
           this.isSubmiting = false;
-          this.subBtnText = '登 入'
+          this.subBtnText = this.$t("message['login.btn']");
           // 登录成功
           if(res.data.code === 0) {
-            this.$vux.toast.text('登入成功');
+            this.$vux.toast.text(this.$t("message['login.success']"));
             let data = res.data.data;
             localStorage.setItem('CP_U_TOKEN',data.token);
             localStorage.setItem('CP_uid',data.user.uid);
@@ -94,7 +94,7 @@ export default {
             this.$router.push({name:'carpool'});
           }else{
             // alert(res.data.msg);
-            let errorMsg = res.data.code === 10001 ? "用户名或密码错误" : res.data.desc;
+            let errorMsg = res.data.code === 10001 ? this.$t("message['login.usernameOrPasswordError']")  : res.data.desc;
 
             this.$vux.toast.text(errorMsg);
             this.errorTips = errorMsg;
@@ -105,7 +105,7 @@ export default {
         })
         .catch(error => {
           this.isSubmiting = false;
-          this.subBtnText = '登 入'
+          this.subBtnText = this.$t("message['login.btn']");
         })
     }
   },

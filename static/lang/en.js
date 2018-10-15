@@ -2061,15 +2061,15 @@ module.exports = {
     "placeholder.verCode" :"Please enter the verification code",
     "placeholder.name" :"Please enter your name",
     "placeholder.sex" :"Please select gender",
-
     "placeholder.startp" :"Please select",
     "placeholder.endp" :"Please select",
     "placeholder.keyword" :"Please enter the keyword",
     "placeholder.oldPassword" :"Please enter the old password",
     "placeholder.newPassword" :"Please enter a new password",
     "placeholder.confirmPassword" :"Enter the new password again",
-    "placeholder.comment" :"comment",
-
+    "placeholder.comment" :"Comment",
+    "placeholder.username" :"Username",
+    "placeholder.password" :"Password",
 
     "label.from" : "From",
     "label.to" : "To",
@@ -2155,6 +2155,25 @@ module.exports = {
     "carpool.status.alert.hasFinished": "This trip has ended",
 
 
+    "department.title":"Select department",
+    "department.noData":"No need to choose, please return.",
+
+    "user.avatar.title":"Change avatar",
+    "user.avatar.selectImage":"Select Image",
+    "user.avatar.imageFormat":"Image type must be one of gif, jpeg, jpg, png, bmp",
+    "user.avatar.failed":"Failed, please try again later",
+
+    "login.btn":"Login",
+    "login.logging" : "Signing on",
+    "login.success" : "Login Success",
+    "login.usernameOrPasswordError" : "User name or password error",
+    "login.clickMeansRead" : "Clicking on the \"Login\" button means reading and agreeing to the \"Disclaimer\"",
+    "login.disclaimer" : "Disclaimer",
+
+    "downloadapp.title" : "Download APP",
+    "downloadapp.welcomeDownload" : "Welcome to download the mobile app for more features and a better experience.",
+    "downloadapp.android" : "Android download",
+    "downloadapp.ios" : "iOS download",
 
 
 
