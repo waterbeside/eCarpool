@@ -2011,6 +2011,7 @@ message: {
   "kilogramsCarbon" : "Kg-Carbon",
   "other" : "Khác",
   "networkFail":"Internet không hoạt động, hãy thử lại sau",
+  "submitFail":"Thay đổi không thành công, vui lòng thử lại sau",
   "AreYouSure":"Bạn có chắc không?",
   "isLogout":"để đăng xuất",
   "today" : "Hôm nay",
@@ -2041,6 +2042,7 @@ message: {
   "placeholder.comment" :"Để lại một bình luận",
   "placeholder.username" :"Tên người dùng",
   "placeholder.password" :"Mật khẩu",
+  "placeholder.selectAddress" :"请选择地址",
 
 
   "label.from" : "từ",
@@ -2143,7 +2145,8 @@ message: {
   "downloadapp.android" : "Android download",
   "downloadapp.ios" : "iOS download",
 
-
+  "address.createAddress":"Tạo địa chỉ",
+  "address.noAddress":"Bạn không tìm thấy địa chỉ mình muốn?",
 }
 
 

@@ -41,8 +41,8 @@
          <spinner type="dots" size="60px" v-show="isLoading"></spinner>
        </div>
        <div class="cp-createAddress-box" @click="goCreateAddress" v-show="isShowCreateBtn">
-         <p>没找到您想要的站点？</p>
-         <p><i class="fa fa-plus"></i> 创建站点：<b class="cp-keyword"></b></p>
+         <p> {{$t("message['placeholder.noAddress']")}}</p>
+         <p><i class="fa fa-plus"></i> {{$t("message['placeholder.createAddress']")}}: <b class="cp-keyword"></b></p>
        </div>
       </cp-scroller>
 
@@ -87,7 +87,7 @@ export default {
         "home":this.$t("message['setting.home']"),
         "work":this.$t("message['setting.company']"),
       }
-      return typeof(titlesArray[this.to]!=="undefault") ? titlesArray[this.to] : "请选择地址"
+      return typeof(titlesArray[this.to]!=="undefault") ? titlesArray[this.to] : this.$t("message['placeholder.selectAddress']")
     },
     isShowCreateBtn (){
       return this.to == "start" || this.to=="end" ? true : false;
@@ -391,19 +391,19 @@ export default {
                    cModel.myAddress('update',{data:data_n});
                 }
                 // console.log(GB_VAR['user_info']);
-                this.$vux.toast.text("更改成功");
+                this.$vux.toast.text(this.$t("message.success"));
 
               }
             })
           }else{
-            this.$vux.toast.text("更改失败，请稍候再试");
+            this.$vux.toast.text(this.$t("message.submitFail"));
 
           }
           // this.$router.push({name:'user_profile'});
           this.$router.back();
         })
         .catch(error => {
-          this.$vux.toast.text("更改失败，请稍候再试");
+          this.$vux.toast.text(this.$t("message.submitFail"));
           this.$router.back();
           console.log(error)
         })

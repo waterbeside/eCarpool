@@ -2022,6 +2022,7 @@ message: {
   "kilogramsCarbon" : "千克碳",
   "other" : "其它",
   "networkFail":"网络不畅，请稍候再试",
+  "submitFail":"更改失败，请稍候再试",
   "AreYouSure":"请确认",
   "isLogout":"是否退出",
   "today" : "今天",
@@ -2052,6 +2053,7 @@ message: {
   "placeholder.comment" :"发表评论",
   "placeholder.username" :"用户名",
   "placeholder.password" :"密码",
+  "placeholder.selectAddress" :"请选择地址",
 
 
 
@@ -2158,7 +2160,8 @@ message: {
   "downloadapp.ios" : "苹果下载",
 
 
-
+  "address.createAddress":"创建站点",
+  "address.noAddress":"没找到您想要的站点？",
 
 
 }
