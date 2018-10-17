@@ -2135,6 +2135,8 @@ module.exports = {
     "carpool.detail.noPassenger" : "No passengers",
 
     "carpool.comments.title" : "Comments",
+    "carpool.comments.sendFail" : "Fail in send",
+    "carpool.comments.fillContent" : "Please fill in the contents",
 
 
     "carpool.confirm.accept" : "Would you like to pick up 【{username}】? ",

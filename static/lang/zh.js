@@ -2117,6 +2117,10 @@ message: {
   "carpool.detail.noPassenger" : "未有乘客",
 
   "carpool.comments.title" : "评论",
+  "carpool.comments.sendFail" : "发送失败",
+  "carpool.comments.fillContent" : "请填写内容",
+
+
 
   "carpool.confirm.accept" : "是否接受【{username}】的约车",
   "carpool.acceptSuccess" : "成功添加乘客",

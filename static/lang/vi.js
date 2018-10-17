@@ -2105,6 +2105,9 @@ message: {
   "carpool.detail.noPassenger" : "Không có hành khách",
 
   "carpool.comments.title" : "Nhận xét",
+  "carpool.comments.sendFail" : "Gửi thất bại.",
+  "carpool.comments.fillContent" : "Hãy điền vào nội dung.",
+
 
   "carpool.confirm.accept" : "Bạn có muốn nhận 【{username}】 không?",
   "carpool.acceptSuccess" : "Thành công",
