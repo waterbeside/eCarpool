@@ -135,21 +135,7 @@ export default {
       },
 
       mapObj:null,
-      mapPlugin: [
-        {
-            pName: 'ToolBar',
-            position:"LT",
-            offset:new AMap.Pixel(-3, 110),
-            autoPosition: false,
-            // ruler:false,
-            locate:true,
-            events: {
-              init(o) {
-                // console.log(o);
-              }
-            }
-          }
-      ],
+
 
       disableSubmitBtn:true,
       formatDateDisplay: function (value, name) {
@@ -210,16 +196,15 @@ export default {
       return new Promise ((resolve, reject) => {
         if(!this.mapObj){
           lazyAMapApiLoaderInstance.load().then(() => {
-            this.mapObj = new AMap.Map('amapContainer', {
-              gridMapForeign:true,
+            this.mapObj = cFuns.amap.showMap('amapContainer', {
               resizeEnable: true,zoom: 10
-            });
+            })
             if(!this.$store.state.localCity){
-              this.mapObj.getCity((data)=> {
-                  if (data['province'] && typeof data['province'] === 'string') {
-                    this.$store.commit('setLocalCity',data);
-                    this.city = data.city
-                  }
+              cFuns.amap.getCity(this.mapObj).then((data)=> {
+                if (data['province'] && typeof data['province'] === 'string') {
+                  this.$store.commit('setLocalCity',data);
+                  this.city = data.city
+                }
               });
             }
             resolve(this.mapObj);

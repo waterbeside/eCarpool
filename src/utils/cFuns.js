@@ -74,9 +74,10 @@ var cFuns = {
     lct.href = url;
   },
 
-  getLanguage (){
+  getLanguage (dontFromCache){
+    dontFromCache = dontFromCache || 0;
     let lang = "";
-    if(localStorage){
+    if(localStorage && !dontFromCache){
       lang = localStorage.getItem('language');
       lang = lang ?  lang : localStorage.getItem('lang');
       lang = lang ?  lang : localStorage.getItem('lag');
@@ -213,16 +214,24 @@ var cFuns = {
 
   //地图类方法
   amap:{
-    showMap (target){
-      var map = new AMap.Map(target, {
-        gridMapForeign:true,
-      // resizeEnable: true,
-      //zoom:11,
-      // center: [112.903921, 22.884658]
-      });
 
+    showMap (target,setting){
+      var settingDefault = {
+        gridMapForeign:true,
+      }
+      var opt = Object.assign({},settingDefault,setting);
+      var map = new AMap.Map(target, opt);
       return map;
     },
+    /**
+     * 清地图
+     */
+    clear (mapObj){
+        mapObj.clearMap();
+    },
+    /**
+     * 加marker
+     */
     addMarker (position,mapObj) {
       mapObj.setZoomAndCenter(14, position);
       var marker = new AMap.Marker({
@@ -231,6 +240,13 @@ var cFuns = {
         position: position,
       });
       marker.setMap(mapObj);
+      return marker;
+    },
+    /**
+     * 删marker
+     */
+    removeMarker (marker,mapObj){
+      mapObj.remove(marker);
     },
     //至中心点
     setCenter (position,mapObj,zoom) {
@@ -240,9 +256,9 @@ var cFuns = {
     },
     //画线
     drawTripLine(start,end,mapObj,callBack){
-      console.log(mapObj)
       // mapObj.clearMap();
       AMap.service('AMap.Driving',function(){//回调函数
+
       //实例化Driving
         let map_draw = new AMap.Driving({
               map: mapObj,
@@ -260,6 +276,57 @@ var cFuns = {
           console.log(result)
         });
       })
+    },
+    /**
+     * 取得地理编码组件
+     */
+    getGeocoder(city) {
+      return new Promise ((resolve, reject) => {
+        AMap.plugin('AMap.Geocoder',()=>{
+            var geocoder = new AMap.Geocoder({
+                city:city//城市，默认：“全国”
+            });
+            resolve(geocoder)
+        });
+      })
+    },
+    /**
+     * 取得坐标的地址信息
+     * @param  {array} lnglat  [坐标]
+     * @param  {function} callback [回调函数]
+     */
+    getMarkerInfo (lnglat,geocoder){
+      return new Promise ((resolve, reject) => {
+        geocoder.getAddress(lnglat,(status,result)=>{
+          resolve({status:status,result:result})
+        })
+      });
+    },
+    /**
+     * 取得当前城市
+     */
+    getCity (mapObj){
+      return new Promise ((resolve, reject) => {
+        mapObj.getCity((data)=> {
+          resolve(data);
+        });
+      })
+    },
+    /**
+     * 添加窗体覆盖物
+     */
+    showInfoWindow(options,mapObj){
+      var settingDefault = {
+        position:[],
+        content:"",
+        offset: new AMap.Pixel(0, -20),
+      }
+      var opt = Object.assign({},settingDefault,options);
+      // 创建 infoWindow 实例
+      var infoWindow = new AMap.InfoWindow(opt);
+      // 打开信息窗体
+      infoWindow.open(mapObj);
+      return infoWindow;
     },
 
     // 格式化行程距离

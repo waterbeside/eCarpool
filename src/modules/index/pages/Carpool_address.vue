@@ -41,8 +41,8 @@
          <spinner type="dots" size="60px" v-show="isLoading"></spinner>
        </div>
        <div class="cp-createAddress-box" @click="goCreateAddress" v-show="isShowCreateBtn">
-         <p> {{$t("message['placeholder.noAddress']")}}</p>
-         <p><i class="fa fa-plus"></i> {{$t("message['placeholder.createAddress']")}}: <b class="cp-keyword"></b></p>
+         <p> {{$t("message['address.noAddress']")}}</p>
+         <p><i class="fa fa-plus"></i> {{$t("message['address.createAddress']")}}: <b class="cp-keyword"></b></p>
        </div>
       </cp-scroller>
 
@@ -179,15 +179,16 @@ export default {
      * [getCity 通过高德地图定位到当前城市]
      */
     getCity(){
-      var map = new AMap.Map("cp-map-hidden",{
+        var mapObj = cFuns.amap.showMap('cp-map-hidden', {})
+        if(!this.$store.state.localCity){
+          cFuns.amap.getCity(mapObj).then((data)=> {
+            if (data['province'] && typeof data['province'] === 'string') {
+              this.$store.commit('setLocalCity',data);
+            }
+          });
+        }
 
-      });
-      map.getCity((data)=>{
-        // console.log(data)
-          if (data['province'] && typeof data['province'] === 'string') {
-            this.$store.commit('setLocalCity',data);
-          }
-      });
+
     },
 
     /**

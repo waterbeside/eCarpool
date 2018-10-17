@@ -245,16 +245,16 @@ export default {
       return new Promise ((resolve, reject) => {
         if(!this.mapObj){
           lazyAMapApiLoaderInstance.load().then(() => {
-            this.mapObj = new AMap.Map('amapContainer', {
+            this.mapObj = cFuns.amap.showMap('amapContainer', {
               gridMapForeign:true,
               resizeEnable: true,zoom: 10
-            });
+            })
             if(!this.$store.state.localCity){
-              this.mapObj.getCity((data)=> {
-                  if (data['province'] && typeof data['province'] === 'string') {
-                    this.$store.commit('setLocalCity',data);
-                    this.city = data.city
-                  }
+              cFuns.amap.getCity(this.mapObj).then((data)=> {
+                if (data['province'] && typeof data['province'] === 'string') {
+                  this.$store.commit('setLocalCity',data);
+                  this.city = data.city
+                }
               });
             }
             resolve(this.mapObj);
