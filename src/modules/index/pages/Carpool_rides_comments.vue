@@ -15,7 +15,7 @@
               </div>
               <div class="cp-content">
                 {{item.content}} <i v-show="item.isSubmiting" class="cp-loadingIcon fa fa-circle-o-notch fa-spin "></i>
-                <span v-show="item.isError" class="cp-error">发送失败</span>
+                <span v-show="item.isError" class="cp-error">{{$t("message['carpool.comments.sendFail']" )}} </span>
               </div>
             </div>
           </li>
@@ -137,7 +137,7 @@ export default {
     submitComment(){
 
       if(this.content.trim()==''){
-        this.$vux.toast.text('请填写内容。');
+        this.$vux.toast.text(this.$t("message['fillContent']"));
         return false;
       }
       let userData =  this.$store.state.userData;

@@ -43,7 +43,7 @@
                   <div class="la"><i class="fa fa-clock-o"></i></div>
                   <span class="cp-time">{{detailData.time_format}}</span>
               </div>
-              <cp-trip-box :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname"></cp-trip-box>
+              <cp-trip-box :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname" :labelStart="$t('message[\'label.from\']')"  :labelEnd="$t('message[\'label.to\']')"></cp-trip-box>
               <div class="cp-statis-list">
                 <statis-item class="cp-statis-item col-xs-4 cp-time" :title="$t('message[\'label.startTime\']')"   icon="fa fa-clock-o" :duration="1"><b slot="num"  class="num"><p class="date">{{detailData.time_format.split(' ')[0]}}</p>{{detailData.time_format.split(' ')[1]}}</b></statis-item>
                 <statis-item class="cp-statis-item col-xs-4 cp-distance" :title="$t('message[\'carpool.detail.EstimatedDistance\']')"   :num="statis.distance" :unit="statis.distance_unit" icon="fa fa-map-signs" :duration="1"></statis-item>
@@ -245,13 +245,16 @@ export default {
       return new Promise ((resolve, reject) => {
         if(!this.mapObj){
           lazyAMapApiLoaderInstance.load().then(() => {
-            this.mapObj = new AMap.Map('amapContainer', { resizeEnable: true,zoom: 10 });
+            this.mapObj = cFuns.amap.showMap('amapContainer', {
+              gridMapForeign:true,
+              resizeEnable: true,zoom: 10
+            })
             if(!this.$store.state.localCity){
-              this.mapObj.getCity((data)=> {
-                  if (data['province'] && typeof data['province'] === 'string') {
-                    this.$store.commit('setLocalCity',data);
-                    this.city = data.city
-                  }
+              cFuns.amap.getCity(this.mapObj).then((data)=> {
+                if (data['province'] && typeof data['province'] === 'string') {
+                  this.$store.commit('setLocalCity',data);
+                  this.city = data.city
+                }
               });
             }
             resolve(this.mapObj);
@@ -528,14 +531,14 @@ export default {
          case 'pickup':
            url = config.urls.acceptRequest;
            postData = {id:this.id};
-           confirmText = this.$t("message['carpool.confirm.accept']",{"usernname":this.user.name});
+           confirmText = this.$t("message['carpool.confirm.accept']",{"username":this.user.name});
            successText = this.$t("message['carpool.acceptSuccess']") ;
            isJumpToMytrip = true;
            break;
          case 'riding':
            url = config.urls.riding;
            postData = {wid:this.id};
-           confirmText = this.$t("message['carpool.confirm.riding']",{"usernname":this.user.name});
+           confirmText = this.$t("message['carpool.confirm.riding']",{"username":this.user.name});
            successText = this.$t("message['carpool.ridingSuccess']") ;
            isJumpToMytrip = true;
            break;

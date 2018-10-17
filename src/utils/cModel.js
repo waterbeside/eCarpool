@@ -1,8 +1,9 @@
-// import config from '../configs'
+import cFuns from '@/utils/cFuns'
 let uid = localStorage.getItem('CP_uid');
+let lang = cFuns.getLanguage();
 var cModel = {
     config:{
-      serverName : 'carpool_u'+ uid,
+      serverName : 'carpool_u'+ uid+ "_"+lang,
       version: 1
     },
     supports: function(){

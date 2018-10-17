@@ -2022,6 +2022,7 @@ message: {
   "kilogramsCarbon" : "千克碳",
   "other" : "其它",
   "networkFail":"网络不畅，请稍候再试",
+  "submitFail":"更改失败，请稍候再试",
   "AreYouSure":"请确认",
   "isLogout":"是否退出",
   "today" : "今天",
@@ -2052,6 +2053,7 @@ message: {
   "placeholder.comment" :"发表评论",
   "placeholder.username" :"用户名",
   "placeholder.password" :"密码",
+  "placeholder.selectAddress" :"请选择地址",
 
 
 
@@ -2078,8 +2080,8 @@ message: {
   "verify.oldPasswordError" :"旧密码错误",
 
   "address.stationName" : "站点名称",
-
-
+  "address.createAddress":"创建站点",
+  "address.noAddress":"没找到您想要的站点？",
 
   "scroller.pullToRefresh" : "下拉更新数据",
   "scroller.refreshing" : "加载中...",
@@ -2115,6 +2117,10 @@ message: {
   "carpool.detail.noPassenger" : "未有乘客",
 
   "carpool.comments.title" : "评论",
+  "carpool.comments.sendFail" : "发送失败",
+  "carpool.comments.fillContent" : "请填写内容",
+
+
 
   "carpool.confirm.accept" : "是否接受【{username}】的约车",
   "carpool.acceptSuccess" : "成功添加乘客",

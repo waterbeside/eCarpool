@@ -5,18 +5,11 @@
       <cp-goback-btn></cp-goback-btn>
       <div class="page-view-main" >
         <div class="cp-map-wapper  cp-map-wapper-addtrip">
-          <el-amap class="amap-box" :vid="'amap-vue-address'" :events="mapEvents" :plugin="mapPlugin">
-            <el-amap-marker vid="marker-my" :position="myMarker.position"  v-if="myMarker.position.length > 1" :events="myMarker.events"></el-amap-marker>
+          <div   id="amapContainer"  class="amap-box"  style="height:100%"></div>
 
-            <el-amap-marker  v-for="(marker, index) in markers" :position="marker.position" :events="marker.events"  :vid="index" :key="marker.index"></el-amap-marker>
-            <el-amap-info-window  v-if="markerInfoWin.position.length > 1" class="cp-markInfo-box-wrapper"
-              :autoMove="true"
 
-              :position="markerInfoWin.position"
-              :visible="markerInfoWin.visible"
-              :offset="infoWin_offset"
-              :events="markerInfoWin.events"
-              >
+          <div style="display:none">
+            <div class="cp-markInfo-box-wrapper" ref="infoWindow">
               <div class="cp-markInfo-box">
                 <div class="form-horizontal">
                   <form @submit.prevent="searchMap(0)">
@@ -35,10 +28,8 @@
                   <x-button type="primary" class=" btn-submit" @click.native="doSubmit" :disabled="isSubmiting">{{$t("message.done")}}</x-button>
                 </div>
               </div>
-
-            </el-amap-info-window>
-
-          </el-amap>
+            </div>
+          </div>
 
 
         </div>
@@ -55,7 +46,7 @@ import cFuns from '../../../utils/cFuns'
 import cModel from '../../../utils/cModel'
 
 // import { AMapManager } from 'vue-amap';
-// import { lazyAMapApiLoaderInstance } from 'vue-amap';
+import { lazyAMapApiLoaderInstance } from 'vue-amap';
 
 export default {
   components: {
@@ -72,55 +63,9 @@ export default {
       infoWin_address:'',
       infoWin_offset:[3,-25],
       city:'', //当前城市
-      mapEvents:{ //地图事件。
-        init :(o)=>{
 
-          this.mapObj = o;
-          if(!this.$store.state.localCity){
-            this.mapObj.getCity((data)=>{
-                if (data['province'] && typeof data['province'] === 'string') {
-                  this.$store.commit('setLocalCity',data);
-                  this.city = data.city
-                  this.searchMap(1)
-                }
-            });
-          }else{
-            this.city = this.$store.state.localCity;
-            this.searchMap(1)
-          }
-          // console.log(this)
-          // console.log(o.getCenter())
-        },
-        'click': (e) => {
-          // console.log(e)
-          let position = [e.lnglat.lng,e.lnglat.lat];
-          this.myMarker.position = position;
-          this.myMarker.events = {
-            'click': (e) => {
-              this.doClickMyMarker(position);
-            },
-          }
-          this.doClickMyMarker(position);
+      mapObj:null, //存放地图实例对象
 
-        }
-      },
-      mapObj:{}, //存放地图实例对象
-      mapPlugin: [ //地图插件
-        {
-            pName: 'ToolBar',
-            position:"LT",
-            offset:new AMap.Pixel(-3, 80),
-            autoPosition: true,
-            // ruler:false,
-            locate:false,
-            events: {
-              init(o) {
-                // console.log(o);
-              },
-
-            }
-          }
-      ],
       markers:[], //标记点列表
       myMarker:{  position:[] }, //点击地图空白位置的标记点
       markerInfoWin:{position:[]},//地图窗体
@@ -136,51 +81,78 @@ export default {
   },
 
   methods: {
+    //地图初始化
+    mapInit (){
+      return new Promise ((resolve, reject) => {
+        if(!this.mapObj){
+          lazyAMapApiLoaderInstance.load().then(() => {
+            this.mapObj = cFuns.amap.showMap('amapContainer', {
+              resizeEnable: true,zoom: 10,
+            })
+            console.log(this.mapObj)
+            if(!this.$store.state.localCity){
+              cFuns.amap.getCity(this.mapObj).then((data)=> {
+                if (data['province'] && typeof data['province'] === 'string') {
+                  this.$store.commit('setLocalCity',data);
+                  this.city = data.city
+                  this.searchMap(1)
+                }
+              });
+            }else{
+              this.city = this.$store.state.localCity;
+              this.searchMap(1)
+            }
+            resolve(this.mapObj);
+          }).catch((error) => {
+              reject(error);
+            }
+          );
+        }else{
+          cFuns.amap.clear(this.mapObj);
+          resolve(this.mapObj);
+        }
+
+      })
+    },
     /**
      * 显示地图窗体
      * @param  {array} position [坐标]
      */
     showMarkerInfoWin (position){
-      let infoWin_Setting = {
-        position:position,
-        visible:true,
-      }
-      this.markerInfoWin = Object.assign({},infoWin_Setting);
+      var infoWindow = cFuns.amap.showInfoWindow({position:position,content: this.$refs.infoWindow},this.mapObj);
+    },
+
+    getGeocoder(){
+      return new Promise ((resolve, reject) => {
+        if(this.geocoder){
+          resolve(this.geocoder);
+        }else{
+          cFuns.amap.getGeocoder(this.city).then(res=>{
+            this.geocoder = res;
+            resolve(res);
+          })
+        }
+      })
     },
     /**
      * 取得坐标的地址信息
      * @param  {array} lnglat  [坐标]
      * @param  {function} callback [回调函数]
      */
-    getMarkerInfo (lnglat,callback){
-      var geocoder = this.geocoder;
-      // var marker = pageDatas.marker;
-      AMap.plugin('AMap.Geocoder',()=>{
-          var geocoder = new AMap.Geocoder({
-              city:this.city//城市，默认：“全国”
-          });
-          this.geocoder = geocoder;
-          // marker.setPosition(lnglat);
-          geocoder.getAddress(lnglat,(status,result)=>{
-            // console.log(result);
-            if(typeof(callback)=="function"){
-              callback(status,result);
-            }
-            if(status=='complete'){
-              return result;
-            }else{
-              return false;
-               // message.innerHTML = '无法获取地址'
-            }
-          })
-      });
+    getMarkerInfo (lnglat){
+        return this.getGeocoder().then(geocoder=>{
+           return cFuns.amap.getMarkerInfo(lnglat,this.geocoder);
+        })
     },
     /**
      * 点击myMarker时弹出信息窗体
      * @param {array} lnglat [坐标]
      */
     doClickMyMarker (lnglat){
-      this.getMarkerInfo(lnglat,(status,result)=>{
+
+      this.getMarkerInfo(lnglat).then(res=>{
+        let status  = res.status
+        let result = res.result
         this.infoWin_address = status=='complete' ?  result.regeocode.formattedAddress : "...";
         this.infoWin_addressname =  "";
         this.pointData = {
@@ -190,6 +162,7 @@ export default {
           city:result.regeocode.addressComponent.city
         }
         this.showMarkerInfoWin(lnglat);
+
       })
     },
     /**
@@ -273,26 +246,24 @@ export default {
         //关键字查询
         placeSearch.search(this.keyword, (status, result)=>{
           if( typeof(result.poiList)!='undefined' && result.poiList.pois.length>0){
-
+            cFuns.amap.clear(this.mapObj);
+            this.markers = [];
             result.poiList.pois.forEach((value,index,arr)=>{
               value.position = [value.location.lng, value.location.lat]
-              value.events= {
-                click: (e) => {
-                 this.setPointData(value)
-                 // console.log(value)
-                },
-              }
+
               if(index===0 && autoShow){
                 cFuns.amap.setCenter(value.position,this.mapObj,12);
                 this.setPointData(value)
-
               }
+              var marker = cFuns.amap.addMarker(value.position,this.mapObj);
+              marker.on('click',ev=>{
+                console.log(ev);
+                this.setPointData(value)
+              })
              // value.visible =  true;
-             // this.markers.push(value);
+             this.markers.push(marker);
             })
 
-            this.markers = result.poiList.pois;
-            // console.log(this.markers);
 
           }else{
             if(autoShow){ //自动中央标注点信息
@@ -300,11 +271,11 @@ export default {
               let center = this.mapObj.getCenter()
               let position = [center.lng,center.lat]
               this.myMarker.position = position;
-              this.getMarkerInfo(position,(status,result)=>{
-                this.infoWin_address = status=='complete' ?  result.regeocode.formattedAddress : "...";
+              this.getMarkerInfo(lnglat).then(res=>{
+                this.infoWin_address = res.status=='complete' ?  result.regeocode.formattedAddress : "...";
                 this.infoWin_addressname =  "";
                 this.showMarkerInfoWin(position);
-              })
+              });
             }
           }
 
@@ -314,7 +285,6 @@ export default {
     },
 
     setPointData (datas){
-
       this.pointData = {
         longtitude:datas.position[0],
         latitude:datas.position[1],
@@ -335,9 +305,20 @@ export default {
   },
   created(){
     // console.log(AMap);
+    this.mapInit().then((res)=>{
+      this.mapObj.on('click', (ev)=>{
+        if(this.myMarker){
+          cFuns.amap.removeMarker(this.myMarker,this.mapObj);
+        }
+        let position = [ev.lnglat.lng,ev.lnglat.lat];
+        this.myMarker = cFuns.amap.addMarker(position,this.mapObj);
+        this.doClickMyMarker(position);
+        // console.log(position)
+      });
+    })
     this.to = this.$route.params.to;
     this.keyword = this.$route.params.keyword;
-    // _this.searchMap(1);
+    // this.searchMap(1);
   },
   activated (){
 

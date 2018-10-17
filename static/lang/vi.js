@@ -2011,6 +2011,7 @@ message: {
   "kilogramsCarbon" : "Kg-Carbon",
   "other" : "Khác",
   "networkFail":"Internet không hoạt động, hãy thử lại sau",
+  "submitFail":"Thay đổi không thành công, vui lòng thử lại sau",
   "AreYouSure":"Bạn có chắc không?",
   "isLogout":"để đăng xuất",
   "today" : "Hôm nay",
@@ -2041,6 +2042,7 @@ message: {
   "placeholder.comment" :"Để lại một bình luận",
   "placeholder.username" :"Tên người dùng",
   "placeholder.password" :"Mật khẩu",
+  "placeholder.selectAddress" :"请选择地址",
 
 
   "label.from" : "từ",
@@ -2064,7 +2066,8 @@ message: {
   "verify.oldPasswordError" :"Lỗi mật khẩu cũ",
 
   "address.stationName" : "Địa chỉ",
-
+  "address.createAddress":"Tạo địa chỉ",
+  "address.noAddress":"Bạn không tìm thấy địa chỉ mình muốn?",
 
 
 
@@ -2079,7 +2082,7 @@ message: {
   "btn.driverpublish": "Post seats",
 
   "carpool.addtrip.tooLong":"The route is too long to predict the journey time",
-  "carpool.addtrip.toEstimate":"ước tính",
+  "carpool.addtrip.estimate":"ước tính",
   "carpool.whetherAccept":"Dù chấp nhận yêu cầu",
   "carpool.emptySeat":"Empty",
   "carpool.takenSeat":"Taken",
@@ -2102,6 +2105,9 @@ message: {
   "carpool.detail.noPassenger" : "Không có hành khách",
 
   "carpool.comments.title" : "Nhận xét",
+  "carpool.comments.sendFail" : "Gửi thất bại.",
+  "carpool.comments.fillContent" : "Hãy điền vào nội dung.",
+
 
   "carpool.confirm.accept" : "Bạn có muốn nhận 【{username}】 không?",
   "carpool.acceptSuccess" : "Thành công",
