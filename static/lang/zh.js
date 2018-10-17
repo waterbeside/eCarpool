@@ -2080,8 +2080,8 @@ message: {
   "verify.oldPasswordError" :"旧密码错误",
 
   "address.stationName" : "站点名称",
-
-
+  "address.createAddress":"创建站点",
+  "address.noAddress":"没找到您想要的站点？",
 
   "scroller.pullToRefresh" : "下拉更新数据",
   "scroller.refreshing" : "加载中...",
@@ -2160,8 +2160,7 @@ message: {
   "downloadapp.ios" : "苹果下载",
 
 
-  "address.createAddress":"创建站点",
-  "address.noAddress":"没找到您想要的站点？",
+
 
 
 }

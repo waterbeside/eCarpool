@@ -2066,7 +2066,8 @@ message: {
   "verify.oldPasswordError" :"Lỗi mật khẩu cũ",
 
   "address.stationName" : "Địa chỉ",
-
+  "address.createAddress":"Tạo địa chỉ",
+  "address.noAddress":"Bạn không tìm thấy địa chỉ mình muốn?",
 
 
 
@@ -2145,8 +2146,7 @@ message: {
   "downloadapp.android" : "Android download",
   "downloadapp.ios" : "iOS download",
 
-  "address.createAddress":"Tạo địa chỉ",
-  "address.noAddress":"Bạn không tìm thấy địa chỉ mình muốn?",
+
 }
 
 

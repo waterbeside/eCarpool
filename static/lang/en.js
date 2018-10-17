@@ -2097,7 +2097,8 @@ module.exports = {
 
 
     "address.stationName" : "Station",
-
+    "address.createAddress":"Create an address",
+    "address.noAddress":"Didn't find the address you want?",
 
 
     "scroller.pullToRefresh" : "Scroll down to refresh the data",
@@ -2179,8 +2180,7 @@ module.exports = {
     "downloadapp.ios" : "iOS download",
 
 
-    "address.createAddress":"Create an address",
-    "address.noAddress":"Didn't find the address you want?",
+
 
   }
 }

@@ -33,10 +33,10 @@ export default {
     start_name : String,
     end_name : String,
     labelStart : {
-      default:"出发 FROM"
+      default:"出发"
     },
     labelEnd : {
-      default:"结束 TO"
+      default:"结束"
     }
   },
 
