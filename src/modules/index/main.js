@@ -41,29 +41,15 @@ Vue.directive('focus', focus);
 Vue.use(ToastPlugin);
 Vue.use(ConfirmPlugin);
 
-Vue.use(VueAMap);
-VueAMap.initAMapApiLoader({
-  key: config.aMapKey,
-  plugin: ['AMap.Autocomplete','AMap.Geolocation','AMap.Driving', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
-});
-
 Vue.config.productionTip = false
-
-
 Vue.prototype.$http = axios;
 // Vue.prototype.$tokenAxios = tokenAxios;
 Vue.use(tokenAxios)
-
-
 Vue.use(VueI18n)
 
 
-
-
-var _language = cFuns.getLanguage();
+var _language = cFuns.getLanguage(1);
 localStorage.setItem('language',_language);
-
-
 
 const i18n = new VueI18n({
   // locale: _language, // 语言标识
@@ -74,6 +60,14 @@ const i18n = new VueI18n({
        'en': require('@/../static/lang/en')
    }
 })
+
+Vue.use(VueAMap);
+VueAMap.initAMapApiLoader({
+  key: config.aMapKey,
+  v: '1.4.10',
+  plugin: ['AMap.Autocomplete','AMap.Geolocation','AMap.Driving', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
+});
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -2040,6 +2040,7 @@ module.exports = {
     "kilogramsCarbon" : "Kg-Carbon",
     "other" : "Other",
     "networkFail":"The Internet is not working, please try again later",
+    "submitFail":"Change failed, please try again later",
     "AreYouSure":"Are you sure?",
     "isLogout":"to log out",
     "today" : "Today",
@@ -2070,6 +2071,8 @@ module.exports = {
     "placeholder.comment" :"Comment",
     "placeholder.username" :"Username",
     "placeholder.password" :"Password",
+    "placeholder.selectAddress" :"请选择地址",
+
 
     "label.from" : "From",
     "label.to" : "To",
@@ -2094,7 +2097,8 @@ module.exports = {
 
 
     "address.stationName" : "Station",
-
+    "address.createAddress":"Create an address",
+    "address.noAddress":"Didn't find the address you want?",
 
 
     "scroller.pullToRefresh" : "Scroll down to refresh the data",
@@ -2131,6 +2135,8 @@ module.exports = {
     "carpool.detail.noPassenger" : "No passengers",
 
     "carpool.comments.title" : "Comments",
+    "carpool.comments.sendFail" : "Fail in send",
+    "carpool.comments.fillContent" : "Please fill in the contents",
 
 
     "carpool.confirm.accept" : "Would you like to pick up 【{username}】? ",
