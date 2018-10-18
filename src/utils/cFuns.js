@@ -94,6 +94,20 @@ var cFuns = {
     return _language;
   },
 
+  formartLanguage(_language){
+    var arrowLang = "zh,zh-tw,zh-hk,vi,en,"
+    var lang = _language;
+    var language_lower = _language.toLowerCase();
+    if(arrowLang.indexOf(language_lower) == -1){
+      lang = "en";
+    }
+    if(language_lower.indexOf('-')>0){
+      var langTempArr = language_lower.split('-');
+      lang = langTempArr[0];
+    }
+    return lang;
+  },
+
   /**
    * 验证反回码是否未登入
    * @param  int code      [返回码]

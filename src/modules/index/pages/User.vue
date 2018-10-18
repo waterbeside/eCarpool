@@ -31,7 +31,7 @@
               </popup-picker>
             </li>
 
-            <li><router-link  class="btn btn-ripple" to="/downloadapp"><i class="fa fa-download"></i>{{ $t("message['about.downloadEntrance']" )}}</router-link></li>
+            <!-- <li><router-link  class="btn btn-ripple" to="/downloadapp"><i class="fa fa-download"></i>{{ $t("message['about.downloadEntrance']" )}}</router-link></li> -->
             <li><a class="btn btn-ripple" @click="logout" ><i class="fa fa-sign-out"></i>{{ $t("message['setting.logout']" )}}</a></li>
           </ul>
       </div>
@@ -156,7 +156,7 @@ export default {
 
    onChangeLang (){
     localStorage.setItem('language',this.language[0]);
-    this.$i18n.locale= this.language[0]
+    this.$i18n.locale= cFuns.formartLanguage(this.language[0]);
    }
   },
   mounted () {
@@ -164,7 +164,7 @@ export default {
 
   },
   activated (){
-    this.language = [cFuns.getLanguage()];
+    this.language = [cFuns.formartLanguage(cFuns.getLanguage())];
     setTimeout(()=>{
       if(typeof(this.$store.state.userData.name)!="undefined"){
         this.avatar = this.$store.state.userAvatar;
