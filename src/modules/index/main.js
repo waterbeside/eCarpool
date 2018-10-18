@@ -49,13 +49,11 @@ Vue.use(VueI18n)
 
 
 var _language = cFuns.getLanguage(1);
-var arrowLang = "zh,zh-tw,zh-hk,vi,en,"
+var lang = cFuns.formartLanguage(_language);
 localStorage.setItem('language',_language);
-var lang = _language;
-if(arrowLang.indexOf(_language.toLowerCase()) == -1){
-  lang = "en"
-}
-// console.log(_language);
+
+console.log(_language);
+console.log(lang);
 
 const i18n = new VueI18n({
   // locale: _language, // 语言标识
