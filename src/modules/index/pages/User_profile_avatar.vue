@@ -50,7 +50,7 @@ export default {
       avatar_img: config.defaultAvatar,
     }
   },
-  
+
   methods: {
     uploadImg (e) {
 			//上传图片
@@ -99,7 +99,8 @@ export default {
         // console.log(param.get('upload')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
 
         let httpConfig = {
-              headers:{'Content-Type':'multipart/form-data'}
+              headers:{'Content-Type':'multipart/form-data'},
+              qs:false,
             };  //添加请求头
         this.isSubmiting = true;
         this.$http.post(config.urls.uploadAvatar,param,httpConfig).then(res => {

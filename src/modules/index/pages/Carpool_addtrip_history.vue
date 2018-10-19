@@ -74,7 +74,7 @@ export default {
 
       this.isLoading = 1;
       this.noData = 0;
-      this.$tokenAxios.get(config.urls.getMytrip,{params:params}).then(res => {
+      this.$http.get(config.urls.getMytrip,{params:params}).then(res => {
 
         let data = res.data.data;
           this.isLoading = 0;

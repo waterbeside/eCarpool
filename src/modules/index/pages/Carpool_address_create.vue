@@ -182,7 +182,7 @@ export default {
       }
       this.isSubmiting = true;
 
-      this.$tokenAxios.post(config.urls.createAddress,postDatas).then(res => {
+      this.$http.post(config.urls.createAddress,postDatas).then(res => {
         this.isSubmiting = false;
         var resData = res.data.data
 

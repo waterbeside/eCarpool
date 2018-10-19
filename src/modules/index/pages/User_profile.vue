@@ -125,7 +125,7 @@ export default {
     */
     loadUserInfo () {
      var that = this;
-     this.$tokenAxios.get(config.urls.getUserInfo,{}).then(res => {
+     this.$http.get(config.urls.getUserInfo,{}).then(res => {
 
        if(res.data.code === 0) {
          let data = res.data.data;
@@ -172,7 +172,7 @@ export default {
     * 取得公司列表。
     */
     getCompanys(){
-     this.$tokenAxios.get(config.urls.getCompanys).then(res => {
+     this.$http.get(config.urls.getCompanys).then(res => {
        // console.log(res)
        if(res.data.code === 0) {
          let data = res.data.data;
@@ -222,7 +222,7 @@ export default {
        return false;
      }
 
-     this.$tokenAxios.post(config.urls.editProfile,postData).then(res => {
+     this.$http.post(config.urls.editProfile,postData).then(res => {
        if(res.data.code === 0 ){
          let data = Object.assign({},this.userData);
          this.$store.commit('setUserData',data);

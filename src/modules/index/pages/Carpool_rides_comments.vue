@@ -101,7 +101,7 @@ export default {
       this.isLoading = true;
 
       let params = {wid:this.id};
-      this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
+      this.$http.get(config.urls.wallComments,{params:params}).then(res => {
 
         this.isLoading = false;
         if(res.data.code == 0){
@@ -159,7 +159,7 @@ export default {
 
       let postDatas = {wid:this.id,content:this.content}
 
-      this.$tokenAxios.post(config.urls.wallComments,postDatas).then(res => {
+      this.$http.post(config.urls.wallComments,postDatas).then(res => {
         if(res.data.code === 0){
           this.content = "";
         }else{

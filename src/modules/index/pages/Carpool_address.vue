@@ -204,7 +204,7 @@ export default {
 
       this.isLoading = 1;
       this.noData = 0;
-      this.$tokenAxios.get(config.urls.getMyAddress,{params:params}).then(res => {
+      this.$http.get(config.urls.getMyAddress,{params:params}).then(res => {
         // console.log(res)
 
           this.isLoading = 0;
@@ -355,7 +355,7 @@ export default {
           from: to
         }
         //提交修改个人信息（公司或家地址）
-        this.$tokenAxios.post(config.urls.editProfileAdress,postData).then(res => {
+        this.$http.post(config.urls.editProfileAdress,postData).then(res => {
           var resData = res.data.data
           if(res.data.code === 0) {
             var data_n = data;

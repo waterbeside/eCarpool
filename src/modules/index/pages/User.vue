@@ -88,7 +88,7 @@ export default {
       */
      loadUserInfo () {
        var that = this;
-       this.$tokenAxios.get(config.urls.getUserInfo,{}).then(res => {
+       this.$http.get(config.urls.getUserInfo,{}).then(res => {
 
          if(res.data.code === 0) {
            let data = res.data.data;
@@ -113,7 +113,7 @@ export default {
     */
    loadUserStatis : function(){
      var that = this;
-     this.$tokenAxios.get(config.urls.getUserStatis,{}).then(res => {
+     this.$http.get(config.urls.getUserStatis,{}).then(res => {
        // console.log(res)
        let data = res.data.data;
        if(res.data.code === 0) {
@@ -140,8 +140,8 @@ export default {
        cancelText: this.$t("message.cancel"),
        onConfirm: ()=>{
          let uid = localStorage.getItem('CP_uid');
-         this.$tokenAxios.delete(config.urls.passport).then(res => { });
-         // this.$tokenAxios.get(config.urls.logout).then(res => { });
+         this.$http.delete(config.urls.passport).then(res => { });
+         // this.$http.get(config.urls.logout).then(res => { });
 
          window.localStorage.removeItem('CP_U_TOKEN');
          window.localStorage.removeItem('CP_uid');

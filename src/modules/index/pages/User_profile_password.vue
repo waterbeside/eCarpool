@@ -75,7 +75,7 @@ export default {
       let postData = {type:"password",password:this.password,pw_new:this.pw_new,pw_confirm:this.pw_confirm}
 
       this.isSubmiting = true;
-      this.$tokenAxios.post(config.urls.editProfile,postData).then(res => {
+      this.$http.post(config.urls.editProfile,postData).then(res => {
         this.isSubmiting = false;
         if(res.data.code === 0) {
           this.$vux.toast.text(this.$t("message['setting.modifysucces']"));

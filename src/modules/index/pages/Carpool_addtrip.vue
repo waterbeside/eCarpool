@@ -326,7 +326,7 @@ export default {
         postData.seat_count = this.formData.seat_count
       }
 
-      this.$tokenAxios.post(config.urls.addTrip,postData).then(res => {
+      this.$http.post(config.urls.addTrip,postData).then(res => {
 
         var resData = res.data.data
         if(res.data.code === 0) {

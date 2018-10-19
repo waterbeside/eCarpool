@@ -91,7 +91,7 @@ export default {
       // if(user)
 
       this.isSubmiting = true;
-      this.$tokenAxios.post(config.urls.editProfile,postData).then(res => {
+      this.$http.post(config.urls.editProfile,postData).then(res => {
         this.isSubmiting = false;
         if(res.data.code === 0 ){
           userData_o[postData.type] =  postData[postData.type];

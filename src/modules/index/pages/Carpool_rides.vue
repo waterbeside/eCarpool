@@ -146,7 +146,7 @@ export default {
         this.listDatas[index].like_count = parseInt(this.listDatas[index].like_count) + 1
         this.listDatas[index].hasLike = 1;
         this.doLikeId = id;
-        this.$tokenAxios.post(config.urls.likeTrip,{id:id}).then(res => {
+        this.$http.post(config.urls.likeTrip,{id:id}).then(res => {
           if(res.data.code === 0) {
 
           }else{
@@ -173,7 +173,7 @@ export default {
 
       this.isLoading = 1;
       this.noData = 0;
-      this.$tokenAxios.get(config.urls.getWallLists,{params:params}).then(res => {
+      this.$http.get(config.urls.getWallLists,{params:params}).then(res => {
         let data = res.data.data;
         this.isLoading = 0;
         if(res.data.code === 0) {

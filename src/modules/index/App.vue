@@ -56,9 +56,9 @@ export default {
       if(this.$router.history.current.name=='login'){
         return false;
       }
+
       // this.$tokenAxios.get(config.urls.checkLogin,{params:{more:1}}).then(res => {
-      this.$tokenAxios.get(config.urls.passport,{params:{type:1}}).then(res => {
-        // console.log(res)
+      this.$http.get(config.urls.passport,{params:{type:1}}).then(res => {
          // 登录成功
           if(res.data.code === 0 ) {
             let userDatas = res.data.data;

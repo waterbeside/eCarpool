@@ -74,8 +74,8 @@ export default {
         this.$vux.toast.text(this.$t("message['verify.phoneEmpty']"));
         return false;
       }
-      this.$tokenAxios.get(config.urls.sms+"/103",{params:postData}).then(res => {
-      // this.$tokenAxios.post(config.urls.sendSms,postData).then(res => {
+      this.$http.get(config.urls.sms+"/103",{params:postData}).then(res => {
+      // this.$http.post(config.urls.sendSms,postData).then(res => {
         if(res.data.code === 0) {
           this.$vux.toast.text(this.$t("message['login.verCodeHasBeenSent']"));
           this.isCounting = true;
@@ -122,7 +122,7 @@ export default {
           return false;
         }
         this.isSubmiting = true;
-        this.$tokenAxios.post(config.urls.sms+'/103',postData).then(res => {
+        this.$http.post(config.urls.sms+'/103',postData).then(res => {
           this.isSubmiting = false;
           if(res.data.code === 0) {
             this.userData.phone = this.phone;

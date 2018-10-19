@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import axios from 'axios';
+
 import { focus } from 'vue-focus';
 import tokenAxios from './utils/cTokenAxios';
 import cFuns from '@/utils/cFuns';
@@ -40,12 +40,13 @@ Vue.directive('focus', focus);
 
 Vue.use(ToastPlugin);
 Vue.use(ConfirmPlugin);
+Vue.use(VueI18n)
+Vue.use(VueAMap);
+
+
 
 Vue.config.productionTip = false
-Vue.prototype.$http = axios;
-// Vue.prototype.$tokenAxios = tokenAxios;
-Vue.use(tokenAxios)
-Vue.use(VueI18n)
+Vue.prototype.$http = tokenAxios;
 
 
 var _language = cFuns.getLanguage(1);
@@ -67,7 +68,6 @@ const i18n = new VueI18n({
    }
 })
 
-Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
   key: config.aMapKey,
   v: '1.4.10',

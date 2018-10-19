@@ -73,7 +73,7 @@ export default {
       }
 
 
-      this.$tokenAxios.post(config.urls.editProfile,postData).then(res => {
+      this.$http.post(config.urls.editProfile,postData).then(res => {
         if(res.data.code === 0 ){
           userData_o.Department = postData.Department;
           this.$store.commit('setUserData',userData_o);
@@ -94,7 +94,7 @@ export default {
     getDepartments(){
      let params = {company_id:this.userData.company_id}
      this.isLoading = true;
-     this.$tokenAxios.get(config.urls.getDepartments,{params:params}).then(res => {
+     this.$http.get(config.urls.getDepartments,{params:params}).then(res => {
        this.isLoading = false;
        // console.log(res)
        if(res.data.code === 0) {
