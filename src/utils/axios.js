@@ -17,10 +17,11 @@ var langPathArray = {
   'vi' : true,
   'en' : true,
 }
-if(lang && typeof(langPathArray[lang])!="undefined" && langPathArray[lang]){
-  t =  require('@/../static/lang/'+lang);
-}
 
+if(lang && typeof(langPathArray[lang])!="undefined" && langPathArray[lang]){
+  t =  require('@/assets/lang/'+lang).default;
+}
+console.log(t);
 const tokenAxios = axios.create({
   // baseURL: process.env.BASE_API,
   timeout: 10000,

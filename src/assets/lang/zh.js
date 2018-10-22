@@ -1,4 +1,4 @@
-module.exports = {
+export default  {
 
 message: {
   //general
@@ -1058,23 +1058,7 @@ message: {
 
   "reconnection.wait" : "继续等待",
 
-  //location
-
-  "location.messageType" : "位置信息",
-
-  "location.ongoing" : "定位中",
-
-  "location.fail" : "定位失败",
-
-  "location.ongoning" : "正在定位...",
-
-  "location.cityChineseInfo" : "城市中文名或拼音",
-
-  "location.pleaseAuthorizeLocationInSetting" : "请在设置-隐私里允许程序使用地理位置服务",
-
-  "location.pleaseAuthorizeAddressBookInSetting" : "请在设置-隐私里允许程序使用通讯录服务",
-
-  "location.pleaseOpenLocation" : "请打开地理位置服务",
+  
 
   //title
 
@@ -1542,73 +1526,7 @@ message: {
 
   "share.abouttime" : "大约时间: %ld小时%ld分钟",
 
-  "group.someoneDisbanded" : "%@解散了%@",
 
-  "group.someoneEntered" : "进入了%@",
-
-  "group.someoneRemoved" : "移出了%@",
-
-  "group.someoneUpdateName" : "%@更新了%@名称",
-
-  "group.someoneUpdateIntroduction" : "%@更新了%@介绍",
-
-  "group.someoneUpdateAnnouncement" : "%@更新了%@公告",
-
-  "group.someoneUpdateAuthenticationMethod" : "%@更新了%@验证方式",
-
-  "group.someoneUpdateAvatar" : "%@更新了%@头像",
-
-  "group.someoneUpdateAddMembers" : "%@更新了邀请他人权限",
-
-  "group.someoneUpdateInviteesAuthentication" : "%@更新了被邀请人身份验证权限",
-
-  "group.someoneUpdatePermissionToModifyData" : "%@更新了群资料修改权限",
-
-  "group.someoneUpdateProhibitSpeaking" : "%@设置了群全体禁言",
-
-  "group.someoneCanceledAllSpeakingBan" : "%@取消了全体禁言",
-
-  "group.someoneUpdateInfo" : "%@更新了%@信息",
-
-  "group.someoneLeave" : "%@离开了%@",
-
-  "group.someoneJoin" : "%@进入了%@",
-
-  "group.someonePassed" : "%@通过了%@的申请",
-
-  "group.someoneTransferredGroup" : "%@转移了群主身份给%@",
-
-  "group.someoneBecomesAdminOfThisGroup" : "%@被添加为群管理员",
-
-  "group.canceledAdministrator" : "%@被撤销了群管理员身份",
-
-  "group.acceptsInvitationJoin" : "%@接受%@的邀请进群",
-
-  "group.prohibitedFromSpeaking" : "禁言",
-
-  "group.cancelTheProhibition" : "解除禁言",
-
-  "group.unknownSystemMessage" : "未知系统消息",
-
-  "group.callDuration" : "通话时长 ",
-
-  "group.noAnswer" : "未接听",
-
-  "group.busy" : "对方正忙",
-
-  "group.refused" : "已拒绝",
-
-  "group.cancel" : "未接通，已取消",
-
-  "group.carpoolGroup" : "溢起拼车群",
-
-  "group.invitedOneFormatString" : "%@ 邀请了 %@ 加入群组 %@",
-
-  "group.invitedManyFormatString" : "%@ 邀请了 %@ 等 %zd 人加入群组 %@",
-
-  "group.removeOneFormatString" : "%@ 将 %@ 移出了群组 %@",
-
-  "group.removeManyFormatString" : "%@ 将 %@ 等 %zd 人移出了群组 %@",
 
 
   //墙上空座位详情
@@ -1659,316 +1577,12 @@ message: {
   "discover.DetailCopySure" : "好",
 
 
-  //实时位置
-  "location.groupChat" : "进入群聊",
-
-  "location.arriveTime" : "请您在%@前到达约定上车地点。",
-
-  "location.shieldedMessage" : "屏蔽消息",
-
-  "location.showMessage" : "显示消息",
-
-  "location.clickLike" : "点赞",
-
-  "location.showCarbon" : "查看碳账号",
-
-  "location.unknownName" : "未知名字",
-
-  "location.unknownDepartment" : "未知部门",
-
-  "location.unknownCarNum" : "未知车牌",
-
-  "location.sentMessageToYourself" : "不能给自己发送消息",
-
-  "location.sentVoiceToYourself" : "不能与自己进行电话通话",
-
-  "location.sentVideoToYourself" : "不能与自己进行语音视频通话",
-
-
-  //推进好友
-
-  "recommendFriend.departmentFriend" : "部门的大兄弟",
-
-  "recommendFriend.takeCarFriend" : "拼车的小伙伴",
-
-  "recommendFriend.unknownFriend" : "小溢也没有猜到你的好友是谁哦～～",
-
-  "recommendFriend.networkFail" : "你的网络似乎出现了问题噢～～",
-
-  "recommendFriend.noFriendAndAdd" : "未能找到信息匹配的人哦，是否去完善资料",
-
-  "recommendFriend.alreadyAdded" : "已添加",
-
-  "recommendFriend.add" : "添加",
-
-  "recommendFriend.maybeKnowFriends" : "可能认识的人",
-
 
   //历史行程
   "HistoryTrips.title" : "历史行程",
 
 
 
-
-
-
-  //积分兑换
-
-  //兑换商品展示页
-  "PointGoodsList.title" : "积分兑换",
-  "PointGoodsList.pointBtn" : "积分：%.1f",
-  "PointGoodsList.OrderBtn" : "兑换历史",
-  "PointGoodsList.Orderstatement" : "本活动由超丰科技提供，与苹果公司无关",
-  "PointGoodsList.BGNote" : "管理员还没有发布兑换物品哦～～",
-
-  "PointGoodsList.GoodsInventory" : "库存:%@",
-  "PointGoodsList.GoodsWillUp" : "即将上架",
-  "PointGoodsList.GoodsOver" : "已经下架",
-  "PointGoodsList.GoodsFinish" : "已被兑完",
-  "PointGoodsList.GoodsCanAdd" : "加入兑换",
-  "PointRequest.GoodsNotEnough" : "您选择的商品已经被兑换完了喔～～",
-  "PointRequest.GoodsTipsLength" : "库存:",
-  "PointGoodsList.GoodsIsEnough" : "无限供应",
-
-
-
-
-  //兑换购物车
-  "PointShoppingCar.topTipsWrong" : "您的积分不足，请修改兑换物品或数量",
-  "PointShoppingCar.topTipsRight" : "您共有积分%.2f分",
-  "PointShoppingCar.allSelect" : " 全选",
-  "PointShoppingCar.sureChange" : "确定下单",
-  "PointShoppingCar.total" : "合计:%@",
-  "PointShoppingCar.BGNote" : "您还没有挑选任何兑换物品噢～～",
-  "PointShoppingCar.deleMsg" : "确定要删除该商品?删除后无法恢复!",
-  "PointShoppingCar.hasSelect" : "您还没有选择任何兑换物品",
-  "PointShoppingCar.totalChange" : "共:",
-
-  //兑换成功页
-  "PointFinish.title" : "积分兑换",
-  "PointFinish.succeed" : "下单成功",
-  "PointFinish.orderCode" : "订单编号：%@",
-
-  //积分历史页
-
-  "PointHistory.title" : "积分历史",
-  "PointHistory.BGNote" : "小溢没有找到您的积分记录噢～～",
-  "PointHistory.PointChange" : "积分变动",
-  "PointHistory.Changebalance" : "积分余额",
-  "PointHistory.ChangeReason" : "变动原因",
-  "PointHistory.ChangeTime" : "变动时间",
-
-  "PointHistory.AdministratorsDeduction" : "管理员扣分",
-  "PointHistory.WrongfulDeduction" : "拼车不合法扣分",
-  "PointHistory.GoodsExChangeDeduction" : "兑换商品扣分",
-  "PointHistory.SystemDeduction" : "系统扣分",
-  "PointHistory.AdministratorsBonusPoints" : "管理员加分",
-  "PointHistory.CarpoolBonusPoints" : "拼车加分",
-  "PointHistory.CancelGoodsBonusPoints" : "取消商品兑换订单加分",
-  "PointHistory.SystemBonusPoints" : "系统加分",
-
-  "PointHistory.SystemBundingPointsAdd" : "积分合并",
-
-
-
-
-  "PointHistory.LotterTurnMiss" : "积分翻倍抽奖扣分",
-  "PointHistory.LotterTurnAdd"  : "积分翻倍中奖加分",
-  "PointHistory.LotterPiaoMiss"  : "等你开奖抽奖扣分",
-  "PointHistory.TakeUnLegal"  : "拼车加分（行程中没打开GPS）",
-  "PointHistory.TakeMonthUnLegal"  : "拼车加分（行程中没打开GPS）",
-  "PointHistory.OldPointBack"  : "旧积分返还",
-
-  "PointHistory.TakeCarNoGPS"  : "行程完全没有上传GPS",
-  "PointHistory.TakeCarSpeedLess"  : "行程中速度大于10公里/小时的数据采集点小于2个",
-  "PointHistory.TakeCardistanceFar"  : "行程中乘客和司机距离太远",
-  "PointHistory.TakeCarPassengerNoGPS"  : "乘客没有上传GPS",
-  "PointHistory.TakeCarDriverNoGPS"  : "司机没有上传GPS",
-  "PointHistory.TakeCarSpeedToLow"  : "乘客的最大速度太慢",
-
-
-
-
-  //兑换历史页
-  "PointOrderList.title" : "兑换历史",
-  "PointOrderList.orderCode" : "订单编号：%@",
-  "PointOrderList.orderTime" : "创建时间：%@",
-  "PointOrderList.statuWait" : "待确认",
-  "PointOrderList.statuSucceed" : "已兑换",
-  "PointOrderList.statuCancel" : "已取消",
-  "PointOrderList.statuNO" : "已作废",
-  "PointOrderList.statuTimeOut" : "已过期",
-  "PointOrderList.BGNote" : "小溢没有找到您的兑换历史噢～～",
-
-
-  "PointOrderDetail.btnCancel" : "取消订单",
-  "PointOrderDetail.btnSure" : "确定订单",
-
-  "PointOrderDetail.AlertKnow" : "我知道啦",
-  "PointOrderDetail.AlertNOShow" : "不再提醒",
-
-  //积分请求提示
-  "PointRequest.tipsNoRecord" : "小溢没有找到记录了喔～～",
-  "PointRequest.tipsLoginAgain" : "小溢发了意外，需要您重新登录喔～",
-  "PointRequest.tipsToFast" : "小溢反应没有那么快喔，请慢点操作～～",
-  "PointRequest.tipsEChatError" : "小溢发生了错误，请稍后再试",
-  "PointRequest.notOpen" : "小溢还没开放此功能喔，敬请期待",
-  "PointRequest.canNotMakeOrder" : "今天不是合法的下单时间",
-  "PointRequest.MakeOrderDay" : "你只能在本月的%@进行下单操作",
-  "PointRequest.canNotMakeExChange" : "今天不是合法的兑换时间",
-  "PointRequest.canNotMakeOrderStatusChange" : "今天不是合法的取消或者兑换时间",
-
-  "PointRequest.cancelOrder" : "今天不是合法的取消订单时间",
-  "PointRequest.cancelOrder" : "只能在预约兑换期间每个月的 %@取消订单",
-  "PointRequest.MakeExchangeDay" : "只能在每个月的 %@进行兑换",
-
-
-  "PointRequest.sureCancelOrder" : "你确定要取消此下单吗?删除后将不可恢复，积分会返还到您的账户，您可在开放下单的日期内重新下单",
-  "PointRequest.sureExchangeOrder" : "请确认您已经领到礼品再点击确认,或者交由颁发礼品的管理员点击此按钮确认",
-
-
-
-  "TipsStart.Tips" : "为了更好的记录您在拼车过程中的积分，使用过程中请始终保持GPS活跃，勿直接关闭或者杀死APP进程，谢谢。",
-
-
-  //积分抽奖
-
-  "LotteryDiscover.Title" : "幸运抽奖",
-  "LotteryHistory.Title" : "抽奖历史",
-  "setting.Lottery" : "幸运抽奖",
-
-
-
-  //HomeCell
-  "LotteryHomeCell.totalPoint" : "总需人次：%@",
-  "LotteryHomeCell.nowPoint" : "当前人次：%@",
-  "LotteryHomeCell.PublicNum" : "第%@期",
-  "Lottery.HadBuy" : "已购人次：%@",
-  "Lottery.NeedPeople" : "还需人次：%ld",
-  "Lottery.GoodsPrice" : "%@ 积分/人次",
-
-
-
-
-
-
-  //开奖状态提示  NSLocalizedString(@"LotteryHistory.Title",
-
-  "LotteryStatus.Succeed" : "已成功开奖",
-  "LotteryStatus.WaitResult" : "正在开奖中",
-  "LotteryStatus.HadDown" : "抽奖已下架",
-  "LotteryStatus.ActiveWillUp" : "抽奖将开始",
-  "LotteryStatus.ActiveIsHot" : "火热进行中",
-  "LotteryStatus.ActiveNotOpen" : "尚未开奖",
-
-
-
-
-
-
-  "LotteryStatus.BuyBtnTipsResulting" : "正在\n开奖",
-  "LotteryStatus.BuyBtnTipsHadDown" : "已经\n下架",
-  "LotteryStatus.BuyBtnTipsWillStart" : "即将\n开始",
-
-  "LotteryStatus.BuyBtnTips" : "已经\n开奖",
-  "LotteryStatus.BuyBtnTipsBuy" : "立即\n购买",
-
-
-
-
-  "LotteryStatus.ShowResult" : "查看结果>>",
-  "LotteryStatus.ShowWaitResult" : "查看进展>>",
-  "LotteryStatus.DownReason" : "了解详情>>",
-  "LotteryStatus.goOnNow" : "马上参与>>",
-
-
-  //实物详情   NSLocalizedString(@"LotteryStatus.goOnNow",
-  "LotteryWinner.WinnerMsg" : "获奖信息",
-  "LotteryWinner.YouWin" : "已中奖",
-  "LotteryWinner.YouLost" : "未中奖",
-  "LotteryWinner.NotOpenYet" : "暂未开奖",
-
-
-  "LotteryWinner.MyBuyNum" : "我的号码",
-  "LotteryTreasure.WillBuyTips" : "将下单购买%ld份幸运抽奖",
-  "LotteryTreasure.PickerPublicNum" : "第 %@ 期",
-  "LotteryTreasure.PickerShowPublicNum" : "查看往期",
-
-  "LotteryTreasure.BuyNum" : "购买数量：",
-  "LotteryTreasure.ShowMore" : "查看更多",
-
-  "PointHistory.ShowGPSDetail" : "详情",
-
-
-  //history  NSLocalizedString(@"LotteryHistory.PointRecordTitle",
-  "LotteryHistoryWinner.account" : "获奖账号",
-  "LotteryHistoryWinner.winNum" : "获奖号码",
-  "LotteryHistoryWinner.winTime" : "开奖时间",
-  "LotteryHistoryWinner.duringTime" : "持续时间",
-  "LotteryHistoryWinner.orderTime" : "下单时间",
-
-
-  "LotteryHistory.GoodsRecordTitle" : "等你开奖",
-  "LotteryHistory.PointRecordTitle" : "积分翻倍",
-
-  "LotteryHistoryDetail.OrderStaus" : "订单状态",
-  "LotteryHistoryDetail.GoodsName" : "商品名称",
-  "LotteryHistoryDetail.MyNumber" : "我的号码",
-  "LotteryHistoryDetail.TotalCount" : "总需人次",
-  "LotteryHistoryDetail.NowCount" : "当前人次",
-  "LotteryHistoryDetail.ShowMoreDetail" : "查看更多抽奖详情>>",
-
-
-  "LotteryHistoryDetail.YouWin" : "此注中奖啦",
-  "LotteryHistoryDetail.YouLost" : "此注未中奖",
-
-
-
-  "LotteryHistoryCell.TimeTitle" : "时间",
-  "LotteryHistoryCell.GoodsTitle" : "商品标题",
-  "LotteryHistoryCell.BuyNum" : "抽奖号码",
-  "LotteryHistoryCell.UsePoint" : "消耗积分",
-
-  "LotteryHistoryCell.LotteryWay" : "抽奖方式",
-  "LotteryHistoryCell.LotteryName" : "幸运大转盘",
-  "LotteryHistoryCell.LotteryResult" : "抽奖结果",
-
-
-
-
-
-  //FinishVC
-
-  "LotteryFinish.LotteryNum" : "请您耐心等待开奖,您的幸运抽奖号码：",
-
-
-
-  //积分网络请求提示语
-  "LotteryHomeVC.BGTips" : "敬请期待，目前活动还没开始哟～～",
-  "LotteryBuy.Tips" : "您的积分余额可能不足了噢～～",
-  "LotteryHomeVC.TurnGoodsFailTips" : "获取奖品失败，暂时不可以抽奖噢～～",
-  "LotteryAllVC.GetDataWrong" : "获取奖品失败，请稍后再试～～",
-  "LotteryTreasure.GoodsIsNotEnough" : "没有足够的份额可供购买了噢~~",
-  "LotteryTreasure.NetworkFail" : "网络出好像崩溃了噢～～",
-  "LotteryTreasure.NoBuyRecord" : "还没有往期记录噢～～",
-  "LotteryTreasure.BuyTips" : "最少认购一份噢～～",
-  "LotteryTreasure.HistoryRecordFail" : "小溢获取往期数据时发生了错误～～",
-
-  "LotteryTreasure.Nodescr" : "暂无详细的描述噢～～",
-
-  "LotteryHistory.NoneList" : "小溢没有找到您的抽奖历史噢～～",
-  "LotteryHistory.NoDetail" : "没有详情了噢～～",
-  "LotteryHistory.LoadWinnerFail" : "小溢获取历史数据时发生了错误～～",
-
-
-
-  //查漏补缺
-  //history  NSLocalizedString(@"LoveWall.TakeCarTips",
-
-  "UserInfomation.CreateAddress" : "创建新的站点:%@",
-  "PointGoodsList.MinTtle" : "礼品兑换",
-  "LotteryHome.LotteryStatemeng" : "抽奖说明",//////
-  "PointGoodsList.ECStatement" : "兑换说明",
   "NetWord.FailTips" : "网络异常,请检查网络设置！",
 
 
@@ -2151,6 +1765,9 @@ message: {
   "user.avatar.imageFormat":"图片类型必须是.gif,jpeg,jpg,png,bmp中的一种",
   "user.avatar.failed":"更改失败，请稍候再试",
 
+  "user.profile.edit.mobile":"更改联系电话",
+
+
   "login.btn":"登 入",
   "login.logging" : "登入中",
   "login.success" : "登入成功",
@@ -2165,11 +1782,7 @@ message: {
 
 
 
-
-
 }
-
-
 
 
 

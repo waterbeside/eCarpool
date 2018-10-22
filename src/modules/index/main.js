@@ -60,11 +60,11 @@ const i18n = new VueI18n({
   // locale: _language, // 语言标识
     locale: lang, // 语言标识
     messages: {
-       'zh': require('@/../static/lang/zh'),
-       'zh-TW': require('@/../static/lang/zh-TW'),
-       'zh-HK': require('@/../static/lang/zh-TW'),
-       'vi': require('@/../static/lang/vi'),
-       'en': require('@/../static/lang/en')
+       'zh': require('@/assets/lang/zh').default,
+       'zh-TW': require('@/assets/lang/zh-TW').default,
+       'zh-HK': require('@/assets/lang/zh-TW').default,
+       'vi': require('@/assets/lang/vi').default,
+       'en': require('@/assets/lang/en').default
    }
 })
 

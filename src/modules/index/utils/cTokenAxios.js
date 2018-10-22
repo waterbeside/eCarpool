@@ -17,7 +17,7 @@ var langPathArray = {
   'en' : true,
 }
 if(lang && typeof(langPathArray[lang])!="undefined" && langPathArray[lang]){
-  t =  require('@/../static/lang/'+lang);
+  t =  require('@/assets/lang/'+lang);
 }
 
 const tokenAxios = axios;
