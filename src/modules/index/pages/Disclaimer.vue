@@ -1,14 +1,9 @@
 <template>
   <div class="page-view   cp-disclaimer" id="Page-disclaimer" >
-    <title-bar >{{$t("message['setting.disclaimer']")}}</title-bar>
+    <title-bar >{{$t("message['disclaimer']")}}</title-bar>
     <div class="page-view-main   " >
       <cp-scroller :position="{top:'46px'}"  :enableRefresh="false" :enableInfinite="false">
-        <article class="cp-article"  v-html="content">
-
-
-
-        </article>
-
+        <article class="cp-article"  v-html="content">  </article>
       </cp-scroller>
     </div>
   </div>

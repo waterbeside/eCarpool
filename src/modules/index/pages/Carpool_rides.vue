@@ -39,7 +39,7 @@
          >
            <div slot="btnbar" class="cp-btns-wrapper">
               <div class="cp-fabBtn-wrap " :class="[{'hasLike':item.hasLike===1,'doLike':item.id === doLikeId}]">
-                <b class="t">{{$t("message['location.clickLike']")}}</b>
+                <b class="t">{{$t("message['carpool.detail.clickLike']")}}</b>
                 <a href="javascript:void(0);" class="btn  btn-fab" :class="item.hasLike===1 ? 'btn-danger' : 'btn-primary' " @click="likeTrip(item.id,index)">
                   <i class="fa fa-heart" ></i>
                 </a>

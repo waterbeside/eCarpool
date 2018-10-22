@@ -1,7 +1,7 @@
 <template>
   <div class="page-view cp-page-history-select">
     <title-bar  :left-options="{showBack: true}" >
-      <span >{{$t("message['share.commonroute']")}}</span>
+      <span >{{$t("message['carpool.addtrip.commonroute']")}}</span>
     </title-bar>
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh"  :dataList="scrollData" :enableInfinite="false">

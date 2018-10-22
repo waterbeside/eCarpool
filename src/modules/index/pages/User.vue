@@ -16,9 +16,9 @@
             <statis-item class="cp-statis-item col-xs-4" :num="statis.carbon" :unit="$t('message.kilogramsCarbon')" icon="fa fa-leaf" :duration="1"></statis-item>
           </div>
           <ul class="cp-options-list">
-            <li><router-link  class="btn btn-ripple" :to="{ name:'user_profile'}"><i class="fa fa-cog"></i> {{ $t("message['setting.personalInfo']" )}} </router-link></li>
-            <li><router-link  class="btn btn-ripple" :to="{ name:'user_profile_password'}"><i class="fa fa-key"></i> {{ $t("message['setting.modifypassword']" )}} </router-link></li>
-            <li><router-link  class="btn btn-ripple" to="/disclaimer"><i class="fa fa-legal"></i>{{ $t("message['setting.disclaimer']" )}} </router-link></li>
+            <li><router-link  class="btn btn-ripple" :to="{ name:'user_profile'}"><i class="fa fa-cog"></i> {{ $t("message['user.profile.title']" )}} </router-link></li>
+            <li><router-link  class="btn btn-ripple" :to="{ name:'user_profile_password'}"><i class="fa fa-key"></i> {{ $t("message['user.profile.label.modifypassword']" )}} </router-link></li>
+            <li><router-link  class="btn btn-ripple" to="/disclaimer"><i class="fa fa-legal"></i>{{ $t("message['disclaimer']" )}} </router-link></li>
             <li class="cp-selectbtn-wrap ">
               <popup-picker class="cp-selectbtn"    v-model="language" :data="languages"   @on-change="onChangeLang" :display-format="formatLangDisplay"
               :cancelText="$t('message.cancel')"
@@ -32,7 +32,7 @@
             </li>
 
             <!-- <li><router-link  class="btn btn-ripple" to="/downloadapp"><i class="fa fa-download"></i>{{ $t("message['about.downloadEntrance']" )}}</router-link></li> -->
-            <li><a class="btn btn-ripple" @click="logout" ><i class="fa fa-sign-out"></i>{{ $t("message['setting.logout']" )}}</a></li>
+            <li><a class="btn btn-ripple" @click="logout" ><i class="fa fa-sign-out"></i>{{ $t("message['logout']" )}}</a></li>
           </ul>
       </div>
 
