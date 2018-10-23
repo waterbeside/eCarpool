@@ -246,7 +246,6 @@ export default {
         if(!this.mapObj){
           lazyAMapApiLoaderInstance.load().then(() => {
             this.mapObj = cFuns.amap.showMap('amapContainer', {
-              gridMapForeign:true,
               resizeEnable: true,zoom: 10
             })
             if(!this.$store.state.localCity){

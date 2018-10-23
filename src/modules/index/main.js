@@ -53,8 +53,6 @@ var _language = cFuns.getLanguage(1);
 var lang = cFuns.formartLanguage(_language);
 localStorage.setItem('language',_language);
 
-console.log(_language);
-console.log(lang);
 
 const i18n = new VueI18n({
   // locale: _language, // 语言标识

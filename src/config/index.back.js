@@ -5,15 +5,17 @@ let baseUrl = ""
 let baseUrl_8080 = baseDomain+':8080'
 let baseUrl_8082 = baseDomain
 
+let isOverSeas = false; //是否启用海外地图
+let aMapKey    =  isOverSeas ?  '' : '';//高德地图API之KEY。
 
-let aMapKey    = '';
 let config = {
-  appScheme     : "", //用于启动app的scheme
-  baseDomain    : baseDomain ,
-  aMapKey       : aMapKey, //高德地图API之KEY。
-  avatarBasePath    : baseDomain+'/carpool/images/users/', //头像公共路徑
-  defaultAvatar :  avatarPic, //默认头像
-  urls          : {
+  appScheme       : "", //用于启动app的scheme
+  baseDomain      : baseDomain ,
+  isOverSeas      : isOverSeas,
+  aMapKey         : aMapKey,
+  avatarBasePath  : baseDomain+'/carpool/images/users/', //头像公共路徑
+  defaultAvatar   :  avatarPic, //默认头像
+  urls            : {
     aMapScript        : 'http://webapi.amap.com/maps?v=1.4.0&key='+aMapKey, //高德地图api
     uploadAvatar      : baseUrl_8080+'/uploadfile/image',   // 传头像API
     // uploadAvatar      : 'http://localhost:8080/uploadfile/image',   // 传头像API

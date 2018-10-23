@@ -2,7 +2,6 @@ import Vue from 'vue'
 import {ToastPlugin} from 'vux'
 
 import axios from 'axios'
-import config from '@/config'
 import qs from 'qs'
 
 
@@ -21,7 +20,6 @@ var langPathArray = {
 if(lang && typeof(langPathArray[lang])!="undefined" && langPathArray[lang]){
   t =  require('@/assets/lang/'+lang).default;
 }
-console.log(t);
 const tokenAxios = axios.create({
   // baseURL: process.env.BASE_API,
   timeout: 10000,
