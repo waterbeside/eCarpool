@@ -55,14 +55,12 @@ tokenAxios.interceptors.request.use(config => {
    config.headers['X-Requested-With'] = 'XMLHttpRequest'
    // config.withCredentials = false
   // 下面会说在什么时候存储 token
-  if(localStorage){
-    if(_language){
-      config.headers['Accept-Language'] = _language;
-    }
-    // token放到头
-    if (localStorage.getItem('CP_U_TOKEN')) {
-      config.headers.Authorization = 'Bearer ' + localStorage.getItem('CP_U_TOKEN');
-    }
+  if(_language){
+    config.headers['Accept-Language'] = _language;
+  }
+  // token放到头
+  if (localStorage.getItem('CP_U_TOKEN')) {
+    config.headers.Authorization = 'Bearer ' + localStorage.getItem('CP_U_TOKEN');
   }
   return config
 },error =>{
