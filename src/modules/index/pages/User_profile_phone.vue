@@ -1,15 +1,15 @@
 
 <template>
   <div class="page-view page-view-profile-edit" id="Page-user-profile-phone">
-    <title-bar >{{$t("message['setting.bindingPhone']")}}</title-bar>
+    <title-bar >{{$t("message['user.profile.bindingPhone']")}}</title-bar>
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}"  :enableRefresh="false" :enableInfinite="false">
 
           <group class="cp-form-group">
               <x-input     :show-clear="false"  :placeholder="$t('message[\'placeholder.phone\']')"   name="phone"  v-model="phone" ref="input_phone"></x-input>
               <button class="btn btn-default btn-sendsms "   :disabled="isCounting" @click.prevent="sendCode" id="btnSendCode">
-                <span v-show="!isCounting">{{$t("message['setting.getVerCode']")}}</span>
-                <span v-show="isCounting">{{$t("message['setting.sendAgain']")}} ( <countdown v-model="countNum" :start="isCounting" @on-finish="finishCount"></countdown> )</span>
+                <span v-show="!isCounting">{{$t("message['user.sms.getVerCode']")}}</span>
+                <span v-show="isCounting">{{$t("message['user.sms.sendAgain']")}} ( <countdown v-model="countNum" :start="isCounting" @on-finish="finishCount"></countdown> )</span>
               </button>
               <x-input     :show-clear="true"   :placeholder="$t('message[\'placeholder.verCode\']')" name="code"  v-model="code" ref="input_code"></x-input>
           </group>
@@ -74,8 +74,8 @@ export default {
         this.$vux.toast.text(this.$t("message['verify.phoneEmpty']"));
         return false;
       }
-      this.$tokenAxios.get(config.urls.sms+"/103",{params:postData}).then(res => {
-      // this.$tokenAxios.post(config.urls.sendSms,postData).then(res => {
+      this.$http.get(config.urls.sms+"/103",{params:postData}).then(res => {
+      // this.$http.post(config.urls.sendSms,postData).then(res => {
         if(res.data.code === 0) {
           this.$vux.toast.text(this.$t("message['login.verCodeHasBeenSent']"));
           this.isCounting = true;
@@ -122,7 +122,7 @@ export default {
           return false;
         }
         this.isSubmiting = true;
-        this.$tokenAxios.post(config.urls.sms+'/103',postData).then(res => {
+        this.$http.post(config.urls.sms+'/103',postData).then(res => {
           this.isSubmiting = false;
           if(res.data.code === 0) {
             this.userData.phone = this.phone;

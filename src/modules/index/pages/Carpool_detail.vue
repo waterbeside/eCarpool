@@ -130,15 +130,15 @@
 
 <script>
 import config from '../config'
-import cFuns from '../../../utils/cFuns'
+import cFuns from '@/utils/cFuns'
 import {Tab, TabItem} from 'vux'
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
 
 
-import CpAvatar from '../../../components/CpAvatar'
+import CpAvatar from '@/components/CpAvatar'
 import CpTripBox from '../components/CpTripBox'
 
-import StatisItem from '../../../components/StatisItem'
+import StatisItem from '@/components/StatisItem'
 
 
 export default {
@@ -246,7 +246,6 @@ export default {
         if(!this.mapObj){
           lazyAMapApiLoaderInstance.load().then(() => {
             this.mapObj = cFuns.amap.showMap('amapContainer', {
-              gridMapForeign:true,
               resizeEnable: true,zoom: 10
             })
             if(!this.$store.state.localCity){
@@ -376,7 +375,7 @@ export default {
       let url = this.type == "wall" ? config.urls.getRideDetail : config.urls.getRequestDetail;
       this.$store.commit('setLoading',{isShow:true,text:null});
 
-      this.$tokenAxios.get(url,{params:{id:this.id}}).then(res => {
+      this.$http.get(url,{params:{id:this.id}}).then(res => {
         // console.log(res);
         if(res.data.code === 0) {
           let data = res.data.data;
@@ -454,7 +453,7 @@ export default {
     loadPassengers (){
       this.isLoading_pss = true;
       let params = {wallid:this.id}
-      this.$tokenAxios.get(config.urls.getRidePassengers,{params:params}).then(res => {
+      this.$http.get(config.urls.getRidePassengers,{params:params}).then(res => {
 
         let data = res.data.data;
         this.isLoading_pss = false;
@@ -481,7 +480,7 @@ export default {
       */
      getCommentsCount (){
        let params = {wid:this.id,getcount:1}
-       this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
+       this.$http.get(config.urls.wallComments,{params:params}).then(res => {
          if(res.data.code == 0){
            var data = res.data.data;
            this.comments_total = data.total;
@@ -501,7 +500,7 @@ export default {
        this.isLoading_comments = true;
 
        let params = {wid:this.id,num:5}
-       this.$tokenAxios.get(config.urls.wallComments,{params:params}).then(res => {
+       this.$http.get(config.urls.wallComments,{params:params}).then(res => {
          // console.log(res);
          this.isLoading_comments = false;
          if(res.data.code == 0){
@@ -594,7 +593,7 @@ export default {
          onConfirm : ()=>{
            this.$store.commit('setLoading',{isShow:true,text:this.$t("message.submitting")});
            // return false;
-           this.$tokenAxios.post(url,postData).then(res => {
+           this.$http.post(url,postData).then(res => {
              this.$store.commit('setLoading',{isShow:false});
              if(res.data.code === 0) {
                this.$vux.toast.text(successText);

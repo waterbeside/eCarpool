@@ -53,8 +53,8 @@
 
 <script>
 import config from '../config'
-import cFuns from '../../../utils/cFuns'
-import CpSearchBox from '../../../components/CpSearchBox'
+import cFuns from '@/utils/cFuns'
+import CpSearchBox from '@/components/CpSearchBox'
 import CpTripCard from '../components/CpTripCard'
 
 export default {
@@ -133,7 +133,7 @@ export default {
           this.$store.commit('setLoading',{isShow:true,text:this.$t("message.submitting")});
           // return false;
 
-          this.$tokenAxios.post(config.urls.acceptRequest,{id:id}).then(res => {
+          this.$http.post(config.urls.acceptRequest,{id:id}).then(res => {
             this.$store.commit('setLoading',{isShow:false});
             if(res.data.code === 0) {
               this.listDatas[index].status = 1
@@ -167,7 +167,7 @@ export default {
 
       this.isLoading = 1;
       this.noData = 0;
-      this.$tokenAxios.get(config.urls.getInfoLists,{params:params}).then(res => {
+      this.$http.get(config.urls.getInfoLists,{params:params}).then(res => {
 
         let data = res.data.data;
         this.isLoading = 0;

@@ -70,7 +70,7 @@ export default {
       let postData = {username:this.username,password:this.password,client:'h5'};
       this.isSubmiting = true;
       this.subBtnText = this.$t("message['login.logging']");
-      this.$tokenAxios.post(config.urls.passport,postData).then(res => {
+      this.$http.post(config.urls.passport,postData).then(res => {
       // this.$tokenAxios.post(config.urls.login,postData).then(res => {
           this.isSubmiting = false;
           this.subBtnText = this.$t("message['login.btn']");

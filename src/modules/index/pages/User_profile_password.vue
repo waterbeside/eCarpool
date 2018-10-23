@@ -1,7 +1,7 @@
 
 <template>
   <div class="page-view page-view-profile-edit" id="Page-user-profile-password">
-    <title-bar >{{$t("message['setting.restpassword']")}}</title-bar>
+    <title-bar >{{$t("message['user.profile.label.modifypassword']")}}</title-bar>
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}"  :enableRefresh="false" :enableInfinite="false">
 
@@ -44,7 +44,6 @@ export default {
   computed : {
     isEnableSubmit () {
       return  this.password.trim() == "" ||  this.pw_new.trim()=="" || this.pw_confirm.trim()=="" || this.isSubmiting ? false :true;
-
     },
 
   },
@@ -75,15 +74,16 @@ export default {
       let postData = {type:"password",password:this.password,pw_new:this.pw_new,pw_confirm:this.pw_confirm}
 
       this.isSubmiting = true;
-      this.$tokenAxios.post(config.urls.editProfile,postData).then(res => {
+      this.$http.patch(config.urls.passport+'/password',postData).then(res => {
+      // this.$http.post(config.urls.editProfile,postData).then(res => {
         this.isSubmiting = false;
         if(res.data.code === 0) {
-          this.$vux.toast.text(this.$t("message['setting.modifysucces']"));
+          this.$vux.toast.text(this.$t("message['verify.modifysuccess']"));
           this.$router.back();
         }else if(res.data.code === 10001){
           this.$vux.toast.text(this.$t("message['verify.oldPasswordError']"));
         }else{
-          this.$vux.toast.text(this.$t("message['setting.modifyfail']"));
+          this.$vux.toast.text(this.$t("message['verify.modifyfail']"));
         }
       })
       .catch(error => {

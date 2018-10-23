@@ -1,7 +1,7 @@
 <template>
   <div class="page-view cp-page-history-select">
     <title-bar  :left-options="{showBack: true}" >
-      <span >{{$t("message['share.commonroute']")}}</span>
+      <span >{{$t("message['carpool.addtrip.commonroute']")}}</span>
     </title-bar>
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh"  :dataList="scrollData" :enableInfinite="false">
@@ -30,7 +30,7 @@
 
 <script>
 import config from '../config'
-import cFuns from '../../../utils/cFuns'
+import cFuns from '@/utils/cFuns'
 
 import CpTripCard from '../components/CpTripCard'
 import CpTripBox from '../components/CpTripBox'
@@ -74,7 +74,7 @@ export default {
 
       this.isLoading = 1;
       this.noData = 0;
-      this.$tokenAxios.get(config.urls.getMytrip,{params:params}).then(res => {
+      this.$http.get(config.urls.getMytrip,{params:params}).then(res => {
 
         let data = res.data.data;
           this.isLoading = 0;

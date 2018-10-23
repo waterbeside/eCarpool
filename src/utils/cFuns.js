@@ -2,8 +2,8 @@ import config from '../config'
 import axios from 'axios';
 
 
-var scrollTimer = null
-
+var scrollTimer = null;
+var isGridMapForeign = config.isGridMapForeign;
 var cFuns = {
   /**
    * 取得客户端（浏览器）信息
@@ -92,6 +92,20 @@ var cFuns = {
       _language = navigator.browserLanguage;
     }
     return _language;
+  },
+
+  formartLanguage(_language){
+    var arrowLang = "zh,zh-tw,zh-hk,vi,en,"
+    var lang = _language;
+    var language_lower = _language.toLowerCase();
+    if(arrowLang.indexOf(language_lower) == -1){
+      lang = "en";
+    }
+    if(language_lower.indexOf('-')>0){
+      var langTempArr = language_lower.split('-');
+      lang = langTempArr[0];
+    }
+    return lang;
   },
 
   /**
@@ -217,7 +231,7 @@ var cFuns = {
 
     showMap (target,setting){
       var settingDefault = {
-        gridMapForeign:true,
+        gridMapForeign:isGridMapForeign,
       }
       var opt = Object.assign({},settingDefault,setting);
       var map = new AMap.Map(target, opt);
