@@ -276,7 +276,6 @@ export default  {
     //历史行程
 
     "HistoryTrips.title" : "Trips",
-    "NetWord.FailTips" : "Netword error,please check",
     "HistoryTrip.MiniTitleDrive" : "Driver",
     "HistoryTrip.MiniTitlePassenger" : "Passenger",
     "HistoryTrip.PassengerNum" : "passenger:%@",
@@ -458,7 +457,7 @@ export default  {
     "login.usernameOrPasswordError" : "User name or password error",
     "login.clickMeansRead" : "Clicking on the \"Login\" button means reading and agreeing to the \"Disclaimer\"",
     "login.disclaimer" : "Disclaimer",
-    
+
     "downloadapp.title" : "Download APP",
     "downloadapp.welcomeDownload" : "Welcome to download the mobile app for more features and a better experience.",
     "downloadapp.android" : "Android download",

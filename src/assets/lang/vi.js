@@ -271,7 +271,6 @@ message: {
 
 
 
-  "NetWord.FailTips" : "Netword error,please check",
 
 
   "HistoryTrip.MiniTitleDrive" : "Driver",
@@ -451,7 +450,7 @@ message: {
   "login.usernameOrPasswordError" : "Tên người dùng hoặc mật khẩu không chính xác",
   "login.clickMeansRead" : "Nhấp vào nút \"Đăng nhập\" có nghĩa là đọc và đồng ý với \"Sử dụng thỏa thuận\"",
   "login.disclaimer" : "Sử dụng thỏa thuận",
-  
+
   "downloadapp.title" : "Tải xuống ứng dụng",
   "downloadapp.welcomeDownload" : "Chào mừng bạn đến tải xuống ứng dụng dành cho thiết bị di động để có nhiều tính năng hơn và trải nghiệm tốt hơn.",
   "downloadapp.android" : "Android download",

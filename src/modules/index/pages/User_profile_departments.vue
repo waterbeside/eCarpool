@@ -79,11 +79,11 @@ export default {
           this.$store.commit('setUserData',userData_o);
           this.$router.back();
         }else{
-          this.$vux.toast.text(this.$t("message['NetWord.FailTips']"));
+          this.$vux.toast.text(this.$t("message.networkFail"));
           return false;
         }
       }).catch(error => {
-        this.$vux.toast.text(this.$t("message['NetWord.FailTips']"));
+        this.$vux.toast.text(this.$t("message.networkFail"));
         return false;
       })
     },
@@ -107,7 +107,7 @@ export default {
          }
        }
      }).catch(error => {
-       this.$vux.toast.text(this.$t("message['NetWord.FailTips']"));
+       this.$vux.toast.text(this.$t("message.networkFail"));
        return false;
      })
     },

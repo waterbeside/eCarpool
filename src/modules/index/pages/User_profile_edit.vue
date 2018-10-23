@@ -47,7 +47,7 @@ export default {
         },
         'name':{
           title : this.$t("message['user.profile.label.name']"),
-          placeholder:this.$t("message['placeholder.carColor']") ,
+          placeholder:this.$t("message['placeholder.name']") ,
           tips:''
         },
         'mobile':{
@@ -104,12 +104,11 @@ export default {
           this.$store.commit('setUserData',userData_o);
           this.$router.back();
         }else{
-          let errMsg = this.$t("message['NetWord.FailTips']");
-          this.$vux.toast.text(errMsg);
+          this.$vux.toast.text(res.data.desc);
           return false;
         }
       }).catch(error => {
-        let errMsg = this.$t("message['NetWord.FailTips']");
+        let errMsg = this.$t("message.networkFail");
         this.$vux.toast.text(errMsg);
         this.isSubmiting = false;
         return false;

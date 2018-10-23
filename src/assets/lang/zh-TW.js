@@ -273,7 +273,6 @@ message: {
 
   //历史行程
   "HistoryTrips.title" : "历史行程",
-  "NetWord.FailTips" : "网络异常,请检查网络设置！",
   "HistoryTrip.MiniTitleDrive" : "我是司机",
   "HistoryTrip.MiniTitlePassenger" : "我是乘客",
   "HistoryTrip.PassengerNum" : "%@个乘客",
@@ -459,7 +458,7 @@ message: {
   "login.usernameOrPasswordError" : "用户名或密码错误",
   "login.clickMeansRead" : "点击“登入”按钮即代表阅读并同意《使用协议》",
   "login.disclaimer" : "使用协议",
-  
+
   "downloadapp.title" : "下载APP",
   "downloadapp.welcomeDownload" : "欢迎下载手机APP，以获得更多功能和更好的体验。",
   "downloadapp.android" : "安卓下载",

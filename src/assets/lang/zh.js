@@ -273,7 +273,6 @@ message: {
   //历史行程
   "HistoryTrips.title" : "历史行程",
 
-  "NetWord.FailTips" : "网络异常,请检查网络设置！",
 
   "HistoryTrip.MiniTitleDrive" : "我是司机",
   "HistoryTrip.MiniTitlePassenger" : "我是乘客",
