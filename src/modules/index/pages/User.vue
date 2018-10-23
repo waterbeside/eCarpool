@@ -31,7 +31,7 @@
               </popup-picker>
             </li>
 
-            <!-- <li><router-link  class="btn btn-ripple" to="/downloadapp"><i class="fa fa-download"></i>{{ $t("message['about.downloadEntrance']" )}}</router-link></li> -->
+            <li><router-link  class="btn btn-ripple" to="/downloadapp"><i class="fa fa-download"></i>{{ $t("message['about.downloadEntrance']" )}}</router-link></li>
             <li><a class="btn btn-ripple" @click="logout" ><i class="fa fa-sign-out"></i>{{ $t("message['logout']" )}}</a></li>
           </ul>
       </div>
