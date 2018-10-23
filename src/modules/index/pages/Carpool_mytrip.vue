@@ -46,7 +46,7 @@
 
 <script>
 import config from '../config'
-import cFuns from '../../../utils/cFuns'
+import cFuns from '@/utils/cFuns'
 
 import CpTripCard from '../components/CpTripCard'
 

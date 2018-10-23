@@ -130,15 +130,15 @@
 
 <script>
 import config from '../config'
-import cFuns from '../../../utils/cFuns'
+import cFuns from '@/utils/cFuns'
 import {Tab, TabItem} from 'vux'
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
 
 
-import CpAvatar from '../../../components/CpAvatar'
+import CpAvatar from '@/components/CpAvatar'
 import CpTripBox from '../components/CpTripBox'
 
-import StatisItem from '../../../components/StatisItem'
+import StatisItem from '@/components/StatisItem'
 
 
 export default {

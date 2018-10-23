@@ -47,9 +47,9 @@
 
 <script>
 import config from '../config'
-import cFuns from '../../../utils/cFuns'
+import cFuns from '@/utils/cFuns'
 
-import CpAvatar from '../../../components/CpAvatar'
+import CpAvatar from '@/components/CpAvatar'
 
 
 

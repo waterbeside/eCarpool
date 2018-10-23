@@ -29,7 +29,7 @@
 
 <script>
 import config from '../config'
-import CpScroller from '../../../components/CpScroller'
+import CpScroller from '@/components/CpScroller'
 
 export default {
   components: {

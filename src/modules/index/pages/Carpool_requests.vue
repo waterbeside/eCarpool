@@ -53,8 +53,8 @@
 
 <script>
 import config from '../config'
-import cFuns from '../../../utils/cFuns'
-import CpSearchBox from '../../../components/CpSearchBox'
+import cFuns from '@/utils/cFuns'
+import CpSearchBox from '@/components/CpSearchBox'
 import CpTripCard from '../components/CpTripCard'
 
 export default {

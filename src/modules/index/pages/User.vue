@@ -44,8 +44,8 @@
 import cFuns from '@/utils/cFuns';
 import config from '../config'
 import CpFootNavBar from '../components/CpFootNavBar'
-import StatisItem from '../../../components/StatisItem'
-import CpAvatar from '../../../components/CpAvatar'
+import StatisItem from '@/components/StatisItem'
+import CpAvatar from '@/components/CpAvatar'
 import {PopupRadio} from 'vux'
 
 export default {
