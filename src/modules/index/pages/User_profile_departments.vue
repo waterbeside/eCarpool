@@ -29,7 +29,7 @@
 
 <script>
 import config from '../config'
-import CpScroller from '../../../components/CpScroller'
+import CpScroller from '@/components/CpScroller'
 
 export default {
   components: {
@@ -73,17 +73,17 @@ export default {
       }
 
 
-      this.$tokenAxios.post(config.urls.editProfile,postData).then(res => {
+      this.$http.post(config.urls.editProfile,postData).then(res => {
         if(res.data.code === 0 ){
           userData_o.Department = postData.Department;
           this.$store.commit('setUserData',userData_o);
           this.$router.back();
         }else{
-          this.$vux.toast.text("更改失败，请稍候再试");
+          this.$vux.toast.text(this.$t("message.networkFail"));
           return false;
         }
       }).catch(error => {
-        this.$vux.toast.text("网络不通，请稍候再试");
+        this.$vux.toast.text(this.$t("message.networkFail"));
         return false;
       })
     },
@@ -94,7 +94,7 @@ export default {
     getDepartments(){
      let params = {company_id:this.userData.company_id}
      this.isLoading = true;
-     this.$tokenAxios.get(config.urls.getDepartments,{params:params}).then(res => {
+     this.$http.get(config.urls.getDepartments,{params:params}).then(res => {
        this.isLoading = false;
        // console.log(res)
        if(res.data.code === 0) {
@@ -107,7 +107,7 @@ export default {
          }
        }
      }).catch(error => {
-       this.$vux.toast.text("网络不通");
+       this.$vux.toast.text(this.$t("message.networkFail"));
        return false;
      })
     },

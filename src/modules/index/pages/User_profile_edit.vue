@@ -35,19 +35,24 @@ export default {
       fieldSetting:{},
       fieldArray : {
         'carnumber':{
-          title : this.$t("message['setting.carNumber']"),
+          title : this.$t("message['user.profile.label.licensePlateNo']"),
           placeholder:this.$t("message['placeholder.carNumber']") ,
           tips:'',
           len:0
         },
         'carcolor':{
-          title : this.$t("message['setting.carColor']"),
+          title : this.$t("message['user.profile.label.carColor']"),
           placeholder:this.$t("message['placeholder.carColor']") ,
           tips:''
         },
         'name':{
-          title : this.$t("message['setting.editName']"),
-          placeholder:this.$t("message['placeholder.carColor']") ,
+          title : this.$t("message['user.profile.label.name']"),
+          placeholder:this.$t("message['placeholder.name']") ,
+          tips:''
+        },
+        'mobile':{
+          title : this.$t("message['user.profile.edit.mobile']"),
+          placeholder:this.$t("message['placeholder.mobile']") ,
           tips:''
         },
       },
@@ -91,19 +96,19 @@ export default {
       // if(user)
 
       this.isSubmiting = true;
-      this.$tokenAxios.post(config.urls.editProfile,postData).then(res => {
+      // this.$http.post(config.urls.editProfile,postData).then(res => {
+      this.$http.patch(config.urls.passport+'/'+this.field,postData).then(res => {
         this.isSubmiting = false;
         if(res.data.code === 0 ){
           userData_o[postData.type] =  postData[postData.type];
           this.$store.commit('setUserData',userData_o);
           this.$router.back();
         }else{
-          let errMsg = this.$t("message['NetWord.FailTips']");
-          this.$vux.toast.text(errMsg);
+          this.$vux.toast.text(res.data.desc);
           return false;
         }
       }).catch(error => {
-        let errMsg = this.$t("message['NetWord.FailTips']");
+        let errMsg = this.$t("message.networkFail");
         this.$vux.toast.text(errMsg);
         this.isSubmiting = false;
         return false;

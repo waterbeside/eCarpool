@@ -39,7 +39,7 @@
          >
            <div slot="btnbar" class="cp-btns-wrapper">
               <div class="cp-fabBtn-wrap " :class="[{'hasLike':item.hasLike===1,'doLike':item.id === doLikeId}]">
-                <b class="t">{{$t("message['location.clickLike']")}}</b>
+                <b class="t">{{$t("message['carpool.detail.clickLike']")}}</b>
                 <a href="javascript:void(0);" class="btn  btn-fab" :class="item.hasLike===1 ? 'btn-danger' : 'btn-primary' " @click="likeTrip(item.id,index)">
                   <i class="fa fa-heart" ></i>
                 </a>
@@ -68,9 +68,9 @@
 
 <script>
 import config from '../config'
-import cFuns from '../../../utils/cFuns'
+import cFuns from '@/utils/cFuns'
 
-import CpSearchBox from '../../../components/CpSearchBox'
+import CpSearchBox from '@/components/CpSearchBox'
 import CpTripCard from '../components/CpTripCard'
 
 export default {
@@ -146,7 +146,7 @@ export default {
         this.listDatas[index].like_count = parseInt(this.listDatas[index].like_count) + 1
         this.listDatas[index].hasLike = 1;
         this.doLikeId = id;
-        this.$tokenAxios.post(config.urls.likeTrip,{id:id}).then(res => {
+        this.$http.post(config.urls.likeTrip,{id:id}).then(res => {
           if(res.data.code === 0) {
 
           }else{
@@ -173,7 +173,7 @@ export default {
 
       this.isLoading = 1;
       this.noData = 0;
-      this.$tokenAxios.get(config.urls.getWallLists,{params:params}).then(res => {
+      this.$http.get(config.urls.getWallLists,{params:params}).then(res => {
         let data = res.data.data;
         this.isLoading = 0;
         if(res.data.code === 0) {

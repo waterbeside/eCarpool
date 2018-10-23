@@ -2,8 +2,8 @@ import config from '../config'
 import axios from 'axios';
 
 
-var scrollTimer = null
-
+var scrollTimer = null;
+var isGridMapForeign = config.isGridMapForeign;
 var cFuns = {
   /**
    * 取得客户端（浏览器）信息
@@ -231,7 +231,7 @@ var cFuns = {
 
     showMap (target,setting){
       var settingDefault = {
-        gridMapForeign:true,
+        gridMapForeign:isGridMapForeign,
       }
       var opt = Object.assign({},settingDefault,setting);
       var map = new AMap.Map(target, opt);

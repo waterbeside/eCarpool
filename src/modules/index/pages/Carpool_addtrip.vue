@@ -40,7 +40,7 @@
               <div class="cp-userinfo">
                 <span class="cp-username">{{userData.name}}</span>
 
-                <span class="cp-pull-right">{{type=="info"? $t("message['title.addTrip']") : $t("message['share.shareemptyseat']") }}</span>
+                <span class="cp-pull-right">{{type=="info"? $t("message['carpool.addtrip.addRequest']") : $t("message['carpool.addtrip.shareemptyseat']") }}</span>
               </div>
             </div>
             <div class="cp-map-form-inner">
@@ -95,7 +95,7 @@
               </div>
 
 
-              <button class="cp-btn  cp-btn-submit "   :disabled="disableSubmitBtn" style="border-radius:99px;" @click="doSubmit"><i class="cp-icon fa fa-paper-plane"></i>{{$t("message['share.publish']")}}</button>
+              <button class="cp-btn  cp-btn-submit "   :disabled="disableSubmitBtn" style="border-radius:99px;" @click="doSubmit"><i class="cp-icon fa fa-paper-plane"></i>{{$t("message['publish']")}}</button>
 
             </div>
           </form>
@@ -326,7 +326,7 @@ export default {
         postData.seat_count = this.formData.seat_count
       }
 
-      this.$tokenAxios.post(config.urls.addTrip,postData).then(res => {
+      this.$http.post(config.urls.addTrip,postData).then(res => {
 
         var resData = res.data.data
         if(res.data.code === 0) {

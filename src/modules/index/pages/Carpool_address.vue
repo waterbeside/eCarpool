@@ -12,10 +12,10 @@
         <ul id="J-getAddress" class="cp-list-wrap cp-list-points " :class="{'doSearch':isSearching}"  >
           <li v-for="(item,index) in listDatas" class="cp-item" :class="'cp-type-'+item.address_type"  @click="onSelectAddress(index,0)" v-show="item.is_show">
             <template v-if="item.address_type=='Home'">
-              <i class="fa fa-home"></i><h6>{{$t("message['setting.home']")}}</h6>
+              <i class="fa fa-home"></i><h6>{{$t("message['user.profile.label.home']")}}</h6>
             </template>
             <template v-else-if="item.address_type=='Work'">
-              <i class="fa fa-suitcase"></i><h6>{{$t("message['setting.company']")}}</h6>
+              <i class="fa fa-suitcase"></i><h6>{{$t("message['user.profile.label.company']")}}</h6>
             </template>
             <template v-else>
               <i class="fa fa-map-pin"></i>
@@ -84,8 +84,8 @@ export default {
       let titlesArray = {
         "start": this.$t("message['label.from']"),
         "end": this.$t("message['label.to']"),
-        "home":this.$t("message['setting.home']"),
-        "work":this.$t("message['setting.company']"),
+        "home":this.$t("message['user.profile.label.home']"),
+        "work":this.$t("message['user.profile.label.company']"),
       }
       return typeof(titlesArray[this.to]!=="undefault") ? titlesArray[this.to] : this.$t("message['placeholder.selectAddress']")
     },
@@ -204,7 +204,7 @@ export default {
 
       this.isLoading = 1;
       this.noData = 0;
-      this.$tokenAxios.get(config.urls.getMyAddress,{params:params}).then(res => {
+      this.$http.get(config.urls.getMyAddress,{params:params}).then(res => {
         // console.log(res)
 
           this.isLoading = 0;
@@ -355,7 +355,7 @@ export default {
           from: to
         }
         //提交修改个人信息（公司或家地址）
-        this.$tokenAxios.post(config.urls.editProfileAdress,postData).then(res => {
+        this.$http.post(config.urls.editProfileAdress,postData).then(res => {
           var resData = res.data.data
           if(res.data.code === 0) {
             var data_n = data;

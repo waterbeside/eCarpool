@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import axios from 'axios';
+
 import { focus } from 'vue-focus';
 import tokenAxios from './utils/cTokenAxios';
 import cFuns from '@/utils/cFuns';
@@ -40,34 +40,32 @@ Vue.directive('focus', focus);
 
 Vue.use(ToastPlugin);
 Vue.use(ConfirmPlugin);
+Vue.use(VueI18n)
+Vue.use(VueAMap);
+
+
 
 Vue.config.productionTip = false
-Vue.prototype.$http = axios;
-// Vue.prototype.$tokenAxios = tokenAxios;
-Vue.use(tokenAxios)
-Vue.use(VueI18n)
+Vue.prototype.$http = tokenAxios;
 
 
 var _language = cFuns.getLanguage(1);
 var lang = cFuns.formartLanguage(_language);
 localStorage.setItem('language',_language);
 
-console.log(_language);
-console.log(lang);
 
 const i18n = new VueI18n({
   // locale: _language, // 语言标识
     locale: lang, // 语言标识
     messages: {
-       'zh': require('@/../static/lang/zh'),
-       'zh-TW': require('@/../static/lang/zh-TW'),
-       'zh-HK': require('@/../static/lang/zh-TW'),
-       'vi': require('@/../static/lang/vi'),
-       'en': require('@/../static/lang/en')
+       'zh': require('@/assets/lang/zh').default,
+       'zh-TW': require('@/assets/lang/zh-TW').default,
+       'zh-HK': require('@/assets/lang/zh-TW').default,
+       'vi': require('@/assets/lang/vi').default,
+       'en': require('@/assets/lang/en').default
    }
 })
 
-Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
   key: config.aMapKey,
   v: '1.4.10',

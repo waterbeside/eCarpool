@@ -42,8 +42,8 @@
 <script>
 
 import config from '../config'
-import cFuns from '../../../utils/cFuns'
-import cModel from '../../../utils/cModel'
+import cFuns from '@/utils/cFuns'
+import cModel from '@/utils/cModel'
 
 // import { AMapManager } from 'vue-amap';
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
@@ -182,7 +182,7 @@ export default {
       }
       this.isSubmiting = true;
 
-      this.$tokenAxios.post(config.urls.createAddress,postDatas).then(res => {
+      this.$http.post(config.urls.createAddress,postDatas).then(res => {
         this.isSubmiting = false;
         var resData = res.data.data
 
