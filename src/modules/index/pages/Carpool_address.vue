@@ -54,9 +54,9 @@
 
 <script>
 import config from '../config'
-import cFuns from '../../../utils/cFuns'
-import CpSearchBox from '../../../components/CpSearchBox'
-import cModel from '../../../utils/cModel'
+import cFuns from '@/utils/cFuns'
+import CpSearchBox from '@/components/CpSearchBox'
+import cModel from '@/utils/cModel'
 
 export default {
   components: {
@@ -230,15 +230,13 @@ export default {
 
 
             //通高德地图以地坐标取得地址信息，并写入本地数据库
-              AMap.plugin('AMap.Geocoder',()=>{
-                var geocoder = new AMap.Geocoder({
-                     radius: 1000,
-                     extensions: "all"
-                 });
+              cFuns.amap.getGeocoder({
+                   radius: 1000,
+                   extensions: "all"
+               }).then((geocoder)=>{
                  this.listDatas.forEach((value,key,arr)=>{
                    // console.log(value)
                    // console.log(value.address_type)
-
                    if(value.address_type!='Home' && value.address_type!='Work'){
                      if(value.addressid==arr[0].addressid || value.addressid==arr[1].addressid){
                        return ;
@@ -248,18 +246,13 @@ export default {
                        if (status === 'complete' && result.info === 'OK') {
                          value.listorder = key;
                          value.address = result.regeocode.formattedAddress;
-
                          cModel.myAddress('update',{data:value});
-
                          // server.my_address.update(item);
                        }else{
-
                        }
                    });
                  })
-
-
-              });
+               })
 
           }else{
 
@@ -291,36 +284,30 @@ export default {
 
       // 檢查是存在本地城市信息
       var local_city =  typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.city : "";
-      //使用高德地圖自動無成插件
-      AMap.plugin('AMap.Autocomplete',()=>{//回调函数
-          //实例化Autocomplete
-          var autoOptions = {
-              city: local_city, //城市，默认全国
-          };
-          var autocomplete = new AMap.Autocomplete(autoOptions);
-          autocomplete.search(keyword, (status, result)=>{
-            if(status == 'complete'){
-              this.smListDatas = [];
-              // console.log(result.tips);
-               result.tips.forEach((value,index,arr)=>{
-                if(value.location.lat && value.location.lng){
-                  let itemValue =  {
-                    addressid:0,
-                    addressname:value.name,
-                    address:value.address,
-                    district:value.district,
-                    latitude:value.location.lat,
-                    longtitude:value.location.lng,
-                  }
-                  this.smListDatas.push(itemValue);
-                }
-              })
-              // console.log(this.smListDatas);
-              // console.log(result.tips);
 
+      cFuns.amap.autoComplete(keyword,{city:local_city}).then(res=>{
+        var result = res.result;
+        var status = res.status;
+        if(status == 'complete'){
+          this.smListDatas = [];
+          // console.log(result.tips);
+           result.tips.forEach((value,index,arr)=>{
+            if(value.location.lat && value.location.lng){
+              let itemValue =  {
+                addressid:0,
+                addressname:value.name,
+                address:value.address,
+                district:value.district,
+                latitude:value.location.lat,
+                longtitude:value.location.lng,
+              }
+              this.smListDatas.push(itemValue);
             }
-          });
-      });
+          })
+          // console.log(this.smListDatas);
+          // console.log(result.tips);
+        }
+      })
 
     },
 

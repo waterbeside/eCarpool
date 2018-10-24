@@ -213,6 +213,8 @@ export default {
           }else if( pageDatas.from == 'home' || pageDatas.from == 'company' ){
 
           }
+        }else{
+          this.$vux.toast.text(res.data.desc);
         }
       })
       .catch(error => {
@@ -230,58 +232,46 @@ export default {
 
       this.city = this.$store.state.localCity.city;
       autoShow = autoShow  || 0;
-      AMap.service('AMap.PlaceSearch',()=>{//回调函数
-       //实例化PlaceSearch
-       var placeSearch = new AMap.PlaceSearch({ //构造地点查询类
-            pageSize: 15,
-            pageIndex: 1,
-            city: this.city//城市
-        });
-        if(this.keyword_o == this.keyword || this.keyword == ''){
-          return false;
-        }
+      if(this.keyword_o == this.keyword || this.keyword == ''){
+        return false;
+      }
+      this.keyword_o = this.keyword;
 
-        this.keyword_o = this.keyword;
-        // console.log(this.keyword)
-        //关键字查询
-        placeSearch.search(this.keyword, (status, result)=>{
-          if( typeof(result.poiList)!='undefined' && result.poiList.pois.length>0){
-            cFuns.amap.clear(this.mapObj);
-            this.markers = [];
-            result.poiList.pois.forEach((value,index,arr)=>{
-              value.position = [value.location.lng, value.location.lat]
+      cFuns.amap.placeSearch(this.keyword,{city:this.city}).then(res=>{
+        var result = res.result;
+        var status = res.status;
+        if( typeof(result.poiList)!='undefined' && result.poiList.pois.length>0){
+          cFuns.amap.clear(this.mapObj);
+          this.markers = [];
+          result.poiList.pois.forEach((value,index,arr)=>{
+            value.position = [value.location.lng, value.location.lat]
 
-              if(index===0 && autoShow){
-                cFuns.amap.setCenter(value.position,this.mapObj,12);
-                this.setPointData(value)
-              }
-              var marker = cFuns.amap.addMarker(value.position,this.mapObj);
-              marker.on('click',ev=>{
-                console.log(ev);
-                this.setPointData(value)
-              })
-             // value.visible =  true;
-             this.markers.push(marker);
-            })
-
-
-          }else{
-            if(autoShow){ //自动中央标注点信息
-
-              let center = this.mapObj.getCenter()
-              let position = [center.lng,center.lat]
-              this.myMarker.position = position;
-              this.getMarkerInfo(lnglat).then(res=>{
-                this.infoWin_address = res.status=='complete' ?  result.regeocode.formattedAddress : "...";
-                this.infoWin_addressname =  "";
-                this.showMarkerInfoWin(position);
-              });
+            if(index===0 && autoShow){
+              cFuns.amap.setCenter(value.position,this.mapObj,12);
+              this.setPointData(value)
             }
-          }
+            var marker = cFuns.amap.addMarker(value.position,this.mapObj);
+            marker.on('click',ev=>{
+              this.setPointData(value)
+            })
+           // value.visible =  true;
+           this.markers.push(marker);
+          })
+        }else{
+          if(autoShow){ //自动中央标注点信息
 
-        });
-       })
-       return false;
+            let center = this.mapObj.getCenter()
+            let position = [center.lng,center.lat]
+            this.myMarker.position = position;
+            this.getMarkerInfo(lnglat).then(res=>{
+              this.infoWin_address = res.status=='complete' ?  result.regeocode.formattedAddress : "...";
+              this.infoWin_addressname =  "";
+              this.showMarkerInfoWin(position);
+            });
+          }
+        }
+      });
+      return false;
     },
 
     setPointData (datas){
