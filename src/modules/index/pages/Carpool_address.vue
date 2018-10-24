@@ -54,10 +54,9 @@
 
 <script>
 import config from '../config'
-import cFuns from '../../../utils/cFuns'
-import CpSearchBox from '../../../components/CpSearchBox'
-import cModel from '../../../utils/cModel'
-
+import cFuns from '@/utils/cFuns'
+import CpSearchBox from '@/components/CpSearchBox'
+import cModel from '@/utils/cModel'
 export default {
   components: {
     CpSearchBox
@@ -94,8 +93,6 @@ export default {
     }
   },
   methods:{
-
-
     /**
      * [showSearchBox 显示或关闭搜索输入]
      */
@@ -107,7 +104,6 @@ export default {
         this.isSearching = false;
       }
     },
-
     /**
      * [doSearch 进行搜索]
      */
@@ -115,7 +111,6 @@ export default {
       if(this.keyword_o !==  this.keyword ){
         this.keyword_o =  this.keyword
         // console.log(this.keyword)
-
         if(this.keyword==""){
           this.getList();
           this.isSearching = false;
@@ -123,7 +118,6 @@ export default {
           this.isSearching = true;
           let  temp_array = this.listDatas;
           this.listDatas = temp_array.map((value,key,arr)=>{
-
             if(value.addressname && value.addressname.indexOf(this.keyword)>-1  ){
               value.is_show = 1
             }else{
@@ -137,7 +131,6 @@ export default {
         // this.getList(1)
       }
     },
-
     /**
      * [getList 显示或关闭搜索输入]
      */
@@ -147,7 +140,6 @@ export default {
       if(refresh){
         return this.loadList();
       }
-
       //打开本地数据库 查询地址列表
       cModel.myAddress('getAll',{
         orderBy:'listorder',
@@ -168,13 +160,9 @@ export default {
               // console.log(value.address_type);
             })
           }
-
         }
       });
-
-
     },
-
     /**
      * [getCity 通过高德地图定位到当前城市]
      */
@@ -187,33 +175,25 @@ export default {
             }
           });
         }
-
-
     },
-
     /**
      * 通过接口取地址列表数据
      * @param  {function} success [成功回调]
      */
     loadList (success) {
       var nowTimestamp = new Date().getTime();
-
       // console.log(config.urls.checkLogin)
       // alert(1)
       let params = {keyword:this.keyword,page:1};
-
       this.isLoading = 1;
       this.noData = 0;
       this.$http.get(config.urls.getMyAddress,{params:params}).then(res => {
         // console.log(res)
-
           this.isLoading = 0;
           if(res.data.code === 0) {
             let data = res.data.data;
-
             cModel.myAddress('clear');
             window.localStorage.setItem('CP_'+this.uid+'_addressOverTime',nowTimestamp);
-
             this.listDatas = data.lists.map((value,key,arr)=>{
               value.listorder = key;
               value.address = '';
@@ -227,18 +207,14 @@ export default {
               value.is_show = true;
               return value;
             })
-
-
             //通高德地图以地坐标取得地址信息，并写入本地数据库
-              AMap.plugin('AMap.Geocoder',()=>{
-                var geocoder = new AMap.Geocoder({
-                     radius: 1000,
-                     extensions: "all"
-                 });
+              cFuns.amap.getGeocoder({
+                   radius: 1000,
+                   extensions: "all"
+               }).then((geocoder)=>{
                  this.listDatas.forEach((value,key,arr)=>{
                    // console.log(value)
                    // console.log(value.address_type)
-
                    if(value.address_type!='Home' && value.address_type!='Work'){
                      if(value.addressid==arr[0].addressid || value.addressid==arr[1].addressid){
                        return ;
@@ -248,21 +224,14 @@ export default {
                        if (status === 'complete' && result.info === 'OK') {
                          value.listorder = key;
                          value.address = result.regeocode.formattedAddress;
-
                          cModel.myAddress('update',{data:value});
-
                          // server.my_address.update(item);
                        }else{
-
                        }
                    });
                  })
-
-
-              });
-
+               })
           }else{
-
           }
           if(typeof(success)==="function"){
             success(res);
@@ -273,7 +242,6 @@ export default {
           console.log(error)
         })
     },
-
     /**
      * 下接刷新
      */
@@ -281,49 +249,37 @@ export default {
       this.getList(1);
       done(); // call done
     },
-
     /**
      * 通过高德查找地址
      */
     searchMapAddress (){
-
       var keyword = this.keyword;
-
       // 檢查是存在本地城市信息
       var local_city =  typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.city : "";
-      //使用高德地圖自動無成插件
-      AMap.plugin('AMap.Autocomplete',()=>{//回调函数
-          //实例化Autocomplete
-          var autoOptions = {
-              city: local_city, //城市，默认全国
-          };
-          var autocomplete = new AMap.Autocomplete(autoOptions);
-          autocomplete.search(keyword, (status, result)=>{
-            if(status == 'complete'){
-              this.smListDatas = [];
-              // console.log(result.tips);
-               result.tips.forEach((value,index,arr)=>{
-                if(value.location.lat && value.location.lng){
-                  let itemValue =  {
-                    addressid:0,
-                    addressname:value.name,
-                    address:value.address,
-                    district:value.district,
-                    latitude:value.location.lat,
-                    longtitude:value.location.lng,
-                  }
-                  this.smListDatas.push(itemValue);
-                }
-              })
-              // console.log(this.smListDatas);
-              // console.log(result.tips);
-
+      cFuns.amap.autoComplete(keyword,{city:local_city}).then(res=>{
+        var result = res.result;
+        var status = res.status;
+        if(status == 'complete'){
+          this.smListDatas = [];
+          // console.log(result.tips);
+           result.tips.forEach((value,index,arr)=>{
+            if(value.location.lat && value.location.lng){
+              let itemValue =  {
+                addressid:0,
+                addressname:value.name,
+                address:value.address,
+                district:value.district,
+                latitude:value.location.lat,
+                longtitude:value.location.lng,
+              }
+              this.smListDatas.push(itemValue);
             }
-          });
-      });
-
+          })
+          // console.log(this.smListDatas);
+          // console.log(result.tips);
+        }
+      })
     },
-
     /**
      * [onSelectAddress 当选择地址时]
      * @param  {index}  index     [数据索引]
@@ -331,7 +287,6 @@ export default {
      */
     onSelectAddress (index,isFromMap){
       var data = isFromMap ? this.smListDatas[index] : this.listDatas[index]
-
       var  to = this.to;
       let formData = this.$store.state.tripFormData;
       //如果是选择起点和终点
@@ -393,12 +348,10 @@ export default {
                 }
                 // console.log(GB_VAR['user_info']);
                 this.$vux.toast.text(this.$t("message.success"));
-
               }
             })
           }else{
             this.$vux.toast.text(this.$t("message.submitFail"));
-
           }
           // this.$router.push({name:'user_profile'});
           this.$router.back();
@@ -408,26 +361,20 @@ export default {
           this.$router.back();
           console.log(error)
         })
-
       }
     },
-
     goCreateAddress (){
       this.$router.push({name:'carpool_address_create',params: {to:this.to,keyword:this.keyword}})
     }
-
   },
   created () {
     // this.init();
-
-
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
   },
   activated (){
     this.getList();
-
     if(!this.$store.state.localCity){
       this.getCity();
     }
@@ -438,5 +385,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>

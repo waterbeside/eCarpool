@@ -278,10 +278,6 @@ var cFuns = {
               map: mapObj,
               // panel: "panel"
         });
-
-        //TODO: 使用driving对象调用驾车路径规划相关的功能
-        //传经纬度
-        //  driving.search(new AMap.LngLat(116.379028, 39.865042), new AMap.LngLat(116.427281, 39.903719));
         map_draw.search(start, end, function(status, result) {
            //TODO 解析返回结果，自己生成操作界面和地图展示界面
            if(typeof(callBack)=='function'){
@@ -294,12 +290,16 @@ var cFuns = {
     /**
      * 取得地理编码组件
      */
-    getGeocoder(city) {
+    getGeocoder(setting) {
+      var options = {};
+      if(typeof(setting)=="string"){
+        options = {city:setting};
+      }
+      var settingDefault = {}
+      var opt = Object.assign({},settingDefault,options);
       return new Promise ((resolve, reject) => {
         AMap.plugin('AMap.Geocoder',()=>{
-            var geocoder = new AMap.Geocoder({
-                city:city//城市，默认：“全国”
-            });
+            var geocoder = new AMap.Geocoder(opt);
             resolve(geocoder)
         });
       })
@@ -324,6 +324,61 @@ var cFuns = {
         mapObj.getCity((data)=> {
           resolve(data);
         });
+      })
+    },
+    /**
+     * getPlaceSearch
+     */
+    getPlaceSearch(options){
+      var settingDefault = {
+           pageSize: 15,
+           pageIndex: 1,
+       }
+      var opt = Object.assign({},settingDefault,options);
+      return new Promise ((resolve, reject) => {
+        AMap.service('AMap.PlaceSearch',()=>{
+         var placeSearch = new AMap.PlaceSearch(opt);
+         resolve(placeSearch)
+       })
+      })
+    },
+    /**
+     * 地址搜索
+     */
+    placeSearch(keyword,options){
+      return new Promise ((resolve, reject) => {
+        this.getPlaceSearch(options).then(placeSearch=>{
+          placeSearch.search(keyword, (status, result)=>{
+            resolve({status:status,result:result})
+          })
+        })
+
+      })
+    },
+    /**
+     * getPlaceSearch
+     */
+    getAutocomplete(options){
+      var settingDefault = { }
+      var opt = Object.assign({},settingDefault,options);
+      return new Promise ((resolve, reject) => {
+        AMap.service('AMap.Autocomplete',()=>{
+         var Autocomplete = new AMap.Autocomplete(opt);
+         resolve(Autocomplete)
+       })
+      })
+    },
+    /**
+     * 地址搜索
+     */
+    autoComplete(keyword,options){
+      return new Promise ((resolve, reject) => {
+        this.getAutocomplete(options).then(autoComplete=>{
+          autoComplete.search(keyword, (status, result)=>{
+            resolve({status:status,result:result})
+          })
+        })
+
       })
     },
     /**
