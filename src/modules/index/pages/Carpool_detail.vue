@@ -392,6 +392,7 @@ export default {
           }else{
             this.typeLabel            = data.owner_info.carnumber;
             this.user                 = data.owner_info;
+            this.user.phone           = this.user.mobile; //海外版暂时用mobile字段替换成phone字段
             this.statis.seat_count    = data.seat_count;
             this.statis.took_count    = data.took_count;
             this.statis.surplus_count = data.seat_count - data.took_count;

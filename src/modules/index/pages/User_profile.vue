@@ -15,12 +15,12 @@
         <group class="cp-group">
           <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-id-card"></i> {{ $t("message['user.profile.title']")}}   </group-title>
           <cell :title="$t('message.name')"  @click.native="goEdit('name')" :is-loading="false" :value="userData.name" is-link></cell>
-          <!-- <cell :title="$t('message.phone')"  @click.native="goEdit('mobile')" :is-loading="false" :value="userData.mobile" is-link></cell> -->
+          <cell :title="$t('message.phone')"  @click.native="goEdit('mobile')" :is-loading="false" :value="userData.mobile" is-link></cell>
 
           <!-- <cell title="姓名"  :is-loading="false" :value="userData.name"></cell> -->
           <popup-radio class="cp-select" :title="$t('message.sex')"   :options="sexs" v-model="userData.sex" :placeholder="$t('message[\'placeholder.sex\']')" @on-change="onChangeSex"></popup-radio>
           <!-- <popup-picker title="性别" :data="sexs" v-model="sex"   @on-change="onChangeSex" :display-format="formatSexDisplay"  ></popup-picker> -->
-          <cell :title="$t('message.phone')"   @click.native="$router.push({name:'user_profile_phone'})" :is-loading="false" :value="userData.phone" is-link></cell>
+          <!-- <cell :title="$t('message.phone')"   @click.native="$router.push({name:'user_profile_phone'})" :is-loading="false" :value="userData.phone" is-link></cell> -->
         </group>
         <group class="cp-group">
           <!-- <cell title="公司" @click.native="goEdit('company')" :is-loading="false" :value="company" is-link></cell> -->
