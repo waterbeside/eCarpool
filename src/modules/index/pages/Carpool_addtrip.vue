@@ -196,9 +196,12 @@ export default {
       return new Promise ((resolve, reject) => {
         if(!this.mapObj){
           lazyAMapApiLoaderInstance.load().then(() => {
-            this.mapObj = cFuns.amap.showMap('amapContainer', {
-              resizeEnable: true,zoom: 10
-            })
+            let formData_s = this.$store.state.tripFormData;
+            var opt = { resizeEnable: true,zoom: 10 }
+            if(typeof(formData_s.start)!='undefined' || typeof(formData_s.end)!="undefined"){
+              opt = { resizeEnable: true,zoom: 10,enableHighAccuracy:false }
+            }
+            this.mapObj = cFuns.amap.showMap('amapContainer', opt)
             if(!this.$store.state.localCity){
               cFuns.amap.getCity(this.mapObj).then((data)=> {
                 if (data['province'] && typeof data['province'] === 'string') {
