@@ -263,7 +263,7 @@ export default {
             let center = this.mapObj.getCenter()
             let position = [center.lng,center.lat]
             this.myMarker.position = position;
-            this.getMarkerInfo(lnglat).then(res=>{
+            this.getMarkerInfo(position).then(res=>{
               this.infoWin_address = res.status=='complete' ?  result.regeocode.formattedAddress : "...";
               this.infoWin_addressname =  "";
               this.showMarkerInfoWin(position);
