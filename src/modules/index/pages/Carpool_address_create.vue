@@ -77,21 +77,21 @@ export default {
         if(!this.mapObj){
           lazyAMapApiLoaderInstance.load().then(() => {
             this.mapObj = cFuns.amap.showMap('amapContainer', {
-              resizeEnable: true,zoom: 10,
+              resizeEnable: true,zoom: 10, zoomToAccuracy:false
+            },(res)=>{
+              if(!this.$store.state.localCity){
+                cFuns.amap.getCity(this.mapObj).then((data)=> {
+                  if (data['province'] && typeof data['province'] === 'string') {
+                    this.$store.commit('setLocalCity',data);
+                    this.city = data.city
+                    this.searchMap(1)
+                  }
+                });
+              }else{
+                this.city = this.$store.state.localCity;
+                this.searchMap(1)
+              }
             })
-            console.log(this.mapObj)
-            if(!this.$store.state.localCity){
-              cFuns.amap.getCity(this.mapObj).then((data)=> {
-                if (data['province'] && typeof data['province'] === 'string') {
-                  this.$store.commit('setLocalCity',data);
-                  this.city = data.city
-                  this.searchMap(1)
-                }
-              });
-            }else{
-              this.city = this.$store.state.localCity;
-              this.searchMap(1)
-            }
             resolve(this.mapObj);
           }).catch((error) => {
               reject(error);
@@ -234,7 +234,7 @@ export default {
             let center = this.mapObj.getCenter()
             let position = [center.lng,center.lat]
             this.myMarker.position = position;
-            this.getMarkerInfo(lnglat).then(res=>{
+            this.getMarkerInfo(position).then(res=>{
               this.infoWin_address = res.status=='complete' ?  result.regeocode.formattedAddress : "...";
               this.infoWin_addressname =  "";
               this.showMarkerInfoWin(position);
