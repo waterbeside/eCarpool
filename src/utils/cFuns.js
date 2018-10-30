@@ -233,17 +233,22 @@ var cFuns = {
       var settingDefault = {
         gridMapForeign:isGridMapForeign,
         enableHighAccuracy:true,
+        zoomToAccuracy:true,
       }
       var opt = Object.assign({},settingDefault,setting);
       var map = new AMap.Map(target, opt);
       if(opt.enableHighAccuracy){
-        this.getLocalPosition({},map).then(res=>{
+        this.getLocalPosition({zoomToAccuracy:opt.zoomToAccuracy },map).then(res=>{
           var resStr = JSON.stringify(res);
           localStorage.setItem('carpool_local_info',resStr);
           if(typeof(callback)=="function"){
             callback(res);
           }
         })
+      }else{
+        if(typeof(callback)=="function"){
+          callback({});
+        }
       }
       return map;
     },
@@ -340,7 +345,8 @@ var cFuns = {
     getGeolocation(setting) {
       var settingDefault = {
         enableHighAccuracy: true,
-        zoomToAccuracy: false,
+        zoomToAccuracy: true,
+        timeout: 10000,
       }
       var opt = Object.assign({},settingDefault,setting);
       return new Promise ((resolve, reject) => {

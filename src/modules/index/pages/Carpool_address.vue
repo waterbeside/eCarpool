@@ -167,14 +167,16 @@ export default {
      * [getCity 通过高德地图定位到当前城市]
      */
     getCity(){
-        var mapObj = cFuns.amap.showMap('cp-map-hidden', {})
-        if(!this.$store.state.localCity){
-          cFuns.amap.getCity(mapObj).then((data)=> {
-            if (data['province'] && typeof data['province'] === 'string') {
-              this.$store.commit('setLocalCity',data);
-            }
-          });
-        }
+        var mapObj = cFuns.amap.showMap('cp-map-hidden', {},(res)=>{
+          if(!this.$store.state.localCity){
+            cFuns.amap.getCity(mapObj).then((data)=> {
+              if (data['province'] && typeof data['province'] === 'string') {
+                this.$store.commit('setLocalCity',data);
+              }
+            });
+          }
+        })
+
     },
     /**
      * 通过接口取地址列表数据
@@ -255,7 +257,7 @@ export default {
     searchMapAddress (){
       var keyword = this.keyword;
       // 檢查是存在本地城市信息
-      var local_city =  typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.city : "";
+      var local_city =  this.$store.state.localCity != null && typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.city : "";
       cFuns.amap.autoComplete(keyword,{city:local_city}).then(res=>{
         var result = res.result;
         var status = res.status;
