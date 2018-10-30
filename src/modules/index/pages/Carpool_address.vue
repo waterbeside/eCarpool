@@ -256,15 +256,35 @@ export default {
      */
     searchMapAddress (){
       var keyword = this.keyword;
+      // var keyword = "ROTH";
       // 檢查是存在本地城市信息
+      var lang = cFuns.getLanguage();
       var local_city =  this.$store.state.localCity != null && typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.city : "";
-      cFuns.amap.autoComplete(keyword,{city:local_city}).then(res=>{
+      // var local_city =  this.$store.state.localCity != null && typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.province : "";
+      cFuns.amap.placeSearch(keyword,{city:local_city,lang:'en', pageSize: 20}).then(res=>{
+      // cFuns.amap.autoComplete(keyword,{city:local_city}).then(res=>{
+        console.log(res)
         var result = res.result;
         var status = res.status;
         if(status == 'complete'){
           this.smListDatas = [];
+          if( typeof(result.poiList)!='undefined' && result.poiList.pois.length>0){
+            result.poiList.pois.forEach((value,index,arr)=>{
+              if(value.location.lat && value.location.lng){
+                let itemValue =  {
+                  addressid:0,
+                  addressname:value.name,
+                  address:value.address,
+                  district:value.district,
+                  latitude:value.location.lat,
+                  longtitude:value.location.lng,
+                }
+                this.smListDatas.push(itemValue);
+              }
+            })
+          }
           // console.log(result.tips);
-           result.tips.forEach((value,index,arr)=>{
+           /*result.tips.forEach((value,index,arr)=>{
             if(value.location.lat && value.location.lng){
               let itemValue =  {
                 addressid:0,
@@ -276,7 +296,7 @@ export default {
               }
               this.smListDatas.push(itemValue);
             }
-          })
+          })*/
           // console.log(this.smListDatas);
           // console.log(result.tips);
         }

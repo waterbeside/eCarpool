@@ -204,13 +204,16 @@ export default {
      * @param  {Boolean} autoShow [是否自动弹出地图窗体]
      */
     searchMap (autoShow){
-      this.city = this.$store.state.localCity.city;
+      // this.city = this.$store.state.localCity.city;
+      this.city = this.$store.state.localCity.province;
+      var lang = cFuns.getLanguage();
+
       autoShow = autoShow  || 0;
       if(this.keyword_o == this.keyword || this.keyword == ''){
         return false;
       }
       this.keyword_o = this.keyword;
-      cFuns.amap.placeSearch(this.keyword,{city:this.city}).then(res=>{
+      cFuns.amap.placeSearch(this.keyword,{city:this.city,lang:lang}).then(res=>{
         var result = res.result;
         var status = res.status;
         if( typeof(result.poiList)!='undefined' && result.poiList.pois.length>0){
