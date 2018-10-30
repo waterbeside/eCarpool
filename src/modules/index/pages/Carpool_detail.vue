@@ -241,22 +241,23 @@ export default {
     /**
      * 初始化地图
      */
-    mapInit (){
+     mapInit (){
       return new Promise ((resolve, reject) => {
         if(!this.mapObj){
           lazyAMapApiLoaderInstance.load().then(() => {
             this.mapObj = cFuns.amap.showMap('amapContainer', {
-              resizeEnable: true,zoom: 10
+              resizeEnable: true,zoom: 10,enableHighAccuracy:true, zoomToAccuracy:false,
+            },res=>{
+              if(!this.$store.state.localCity){
+                cFuns.amap.getCity(this.mapObj).then((data)=> {
+                  if (data['province'] && typeof data['province'] === 'string') {
+                    this.$store.commit('setLocalCity',data);
+                    this.city = data.city
+                  }
+                });
+              }
+              resolve(this.mapObj);
             })
-            if(!this.$store.state.localCity){
-              cFuns.amap.getCity(this.mapObj).then((data)=> {
-                if (data['province'] && typeof data['province'] === 'string') {
-                  this.$store.commit('setLocalCity',data);
-                  this.city = data.city
-                }
-              });
-            }
-            resolve(this.mapObj);
           }).catch((error) => {
               reject(error);
             }
@@ -372,71 +373,79 @@ export default {
      * 取得明细
      */
     getDetail (){
-      let url = this.type == "wall" ? config.urls.getRideDetail : config.urls.getRequestDetail;
-      this.$store.commit('setLoading',{isShow:true,text:null});
+      return new Promise ((resolve, reject) => {
 
-      this.$http.get(url,{params:{id:this.id}}).then(res => {
-        // console.log(res);
-        if(res.data.code === 0) {
-          let data = res.data.data;
-          this.detailData      = data;
-          this.uid             = data.uid;
-          this.detailData.owner_info.avatar = data.owner_info.imgpath ? config.avatarBasePath + data.owner_info.imgpath : this.defaultAvatar;
-          if( this.type == "info"){
-            this.typeLabel           = this.$t("message.passenger")
-            this.passengers[0]       = data.passenger_info;
-            this.passengers[0].avatar = data.passenger_info.imgpath ? config.avatarBasePath + this.passengers[0].imgpath :this.defaultAvatar ;
-            this.isShowAlert          = true;
-            this.user                 = data.passenger_info
+        let url = this.type == "wall" ? config.urls.getRideDetail : config.urls.getRequestDetail;
+        this.$store.commit('setLoading',{isShow:true,text:null});
+
+        this.$http.get(url,{params:{id:this.id}}).then(res => {
+          // console.log(res);
+          if(res.data.code === 0) {
+            let data = res.data.data;
+            this.detailData      = data;
+            this.uid             = data.uid;
+            this.detailData.owner_info.avatar = data.owner_info.imgpath ? config.avatarBasePath + data.owner_info.imgpath : this.defaultAvatar;
+            if( this.type == "info"){
+              this.typeLabel           = this.$t("message.passenger")
+              this.passengers[0]       = data.passenger_info;
+              this.passengers[0].avatar = data.passenger_info.imgpath ? config.avatarBasePath + this.passengers[0].imgpath :this.defaultAvatar ;
+              this.isShowAlert          = true;
+              this.user                 = data.passenger_info
+
+            }else{
+              this.typeLabel            = data.owner_info.carnumber;
+              this.user                 = data.owner_info;
+              this.user.phone           = this.user.mobile; //海外版暂时用mobile字段替换成phone字段
+              this.statis.seat_count    = data.seat_count;
+              this.statis.took_count    = data.took_count;
+              this.statis.surplus_count = data.seat_count - data.took_count;
+
+            }
+            this.changeStatus(data.status)
+            // this.status = data.status;
+            // this.mapObj.clearMap()
+
+
+            this.$store.commit('setLoading',{isShow:false});
+            this.drawTripLine(data);
+            resolve(data)
+            // setTimeout(function(){
+            //
+            // },1000)
 
           }else{
-            this.typeLabel            = data.owner_info.carnumber;
-            this.user                 = data.owner_info;
-            this.user.phone           = this.user.mobile; //海外版暂时用mobile字段替换成phone字段
-            this.statis.seat_count    = data.seat_count;
-            this.statis.took_count    = data.took_count;
-            this.statis.surplus_count = data.seat_count - data.took_count;
-
+            reject(res);
+            this.$store.commit('setLoading',{isShow:false});
           }
-          this.changeStatus(data.status)
-          // this.status = data.status;
-          // this.mapObj.clearMap()
-
-          let start = [data.start_info.longtitude,data.start_info.latitude]
-          let end = [data.end_info.longtitude,data.end_info.latitude]
+        })
+        .catch(error => {
           this.$store.commit('setLoading',{isShow:false});
+          console.log(error);
+          reject(error);
+        })
 
-          this.mapInit().then((res)=>{
-            cFuns.amap.drawTripLine(start, end,this.mapObj,(status,result)=>{
-              if(status == 'complete'){
-                this.isShowComputebox = true;
-                var distance = result.routes[0].distance; //计出的距离
-                var distanceObj = cFuns.amap.formatDistance(distance,1);
-                // var distanceStr = distanceObj.distance + distanceObj.unit;
-                var dtTime = result.routes[0].time;
-                var dtTimeStr = cFuns.amap.formatTripTime(dtTime);
+      })
 
-                this.statis.distance = parseFloat(distanceObj.distance);
-                this.statis.distance_unit = distanceObj.unit;
-              }else{
-                this.statis.distance = 0;
-              }
-            });
-          })
+    },
 
+    drawTripLine (data){
+      let start = [data.start_info.longtitude,data.start_info.latitude]
+      let end = [data.end_info.longtitude,data.end_info.latitude]
+      cFuns.amap.drawTripLine(start, end,this.mapObj,(status,result)=>{
+        if(status == 'complete'){
+          this.isShowComputebox = true;
+          var distance = result.routes[0].distance; //计出的距离
+          var distanceObj = cFuns.amap.formatDistance(distance,1);
+          // var distanceStr = distanceObj.distance + distanceObj.unit;
+          var dtTime = result.routes[0].time;
+          var dtTimeStr = cFuns.amap.formatTripTime(dtTime);
 
-          // setTimeout(function(){
-          //
-          // },1000)
-
+          this.statis.distance = parseFloat(distanceObj.distance);
+          this.statis.distance_unit = distanceObj.unit;
         }else{
-          this.$store.commit('setLoading',{isShow:false});
+          this.statis.distance = 0;
         }
-      })
-      .catch(error => {
-        this.$store.commit('setLoading',{isShow:false});
-        console.log(error)
-      })
+      });
     },
     /**
      * 当显示乘客列表的tab时。
@@ -605,7 +614,6 @@ export default {
                  this.$store.commit('setJumpTo',{name:"carpool_mytrip"});
                  this.$router.push({name:'carpool'});
                }
-
              }else{
                this.$vux.toast.text(res.data.desc,'middle');
              }
@@ -629,8 +637,6 @@ export default {
          this.isSticky = false;
        }
      }
-
-
 
 
   },
@@ -677,8 +683,9 @@ export default {
 
     //
     this.id = this.$route.params.id;
-    this.mapInit()
-    this.getDetail()
+    Promise.all([this.mapInit(),this.getDetail()]).then(res=>{
+      this.drawTripLine(res[1]);
+    })
     if(this.type=="wall"){
       this.getCommentsCount();
     }

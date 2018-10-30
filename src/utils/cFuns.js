@@ -229,13 +229,48 @@ var cFuns = {
   //地图类方法
   amap:{
 
-    showMap (target,setting){
+    showMap (target,setting,callback){
       var settingDefault = {
         gridMapForeign:isGridMapForeign,
+        enableHighAccuracy:true,
+        zoomToAccuracy:true,
       }
       var opt = Object.assign({},settingDefault,setting);
       var map = new AMap.Map(target, opt);
+      if(opt.enableHighAccuracy){
+        this.getLocalPosition({zoomToAccuracy:opt.zoomToAccuracy },map).then(res=>{
+          var resStr = JSON.stringify(res);
+          localStorage.setItem('carpool_local_info',resStr);
+          if(typeof(callback)=="function"){
+            callback(res);
+          }
+        })
+      }else{
+        if(typeof(callback)=="function"){
+          callback({});
+        }
+      }
       return map;
+    },
+    /**
+     * 定位，并移到中心
+     */
+    getLocalPosition(setting,mapObj) {
+      var settingDefault = {
+        }
+      var opt = Object.assign({},settingDefault,setting);
+      return new Promise ((resolve, reject) => {
+        this.getGeolocation(opt).then(geolocation=>{
+           mapObj.addControl(geolocation);
+           geolocation.getCurrentPosition(function(status,result){
+             if(status=='complete'){
+               resolve(result)
+            }else{
+              reject(result)
+            }
+           });
+        });
+      })
     },
     /**
      * 清地图
@@ -305,6 +340,23 @@ var cFuns = {
       })
     },
     /**
+     * 取得本地定位组件
+     */
+    getGeolocation(setting) {
+      var settingDefault = {
+        enableHighAccuracy: true,
+        zoomToAccuracy: true,
+        timeout: 10000,
+      }
+      var opt = Object.assign({},settingDefault,setting);
+      return new Promise ((resolve, reject) => {
+        AMap.plugin('AMap.Geolocation',()=>{
+            var geolocation = new AMap.Geolocation(opt);
+            resolve(geolocation)
+        });
+      })
+    },
+    /**
      * 取得坐标的地址信息
      * @param  {array} lnglat  [坐标]
      * @param  {function} callback [回调函数]
@@ -322,6 +374,7 @@ var cFuns = {
     getCity (mapObj){
       return new Promise ((resolve, reject) => {
         mapObj.getCity((data)=> {
+          // alert(JSON.stringify(data));
           resolve(data);
         });
       })

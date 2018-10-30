@@ -40,17 +40,13 @@
 </template>
 
 <script>
-
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 import cModel from '@/utils/cModel'
-
 // import { AMapManager } from 'vue-amap';
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
-
 export default {
   components: {
-
   },
   data () {
     return {
@@ -63,23 +59,17 @@ export default {
       infoWin_address:'',
       infoWin_offset:[3,-25],
       city:'', //当前城市
-
       mapObj:null, //存放地图实例对象
-
       markers:[], //标记点列表
       myMarker:{  position:[] }, //点击地图空白位置的标记点
       markerInfoWin:{position:[]},//地图窗体
       isSubmiting:false,
-
     }
   },
   computed:{
-
   },
   watch:{
-
   },
-
   methods: {
     //地图初始化
     mapInit (){
@@ -87,21 +77,21 @@ export default {
         if(!this.mapObj){
           lazyAMapApiLoaderInstance.load().then(() => {
             this.mapObj = cFuns.amap.showMap('amapContainer', {
-              resizeEnable: true,zoom: 10,
+              resizeEnable: true,zoom: 10, zoomToAccuracy:false
+            },(res)=>{
+              if(!this.$store.state.localCity){
+                cFuns.amap.getCity(this.mapObj).then((data)=> {
+                  if (data['province'] && typeof data['province'] === 'string') {
+                    this.$store.commit('setLocalCity',data);
+                    this.city = data.city
+                    this.searchMap(1)
+                  }
+                });
+              }else{
+                this.city = this.$store.state.localCity;
+                this.searchMap(1)
+              }
             })
-            console.log(this.mapObj)
-            if(!this.$store.state.localCity){
-              cFuns.amap.getCity(this.mapObj).then((data)=> {
-                if (data['province'] && typeof data['province'] === 'string') {
-                  this.$store.commit('setLocalCity',data);
-                  this.city = data.city
-                  this.searchMap(1)
-                }
-              });
-            }else{
-              this.city = this.$store.state.localCity;
-              this.searchMap(1)
-            }
             resolve(this.mapObj);
           }).catch((error) => {
               reject(error);
@@ -111,7 +101,6 @@ export default {
           cFuns.amap.clear(this.mapObj);
           resolve(this.mapObj);
         }
-
       })
     },
     /**
@@ -121,7 +110,6 @@ export default {
     showMarkerInfoWin (position){
       var infoWindow = cFuns.amap.showInfoWindow({position:position,content: this.$refs.infoWindow},this.mapObj);
     },
-
     getGeocoder(){
       return new Promise ((resolve, reject) => {
         if(this.geocoder){
@@ -149,7 +137,6 @@ export default {
      * @param {array} lnglat [坐标]
      */
     doClickMyMarker (lnglat){
-
       this.getMarkerInfo(lnglat).then(res=>{
         let status  = res.status
         let result = res.result
@@ -162,16 +149,13 @@ export default {
           city:result.regeocode.addressComponent.city
         }
         this.showMarkerInfoWin(lnglat);
-
       })
     },
     /**
      * 执行提交
      */
     doSubmit (){
-
       let pointData = this.pointData;
-
       let postDatas = {
         longtitude:pointData.longtitude,
         latitude:pointData.latitude,
@@ -181,11 +165,9 @@ export default {
         city:pointData.city
       }
       this.isSubmiting = true;
-
       this.$http.post(config.urls.createAddress,postDatas).then(res => {
         this.isSubmiting = false;
         var resData = res.data.data
-
         if(res.data.code === 0){
           var inDatas = {
             addressid:resData.aid,
@@ -201,17 +183,12 @@ export default {
           cModel.myAddress('add',{data:inDatas,success:(result)=>{console.log(result)}});
           if(this.to == 'start' || this.to == 'end' ){
             let formData = this.$store.state.tripFormData;
-
             formData[this.to] =   inDatas;
-
             // console.log(formData);
             this.$store.commit('setTripFormData',formData);
             // console.log(formData);
             this.$router.go(-2);
-
-
           }else if( pageDatas.from == 'home' || pageDatas.from == 'company' ){
-
           }
         }else{
           this.$vux.toast.text(res.data.desc);
@@ -221,22 +198,18 @@ export default {
         this.isSubmiting = false;
         console.log(error)
       })
-
     },
-
     /**
      * 通过关键词添加标注点
      * @param  {Boolean} autoShow [是否自动弹出地图窗体]
      */
     searchMap (autoShow){
-
       this.city = this.$store.state.localCity.city;
       autoShow = autoShow  || 0;
       if(this.keyword_o == this.keyword || this.keyword == ''){
         return false;
       }
       this.keyword_o = this.keyword;
-
       cFuns.amap.placeSearch(this.keyword,{city:this.city}).then(res=>{
         var result = res.result;
         var status = res.status;
@@ -245,7 +218,6 @@ export default {
           this.markers = [];
           result.poiList.pois.forEach((value,index,arr)=>{
             value.position = [value.location.lng, value.location.lat]
-
             if(index===0 && autoShow){
               cFuns.amap.setCenter(value.position,this.mapObj,12);
               this.setPointData(value)
@@ -259,7 +231,6 @@ export default {
           })
         }else{
           if(autoShow){ //自动中央标注点信息
-
             let center = this.mapObj.getCenter()
             let position = [center.lng,center.lat]
             this.myMarker.position = position;
@@ -273,7 +244,6 @@ export default {
       });
       return false;
     },
-
     setPointData (datas){
       this.pointData = {
         longtitude:datas.position[0],
@@ -285,12 +255,10 @@ export default {
       this.infoWin_addressname = datas.name;
       this.showMarkerInfoWin(datas.position);
     }
-
   },
   mounted () {
     /*lazyAMapApiLoaderInstance.load().then(() => {
       // this.mapObj = cFuns.amap.showMap("routeFormMap")
-
     });*/
   },
   created(){
@@ -311,14 +279,10 @@ export default {
     // this.searchMap(1);
   },
   activated (){
-
   }
-
-
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>
