@@ -35,7 +35,7 @@ tokenAxios.interceptors.response.use(res =>{
         case 10004:
             // console.log(10004)
             if(router.history.current.name!='login'){
-              Vue.$vux.toast.text(t.message['setting.pleaselogin']);
+              Vue.$vux.toast.text(t.message['user.login.pleaselogin']);
               router.push({ name: 'login'});
             }
           break;
