@@ -244,26 +244,13 @@ export default {
      mapInit (){
       return new Promise ((resolve, reject) => {
         if(!this.mapObj){
-          lazyAMapApiLoaderInstance.load().then(() => {
-            this.mapObj = cFuns.amap.showMap('amapContainer', {
-              resizeEnable: true,zoom: 10,enableHighAccuracy:true, zoomToAccuracy:false,
-            },res=>{
-              if(!this.$store.state.localCity){
-                cFuns.amap.getCity(this.mapObj).then((data)=> {
-                  if (data['province'] && typeof data['province'] === 'string') {
-                    this.$store.commit('setLocalCity',data);
-                    this.city = data.city
-                  }
-                });
-              }
-              resolve(this.mapObj);
-            })
-          }).catch((error) => {
-              reject(error);
-            }
-          );
+          cFuns.gmap.showMap('amapContainer',{autoCenter:false}).then(map=>{
+            this.mapObj = map;
+            resolve(map);
+          }).catch(error=>{
+            reject(error);
+          })
         }else{
-          this.mapObj.clearMap();
           resolve(this.mapObj);
         }
 
@@ -429,9 +416,25 @@ export default {
     },
 
     drawTripLine (data){
-      let start = [data.start_info.longtitude,data.start_info.latitude]
-      let end = [data.end_info.longtitude,data.end_info.latitude]
-      cFuns.amap.drawTripLine(start, end,this.mapObj,(status,result)=>{
+      let start = {lat:data.start_info.latitude,lng:data.start_info.longtitude}
+      let end = {lat:data.end_info.latitude,lng:data.end_info.longtitude}
+      cFuns.gmap.drawTripLine(start, end,this.mapObj).then((res)=>{
+        if(res.status == 'OK'){
+          var leg = res.routes[0].legs[0];
+          var distance = leg.distance.value; //计出的距离
+          var dtTime = leg.duration.value;
+          var distanceStr = leg.distance.text;
+          var dtTimeStr = leg.duration.text;
+          var distanceObj = cFuns.gmap.formatDistance(distance,1);
+          this.statis.distance = parseFloat(distanceObj.distance);
+          this.statis.distance_unit = distanceObj.unit;
+        }else{
+          this.statis.distance = 0;
+        }
+        console.log(res);
+      })
+
+      /*cFuns.gmap.drawTripLine(start, end,this.mapObj,(status,result)=>{
         if(status == 'complete'){
           this.isShowComputebox = true;
           var distance = result.routes[0].distance; //计出的距离
@@ -445,7 +448,7 @@ export default {
         }else{
           this.statis.distance = 0;
         }
-      });
+      });*/
     },
     /**
      * 当显示乘客列表的tab时。

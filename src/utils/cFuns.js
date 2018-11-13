@@ -1,5 +1,6 @@
 import config from '../config'
-import axios from 'axios';
+import cookie from './cookie';
+import axios from './axios';
 
 
 var scrollTimer = null;
@@ -226,6 +227,367 @@ var cFuns = {
   },
 
 
+  getScript (setting){
+    return new Promise ((resolve, reject) => {
+      var settingDefault = {
+        async:false,
+        defer:false,
+      }
+      var opt = Object.assign({},settingDefault,setting);
+      const script = document.createElement('SCRIPT')
+
+      script.setAttribute('src', opt.url)
+      if(opt.async){
+        script.setAttribute('async', '')
+      }
+      if(opt.defer){
+        script.setAttribute('defer', '')
+      }
+      if (script.addEventListener) {
+        script.addEventListener('load',  ()=>{
+            resolve();
+        }, false);
+      } else if (script.attachEvent) {
+          script.attachEvent('onreadystatechange',  ()=>{
+              var target = window.event.srcElement;
+              if (target.readyState == 'loaded') {
+                  resolve();
+              }
+          });
+      }
+      document.body.appendChild(script);
+    })
+  },
+
+
+  getCoords (refresh = 0){
+    return new Promise ((resolve, reject) => {
+      if(!refresh && cookie.get('CP_currentCoords')){
+        let myCoordsStr = cookie.get('CP_currentCoords');
+        let myCoords    = JSON.parse(myCoordsStr);
+        resolve(myCoords);
+      }
+      if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition( (position)=>{
+          var coords = {
+            accuracy:position.coords.accuracy,
+            altitude:position.coords.altitude,
+            altitudeAccuracy:position.coords.altitudeAccuracy,
+            latitude:position.coords.latitude,
+            longitude:position.coords.longitude,
+            speed:position.coords.speed,
+          }
+          var coorStr = JSON.stringify(coords);
+          cookie.set('CP_currentCoords',coorStr,60*5);
+          resolve(coords);
+        }, (error)=>{
+            //处理错误
+          /*  switch (error.code) {
+                case 1:
+                    error.message = "位置服务被拒绝";
+                    break;
+                case 2:
+                    error.message = "暂时获取不到位置信息。";
+                    break;
+                case 3:
+                    error.message = "获取信息超时。";
+                    break;
+                default:
+                    error.message = "未知错误";
+                    break;
+            }*/
+            console.log(error)
+            reject(error);
+        })
+      }else{
+        reject({"message":"浏览器不支持获取地理信息"})
+      }
+    })
+  },
+  //谷歌地圖方法。
+  gmap :{
+
+    //加載地圖
+    load ({ apiKey=config.gMapKey, version='', libraries=["places"], loadCn=false }={}){
+      return new Promise ((resolve, reject) => {
+
+        if (typeof window === 'undefined') {
+    			// Do nothing if run from server-side
+    			reject({"message":"Do nothing if run from server-side"});
+    		}
+        if ( !window.google || !window.google.maps) {
+
+    			// Allow apiKey to be an object.
+    			// This is to support more esoteric means of loading Google Maps,
+    			// such as Google for business
+    			// https://developers.google.com/maps/documentation/javascript/get-api-key#premium-auth
+    			var options = {}
+    			if (typeof apiKey === 'string') {
+    				options.key = apiKey
+    			} else if (typeof apiKey === 'object') {
+    				for (let k in apiKey) { // transfer values in apiKey to options
+    					options[k] = apiKey[k]
+    				}
+    			} else {
+            options.key = config.gMapKey;
+            // reject({"message":"`apiKey` should either be a string or an object"});
+    			}
+
+    			// libraries
+    			let librariesPath = ''
+    			if (libraries && libraries.length > 0) {
+    				librariesPath = libraries.join(',')
+    				options['libraries'] = librariesPath
+    			} else if (Array.prototype.isPrototypeOf(options.libraries)) {
+    				options.libraries = options.libraries.join(',')
+    			}
+    			// options['callback'] = 'GMapsLoaded'
+
+    			let baseUrl = 'https://maps.googleapis.com/'
+
+    			if (typeof loadCn === 'boolean' && loadCn === true) {
+    				baseUrl = 'http://maps.google.cn/'
+    			}
+
+    			let url = baseUrl + 'maps/api/js?' +
+    			Object.keys(options)
+    				.map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(options[key]))
+    				.join('&')
+
+    			if (version) {
+    				url = url + '&v=' + version
+    			}
+
+          cFuns.getScript({url:url,async:true,defer:true}).then(()=>{
+            resolve();
+          });
+        }else{
+          resolve();
+        }
+      });
+    },
+
+    //显示地图
+    showMap (target,setting,loadsetting={}){
+      return new Promise ((resolve, reject) => {
+        this.load(loadsetting).then(()=>{
+          var settingDefault = {
+            center: new google.maps.LatLng(22.88907, 112.910868),
+            zoom: 10,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            autoCenter:true,
+            fullscreenControl:false,
+            scaleControl: false,
+            streetViewControl: false,
+            mapTypeControl:false,
+            overviewMapControl:false,
+            panControl: false,
+            // zoomControl: false,
+            // disableDefaultUI:true,
+          }
+          if( cookie.get('CP_currentCoords')){
+            var myCoordsStr = cookie.get('CP_currentCoords');
+            var myCoords    = JSON.parse(myCoordsStr);
+          }
+          if(typeof(myCoords)=="object"){
+            settingDefault.center = new google.maps.LatLng(myCoords.latitude,myCoords.longitude);
+          }
+          this.getCity().then(res=>{
+
+          });
+
+          var opt = Object.assign({},settingDefault,setting);
+          var map = new google.maps.Map(document.getElementById(target),opt);
+          if(typeof(myCoords)!="object"){
+            cFuns.getCoords(1).then(res=>{
+              if(opt.autoCenter){
+                map.setCenter(new google.maps.LatLng(res.latitude,res.longitude));
+              }
+            });
+          }
+          resolve(map);
+        }).catch((e)=>{
+          reject(e);
+        })
+      })
+    },
+
+    /**
+     * 取得当前城市
+     */
+    getCity (refresh = 0){
+      return new Promise ((resolve, reject) => {
+        var keyOfCache = "CP_currentCity_"+cFuns.getLanguage();
+        if(!refresh && cookie.get(keyOfCache)){
+          let myCityStr = cookie.get(keyOfCache);
+          let myCity    = JSON.parse(myCityStr);
+          return resolve(myCity);
+        }
+        cFuns.getCoords().then(coords=>{
+          var params={
+            latlng:coords.latitude+","+coords.longitude,
+            key:config.gMapKey
+         };
+          axios.get('https://maps.google.cn/maps/api/geocode/json',{"params":params,'isPure':true}).then(res=>{
+            if(res.status !== 200){
+              reject(res);
+            }
+            if(typeof(res.data.results)=="object"){
+              let results = res.data.results;
+              var citys = [];
+              results[0].address_components.forEach((value,index,arr)=>{
+                citys.push(value.short_name);
+              })
+              var cityArray = {
+                "formatted_address":results[0].formatted_address,
+                "country": citys[(citys.length - 1 > 0 ? citys.length - 1 : 0)].short_name,
+                "province": citys[(citys.length - 2 > 0 ? citys.length - 2 : 0)].short_name,
+                "city": citys[(citys.length - 3 > 0 ? citys.length - 3 : 0)].short_name,
+                "district": citys[(citys.length - 4 > 0 ? citys.length - 4 : 0)].short_name,
+                "street": results[1].address_components[0].short_name,
+                "lists":citys,
+              }
+              var cityStr = JSON.stringify(cityArray);
+              cookie.set(keyOfCache,cityStr,60*5);
+              resolve(results);
+            }
+            reject(res);
+          }).catch(e=>{
+            reject(e);
+
+          })
+        })
+
+      })
+    },
+
+    /**
+     * 加marker
+     */
+    addMarker (position,mapObj,title="marker") {
+      var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(position.lat, position.lng),
+        title: title
+      });
+      marker.setMap(mapObj);
+      return marker;
+    },
+    /**
+     * 删marker
+     */
+    removeMarker (marker,mapObj){
+      marker.setMap(null);
+    },
+
+    //至中心点
+    setCenter (position,mapObj,zoom = false) {
+      // mapObj.setCenter(new google.maps.LatLng(position.lat,position.lng));
+      mapObj.panTo(new google.maps.LatLng(position.lat,position.lng));
+      if(zoom){
+        mapObj.setZoom(zoom);
+      }
+
+    },
+
+    //画线
+    drawTripLine(start,end,mapObj,setting){
+      return new Promise ((resolve, reject) => {
+        var defaultSetting={
+          origin:new google.maps.LatLng(start.lat,start.lng),
+          destination: new google.maps.LatLng(end.lat,end.lng),
+          travelMode:'DRIVING',
+          // key:config.gMapKey
+       };
+       var params = Object.assign({},defaultSetting,setting);
+       var directionsService = new google.maps.DirectionsService();
+       var directionsDisplay = new google.maps.DirectionsRenderer();
+       directionsDisplay.setMap(mapObj);
+       directionsService.route(params, function(result, status) {
+          if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(result);
+            resolve(result);
+          }else{
+            reject(result);
+          }
+        });
+      });
+    },
+
+    // 格式化行程距离
+    formatDistance (distance,returnType){
+    	returnType = returnType || 0
+    	var distanceStr = distance + 'M';
+    	var unit = 'M';
+    	var dtTimeStr = '';
+    	if(distance > 1000){
+    		distance = (distance/1000).toFixed(1);
+    		unit = 'KM'
+    		distanceStr = distance + 'KM';
+    	}
+    	if(returnType){
+    		return {unit:unit,distance:distance};
+    	}else{
+    		return distanceStr;
+    	}
+
+    },
+
+
+    /**
+     * 地址搜索
+     */
+    placeSearch(keyword,mapObj,options){
+      return new Promise ((resolve, reject) => {
+        var service = new google.maps.places.PlacesService(mapObj);
+
+          cFuns.getCoords().then(res=>{
+            var request = {
+             radius: 10000,
+             query: keyword,
+             location:new google.maps.LatLng(res.latitude,res.longitude),
+            };
+            if(!keyword){
+              service.nearbySearch(request, (results, status)=>{
+                console.log(results)
+                resolve({status:status,results:results})
+              });
+            }else{
+              service.textSearch(request, (results, status)=>{
+                console.log(results)
+                resolve({status:status,results:results})
+              });
+            }
+          })
+
+        /*var request = {
+         query: keyword,
+         fields: ['photos', 'formatted_address', 'name', 'rating', 'opening_hours', 'geometry'],
+        };
+        service.findPlaceFromQuery(request, (results, status)=>{
+          console.log(results)
+          resolve({status:status,result:results})
+        });*/
+
+      })
+    },
+
+
+    formatPlusCodeCity (plusStr){
+      var plusArray = plusStr.split(' ');
+      var a1 = typeof(plusArray[1]) !="undefined" ?  plusArray[1] : "";
+      var a2 = typeof(plusArray[2]) !="undefined" ?  plusArray[2] : "";
+      return a1+","+a2
+    },
+
+
+
+
+  },
+
+
+
+
+
   //地图类方法
   amap:{
 
@@ -391,7 +753,7 @@ var cFuns = {
       return new Promise ((resolve, reject) => {
         AMap.service('AMap.PlaceSearch',()=>{
          var placeSearch = new AMap.PlaceSearch(opt);
-         resolve(placeSearch)
+         resolve(placeSearch);
        })
       })
     },
@@ -409,7 +771,7 @@ var cFuns = {
       })
     },
     /**
-     * getPlaceSearch
+     * getAutocomplete
      */
     getAutocomplete(options){
       var settingDefault = { }

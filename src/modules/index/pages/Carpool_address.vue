@@ -65,6 +65,7 @@ export default {
     return {
       to: this.$route.params.to,
       keyword : '',
+      mapObj:null,
       isShowSearchBox:0,
       listDatas :[],
       smListDatas :[],
@@ -94,6 +95,25 @@ export default {
   },
   methods:{
     /**
+     * 初始化地图
+     */
+     mapInit (){
+      return new Promise ((resolve, reject) => {
+        if(!this.mapObj){
+          cFuns.gmap.showMap('cp-map-hidden',{autoCenter:false}).then(map=>{
+            this.mapObj = map;
+            this.getList();
+            resolve(map);
+          }).catch(error=>{
+            reject(error);
+          })
+        }else{
+          resolve(this.mapObj);
+        }
+
+      })
+    },
+    /**
      * [showSearchBox 显示或关闭搜索输入]
      */
     showSearchBox (show){
@@ -104,6 +124,7 @@ export default {
         this.isSearching = false;
       }
     },
+
     /**
      * [doSearch 进行搜索]
      */
@@ -135,7 +156,27 @@ export default {
      * [getList 显示或关闭搜索输入]
      */
     getList(refresh){
-      var nowTimestamp = new Date().getTime();
+      this.isLoading = 1;
+
+      return new Promise ((resolve, reject) => {
+        if(this.$store.state.addressDefaultList){
+          let list = this.$store.state.addressDefaultList;
+          this.smListDatas = list;
+          this.isLoading= false;
+          resolve(list);
+        }else{
+          this.searchMapAddress("").then(res=>{
+            this.$store.commit('setAddressDefaultList',res);
+            this.isLoading= false;
+            resolve(res);
+          }).catch(error => {
+            this.isLoading = 0;
+            reject(error)
+          });
+        }
+
+      })
+      /*var nowTimestamp = new Date().getTime();
       refresh = refresh || 0;
       if(refresh){
         return this.loadList();
@@ -161,23 +202,9 @@ export default {
             })
           }
         }
-      });
+      });*/
     },
-    /**
-     * [getCity 通过高德地图定位到当前城市]
-     */
-    getCity(){
-        var mapObj = cFuns.amap.showMap('cp-map-hidden', {},(res)=>{
-          if(!this.$store.state.localCity){
-            cFuns.amap.getCity(mapObj).then((data)=> {
-              if (data['province'] && typeof data['province'] === 'string') {
-                this.$store.commit('setLocalCity',data);
-              }
-            });
-          }
-        })
 
-    },
     /**
      * 通过接口取地址列表数据
      * @param  {function} success [成功回调]
@@ -189,6 +216,7 @@ export default {
       let params = {keyword:this.keyword,page:1};
       this.isLoading = 1;
       this.noData = 0;
+
       this.$http.get(config.urls.getMyAddress,{params:params}).then(res => {
         // console.log(res)
           this.isLoading = 0;
@@ -209,31 +237,9 @@ export default {
               value.is_show = true;
               return value;
             })
-            //通高德地图以地坐标取得地址信息，并写入本地数据库
-              cFuns.amap.getGeocoder({
-                   radius: 1000,
-                   extensions: "all"
-               }).then((geocoder)=>{
-                 this.listDatas.forEach((value,key,arr)=>{
-                   // console.log(value)
-                   // console.log(value.address_type)
-                   if(value.address_type!='Home' && value.address_type!='Work'){
-                     if(value.addressid==arr[0].addressid || value.addressid==arr[1].addressid){
-                       return ;
-                     }
-                   }
-                   geocoder.getAddress([value.longtitude,value.latitude], (status, result)=>{
-                       if (status === 'complete' && result.info === 'OK') {
-                         value.listorder = key;
-                         value.address = result.regeocode.formattedAddress;
-                         cModel.myAddress('update',{data:value});
-                         // server.my_address.update(item);
-                       }else{
-                       }
-                   });
-                 })
-               })
+
           }else{
+
           }
           if(typeof(success)==="function"){
             success(res);
@@ -241,7 +247,7 @@ export default {
         })
         .catch(error => {
           this.isLoading = 0;
-          console.log(error)
+          reject(error)
         })
     },
     /**
@@ -254,22 +260,44 @@ export default {
     /**
      * 通过高德查找地址
      */
-    searchMapAddress (){
-      var keyword = this.keyword;
-      // var keyword = "ROTH";
-      // 檢查是存在本地城市信息
-      var lang = cFuns.getLanguage();
-      var local_city =  this.$store.state.localCity != null && typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.city : "";
-      // var local_city =  this.$store.state.localCity != null && typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.province : "";
-      cFuns.amap.placeSearch(keyword,{city:local_city,lang:'en', pageSize: 20}).then(res=>{
-      // cFuns.amap.autoComplete(keyword,{city:local_city}).then(res=>{
-        console.log(res)
-        var result = res.result;
-        var status = res.status;
-        if(status == 'complete'){
-          this.smListDatas = [];
-          if( typeof(result.poiList)!='undefined' && result.poiList.pois.length>0){
-            result.poiList.pois.forEach((value,index,arr)=>{
+    searchMapAddress (kw=""){
+      return new Promise ((resolve, reject) => {
+
+        var keyword = kw ? keyword : this.keyword;
+        // var keyword = "ROTH";
+        // 檢查是存在本地城市信息
+        var lang = cFuns.getLanguage();
+        var local_city =  this.$store.state.localCity != null && typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.city : "";
+        // var local_city =  this.$store.state.localCity != null && typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.province : "";
+        cFuns.gmap.placeSearch(keyword,this.mapObj).then(res=>{
+
+        // cFuns.amap.autoComplete(keyword,{city:local_city}).then(res=>{
+          // console.log(res)
+          var results = res.results;
+          var status = res.status;
+          if(status == 'OK'){
+            this.smListDatas = [];
+            if(  results.length>0){
+              results.forEach((value,index,arr)=>{
+                if(value.plus_code){
+                  let district = cFuns.gmap.formatPlusCodeCity(value.plus_code.compound_code);
+                  let itemValue =  {
+                    addressid:value.place_id,
+                    addressname:value.name,
+                    address:value.formatted_address ? value.formatted_address : value.vicinity,
+                    district:district,
+                    latitude:value.geometry.location.lat(),
+                    longtitude:value.geometry.location.lng(),
+                  }
+                  this.smListDatas.push(itemValue);
+                }
+              })
+              resolve(this.smListDatas);
+            }else{
+              reject(res);
+            }
+            // console.log(result.tips);
+             /*result.tips.forEach((value,index,arr)=>{
               if(value.location.lat && value.location.lng){
                 let itemValue =  {
                   addressid:0,
@@ -281,25 +309,16 @@ export default {
                 }
                 this.smListDatas.push(itemValue);
               }
-            })
+            })*/
+            // console.log(this.smListDatas);
+            // console.log(result.tips);
+          }else{
+            reject(res);
           }
-          // console.log(result.tips);
-           /*result.tips.forEach((value,index,arr)=>{
-            if(value.location.lat && value.location.lng){
-              let itemValue =  {
-                addressid:0,
-                addressname:value.name,
-                address:value.address,
-                district:value.district,
-                latitude:value.location.lat,
-                longtitude:value.location.lng,
-              }
-              this.smListDatas.push(itemValue);
-            }
-          })*/
-          // console.log(this.smListDatas);
-          // console.log(result.tips);
-        }
+        }).catch(error=>{
+          this.$vux.toast.text(t.message['networkFail']);
+
+        })
       })
     },
     /**
@@ -314,11 +333,11 @@ export default {
       //如果是选择起点和终点
       if(to=="start"||to=="end"){
         formData[to] = data;
-        // console.log(formData);
         this.$store.commit('setTripFormData',formData);
         this.$router.back();
+        return false;
       }
-      //如果是修改公司和家的地址。
+      /*//如果是修改公司和家的地址。
       if(to=="home"||to=="work"){
         // console.log(data);
         //取得用户信息
@@ -383,7 +402,7 @@ export default {
           this.$router.back();
           console.log(error)
         })
-      }
+      }*/
     },
     goCreateAddress (){
       this.$router.push({name:'carpool_address_create',params: {to:this.to,keyword:this.keyword}})
@@ -396,10 +415,8 @@ export default {
     // })
   },
   activated (){
-    this.getList();
-    if(!this.$store.state.localCity){
-      this.getCity();
-    }
+    this.mapInit();
+
     this.to = this.$route.params.to;
   }
 }

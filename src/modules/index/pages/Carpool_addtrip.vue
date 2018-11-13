@@ -195,7 +195,14 @@ export default {
     mapInit (){
       return new Promise ((resolve, reject) => {
         if(!this.mapObj){
-          lazyAMapApiLoaderInstance.load().then(() => {
+          cFuns.gmap.showMap('amapContainer').then(map=>{
+            this.mapObj = map;
+            resolve(map);
+          }).catch(error=>{
+            reject(error);
+          })
+
+          /*lazyAMapApiLoaderInstance.load().then(() => {
             let formData_s = this.$store.state.tripFormData;
             var opt = { resizeEnable: true,zoom: 10 }
             if(typeof(formData_s.start)!='undefined' || typeof(formData_s.end)!="undefined"){
@@ -222,9 +229,11 @@ export default {
           }).catch((error) => {
               reject(error);
             }
-          );
+          );*/
         }else{
-          this.mapObj.clearMap();
+          // this.mapObj.clearMap();
+          console.log(this.mapObj)
+
           resolve(this.mapObj);
         }
 
@@ -243,7 +252,6 @@ export default {
       let formData_s = this.$store.state.tripFormData;
 
       if(formData_s){
-        this.markerAndDraw(formData_s);
         if(formData_s.time){
           this.formData.time =  formData_s.time
         }
@@ -251,6 +259,7 @@ export default {
           this.formData.seat_count =  formData_s.seat_count
         }
       }
+      return formData_s;
       // console.log(formData_s);
     },
 
@@ -282,19 +291,43 @@ export default {
     markerAndDraw (formData_s){
       if(formData_s.start && formData_s.start.latitude ){
         this.formData.start =  formData_s.start
+        var position_start = {lng:formData_s.start.longtitude,lat:formData_s.start.latitude};
         if(!this.formData.end.latitude){
-          cFuns.amap.setCenter([parseFloat(formData_s.start.longtitude),parseFloat(formData_s.start.latitude)],this.mapObj);
-          cFuns.amap.addMarker([parseFloat(formData_s.start.longtitude),parseFloat(formData_s.start.latitude)],this.mapObj);
+          cFuns.gmap.setCenter(position_start,this.mapObj);
+          cFuns.gmap.addMarker(position_start,this.mapObj);
         }
       }
       if(formData_s.end && formData_s.end.latitude){
         this.formData.end =  formData_s.end
+        var position_end = {lng:formData_s.end.longtitude,lat:formData_s.end.latitude};
         if(!this.formData.start.latitude){
-          cFuns.amap.setCenter([parseFloat(formData_s.end.longtitude),parseFloat(formData_s.end.latitude)],this.mapObj);
-          cFuns.amap.addMarker([parseFloat(formData_s.end.longtitude),parseFloat(formData_s.end.latitude)],this.mapObj);
+          cFuns.gmap.setCenter(position_end,this.mapObj);
+          cFuns.gmap.addMarker(position_end,this.mapObj);
         }
       }
       if(formData_s.start && formData_s.end && formData_s.start.latitude && formData_s.end.latitude){ //画线
+        cFuns.gmap.drawTripLine(position_start, position_end,this.mapObj).then((res)=>{
+          if(res.status == 'OK'){
+            var leg = res.routes[0].legs[0];
+            this.isShowComputebox = true;
+            var distance = leg.distance.value; //计出的距离
+            var dtTime = leg.duration.value;
+            // var distanceStr = cFuns.amap.formatDistance(distance);
+            // var dtTimeStr = cFuns.amap.formatTripTime(dtTime,[this.$t('message.hours'),this.$t('message.minutes')]);
+            var distanceStr = leg.distance.text;
+            var dtTimeStr = leg.duration.text;
+            this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
+            this.formData.distance = distance;
+          }else{
+            // var data= this.$t("message['carpool.addtrip.tooLong']");
+            // this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
+            // this.formData.distance = 0;
+          }
+          console.log(res);
+        })
+
+
+        /*
         this.mapObj.clearMap()
         var start = new AMap.LngLat(parseFloat(formData_s.start.longtitude), parseFloat(formData_s.start.latitude));
         var end = new AMap.LngLat(parseFloat(formData_s.end.longtitude), parseFloat(formData_s.end.latitude));
@@ -314,7 +347,7 @@ export default {
             this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
             this.formData.distance = 0;
           }
-        });
+        });*/
       }
     },
     /**
@@ -375,25 +408,52 @@ export default {
     // this.loadUserInfo()
   },
   mounted () {
+    var formData_s = this.getDataFormStore()
+    if(typeof(this.formData.time[0])=="undefined"){
+      let d = new Date();
+      this.formData.time = [cFuns.formatDayItemData(d).value, cFuns.fixZero(d.getHours())+"",cFuns.fixZero(d.getMinutes())+""];
+    }
+    if(!this.formData.seat_count){
+      this.formData.seat_count = 4;
+    }
+    if(this.formData.time && this.formData.start.longtitude && this.formData.end.longtitude &&  ( this.formData.seat_count || this.type == "info" ) ){
+      this.disableSubmitBtn = false ;
+    }
     this.mapInit().then((res)=>{
-      this.getDataFormStore()
-      if(typeof(this.formData.time[0])=="undefined"){
-        let d = new Date();
-        this.formData.time = [cFuns.formatDayItemData(d).value, cFuns.fixZero(d.getHours())+"",cFuns.fixZero(d.getMinutes())+""];
-      }
-      if(!this.formData.seat_count){
-        this.formData.seat_count = 4;
-      }
-      if(this.formData.time && this.formData.start.longtitude && this.formData.end.longtitude &&  ( this.formData.seat_count || this.type == "info" ) ){
-        this.disableSubmitBtn = false ;
-      }
+        if(formData_s){
+          this.markerAndDraw(formData_s);
+        }
+      // console.log(res)
     })
+
+    // cFuns.gmap.load().then(()=>{
+    //   console.log(window.google);
+    //   console.log(google.maps);
+    //
+    //
+    // }).catch(e=>{
+    //   console.log(e.message);
+    // })
+
+    // this.mapInit().then((res)=>{
+    //   this.getDataFormStore()
+    //   if(typeof(this.formData.time[0])=="undefined"){
+    //     let d = new Date();
+    //     this.formData.time = [cFuns.formatDayItemData(d).value, cFuns.fixZero(d.getHours())+"",cFuns.fixZero(d.getMinutes())+""];
+    //   }
+    //   if(!this.formData.seat_count){
+    //     this.formData.seat_count = 4;
+    //   }
+    //   if(this.formData.time && this.formData.start.longtitude && this.formData.end.longtitude &&  ( this.formData.seat_count || this.type == "info" ) ){
+    //     this.disableSubmitBtn = false ;
+    //   }
+    // })
 
   },
 
   activated (){
-
-    // },200)
+    console.log(1)
+    // this.mapInit().then((res)=>{})
   }
 
 
