@@ -66,11 +66,6 @@ const i18n = new VueI18n({
    }
 })
 
-VueAMap.initAMapApiLoader({
-  key: config.aMapKey,
-  v: '1.4.10',
-  plugin: ['AMap.Autocomplete','AMap.Geolocation','AMap.Driving', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
-});
 
 /* eslint-disable no-new */
 new Vue({
