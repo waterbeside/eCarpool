@@ -34,4 +34,8 @@ export default {
   //发布行程时填写的表单内容
   tripFormData:{},
 
+  //预存地址
+  addressDefaultList:null,
+
+
 }

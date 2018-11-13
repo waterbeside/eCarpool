@@ -2,9 +2,9 @@
 // this.$store.commit(method, params)
 
 import store from '../'
-import cookie from '../../../../utils/cookie'
+import cookie from '@/utils/cookie'
 
-import config from '../../../../config'
+import config from '@/config'
 
 export default {
   //设置用户详细数据
@@ -46,6 +46,11 @@ export default {
 
   setTripFormData(state,datas){
     state.tripFormData = datas ? datas : {}
+  },
+
+  //设置预存地址
+  setAddressDefaultList(state,datas){
+    state.addressDefaultList = datas ? datas : null
   },
 
 }
