@@ -8,7 +8,7 @@
       <cp-goback-btn v-show="!isSticky" :class="{'cp-sticky':isSticky}"></cp-goback-btn>
 
       <cp-scroller :enableInfinite="false" :enableRefresh="false" id="cp-scroll-wrapper" @on-scroll="onScroll" :innerStyle="{marginTop:(mapHeight-40)+'px'}">
-        <div  slot="before-inner" id="amapContainer" class="cp-map-content map-box" :style="{height:mapHeight+'px'}"></div>
+        <div  slot="before-inner" id="mapContainer-detail" class="cp-map-content map-box" :style="{height:mapHeight+'px'}"></div>
 
         <!-- <el-amap slot="before-inner" class="cp-map-content map-box" :vid="'amap-vue'" :events="mapEvents" :plugin="mapPlugin">  </el-amap> -->
 
@@ -131,6 +131,7 @@
 <script>
 import config from '../config'
 import cFuns from '@/utils/cFuns'
+import cGmap from '@/utils/cGmap'
 import {Tab, TabItem} from 'vux'
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
 
@@ -244,7 +245,7 @@ export default {
      mapInit (){
       return new Promise ((resolve, reject) => {
         if(!this.mapObj){
-          cFuns.gmap.showMap('amapContainer',{autoCenter:false}).then(map=>{
+          cGmap.showMap('mapContainer-detail',{autoCenter:false}).then(map=>{
             this.mapObj = map;
             resolve(map);
           }).catch(error=>{
@@ -394,7 +395,7 @@ export default {
 
 
             this.$store.commit('setLoading',{isShow:false});
-            this.drawTripLine(data);
+            // this.drawTripLine(data);
             resolve(data)
             // setTimeout(function(){
             //
@@ -416,25 +417,25 @@ export default {
     },
 
     drawTripLine (data){
-      let start = {lat:data.start_info.latitude,lng:data.start_info.longtitude}
-      let end = {lat:data.end_info.latitude,lng:data.end_info.longtitude}
-      cFuns.gmap.drawTripLine(start, end,this.mapObj).then((res)=>{
+      let start = {lat:data.start_info.latitude,lng:data.start_info.longitude}
+      let end = {lat:data.end_info.latitude,lng:data.end_info.longitude}
+      cGmap.drawTripLine(start, end,this.mapObj).then((res)=>{
+        // console.log(res);
         if(res.status == 'OK'){
-          var leg = res.routes[0].legs[0];
+          var leg = res.results.routes[0].legs[0];
           var distance = leg.distance.value; //计出的距离
           var dtTime = leg.duration.value;
           var distanceStr = leg.distance.text;
           var dtTimeStr = leg.duration.text;
-          var distanceObj = cFuns.gmap.formatDistance(distance,1);
+          var distanceObj = cGmap.formatDistance(distance,1);
           this.statis.distance = parseFloat(distanceObj.distance);
           this.statis.distance_unit = distanceObj.unit;
         }else{
           this.statis.distance = 0;
         }
-        console.log(res);
       })
 
-      /*cFuns.gmap.drawTripLine(start, end,this.mapObj,(status,result)=>{
+      /*cGmap.drawTripLine(start, end,this.mapObj,(status,result)=>{
         if(status == 'complete'){
           this.isShowComputebox = true;
           var distance = result.routes[0].distance; //计出的距离
@@ -683,12 +684,15 @@ export default {
     if(path.indexOf('rides')>1){
       this.type =  'wall';
     }
-
     //
     this.id = this.$route.params.id;
-    Promise.all([this.mapInit(),this.getDetail()]).then(res=>{
-      this.drawTripLine(res[1]);
+
+    this.getDetail().then(res=>{
+      this.mapInit().then(map=>{
+        this.drawTripLine(res);
+      });
     })
+
     if(this.type=="wall"){
       this.getCommentsCount();
     }

@@ -1,4 +1,4 @@
-<template>
+longitude<template>
   <div class="page-view"  id="Page-trip-add">
     <div class="page-view-inner" >
       <!-- <title-bar  :left-options="{showBack: true}">{{type=="info"?"发布约车需求":"发布空座位"}}</title-bar> -->
@@ -8,9 +8,7 @@
 
 
           <div   class="cp-map-wapper cp-map-wapper-addtrip">
-            <div   id="amapContainer"  class="amap-box"  style="height:100%"></div>
-
-
+            <div   id="mapContainer-addtrip"  class="amap-box"  style="height:100%"></div>
 
             <div class="cp-tools-wrapper">
               <router-link    :to="'/carpool/addtrip/history/'+type">
@@ -84,14 +82,7 @@
                   <x-number :title="'<span class=\'cp-label\'><i class=\'fa fa-users\'></i><span class=\'cp-title\' style=\'vertical-align:middle;\'>'+$t('message[\'label.needseats\']')+'</span></span>'"    v-model="formData.seat_count" button-style="round" :min="1" :max="10" fillable ></x-number>
                 </div>
 
-                <!--<popup-picker class=""     v-model="formData.seat_count" :data="[[1,2,3,4,5,6,7,8,9,10]]"  >
-                  <template slot="title" slot-scope="props">
-                    <span :class="props.labelClass" :style="props.labelStyle"  >
-                      <i class="fa fa-car"></i>
-                      <span style="vertical-align:middle;">空位数</span>
-                    </span>
-                  </template>
-                </popup-picker>-->
+
               </div>
 
 
@@ -111,6 +102,7 @@
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 import cModel from '@/utils/cModel'
+import cGmap from '@/utils/cGmap'
 import CpAvatar from '@/components/CpAvatar'
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
 
@@ -135,6 +127,9 @@ export default {
       },
 
       mapObj:null,
+      marker_s:null,
+      marker_e:null,
+      directionsDisplay :null,
 
 
       disableSubmitBtn:true,
@@ -192,48 +187,18 @@ export default {
   },
   methods: {
     //地图初始化
-    mapInit (){
+    mapInit (refresh = false){
       return new Promise ((resolve, reject) => {
-        if(!this.mapObj){
-          cFuns.gmap.showMap('amapContainer').then(map=>{
+        if(!this.mapObj || refresh){
+          cGmap.showMap('mapContainer-addtrip').then(map=>{
             this.mapObj = map;
+            console.log(map);
             resolve(map);
           }).catch(error=>{
             reject(error);
           })
 
-          /*lazyAMapApiLoaderInstance.load().then(() => {
-            let formData_s = this.$store.state.tripFormData;
-            var opt = { resizeEnable: true,zoom: 10 }
-            if(typeof(formData_s.start)!='undefined' || typeof(formData_s.end)!="undefined"){
-              opt = { resizeEnable: true,zoom: 10,enableHighAccuracy:false }
-            }
-            this.mapObj = cFuns.amap.showMap('amapContainer', opt,(res)=>{
-              cFuns.amap.getCity(this.mapObj).then((data)=> {
-                if (data['province'] && typeof data['province'] === 'string') {
-                  this.$store.commit('setLocalCity',data);
-                  this.city = data.city
-                }
-              });
-
-            })
-            // if(!this.$store.state.localCity){
-            //   cFuns.amap.getCity(this.mapObj).then((data)=> {
-            //     if (data['province'] && typeof data['province'] === 'string') {
-            //       this.$store.commit('setLocalCity',data);
-            //       this.city = data.city
-            //     }
-            //   });
-            // }
-            resolve(this.mapObj);
-          }).catch((error) => {
-              reject(error);
-            }
-          );*/
         }else{
-          // this.mapObj.clearMap();
-          console.log(this.mapObj)
-
           resolve(this.mapObj);
         }
 
@@ -280,8 +245,10 @@ export default {
       this.formData =  Object.assign({}, formData_o);
       this.$store.commit('setTripFormData',formData_o);
       this.getDataFormStore();
-
-      setTimeout(()=>{this.exChangeAddressing = false},500);
+      // this.mapInit(true).then(map=>{
+        this.markerAndDraw(this.formData)
+        setTimeout(()=>{this.exChangeAddressing = false},500);
+      // })
     },
 
     /**
@@ -291,24 +258,28 @@ export default {
     markerAndDraw (formData_s){
       if(formData_s.start && formData_s.start.latitude ){
         this.formData.start =  formData_s.start
-        var position_start = {lng:formData_s.start.longtitude,lat:formData_s.start.latitude};
+        var position_start = {lng:formData_s.start.longitude,lat:formData_s.start.latitude};
         if(!this.formData.end.latitude){
-          cFuns.gmap.setCenter(position_start,this.mapObj);
-          cFuns.gmap.addMarker(position_start,this.mapObj);
+          cGmap.setCenter(position_start,this.mapObj);
+          this.marker_s = cGmap.addMarker(position_start,this.mapObj);
         }
       }
       if(formData_s.end && formData_s.end.latitude){
         this.formData.end =  formData_s.end
-        var position_end = {lng:formData_s.end.longtitude,lat:formData_s.end.latitude};
+        var position_end = {lng:formData_s.end.longitude,lat:formData_s.end.latitude};
         if(!this.formData.start.latitude){
-          cFuns.gmap.setCenter(position_end,this.mapObj);
-          cFuns.gmap.addMarker(position_end,this.mapObj);
+          cGmap.setCenter(position_end,this.mapObj);
+          this.marker_e = cGmap.addMarker(position_end,this.mapObj);
         }
       }
       if(formData_s.start && formData_s.end && formData_s.start.latitude && formData_s.end.latitude){ //画线
-        cFuns.gmap.drawTripLine(position_start, position_end,this.mapObj).then((res)=>{
+        if(this.directionsDisplay) this.directionsDisplay.setMap(null);
+        cGmap.drawTripLine(position_start, position_end,this.mapObj).then((res)=>{
+
+          cGmap.removeMarker(this.marker_s);
+          cGmap.removeMarker(this.marker_e);
           if(res.status == 'OK'){
-            var leg = res.routes[0].legs[0];
+            var leg = res.results.routes[0].legs[0];
             this.isShowComputebox = true;
             var distance = leg.distance.value; //计出的距离
             var dtTime = leg.duration.value;
@@ -318,36 +289,21 @@ export default {
             var dtTimeStr = leg.duration.text;
             this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
             this.formData.distance = distance;
-          }else{
+            this.directionsDisplay = res.directionsDisplay;
+          }else if(res.status == 'ZERO_RESULTS'){
+
+            this.marker_s = cGmap.addMarker(position_start,this.mapObj);
+            this.marker_e = cGmap.addMarker(position_end,this.mapObj);
             // var data= this.$t("message['carpool.addtrip.tooLong']");
             // this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
             // this.formData.distance = 0;
+          }else{
+            this.marker_s = cGmap.addMarker(position_start,this.mapObj);
+            this.marker_e = cGmap.addMarker(position_end,this.mapObj);
+
           }
-          console.log(res);
         })
 
-
-        /*
-        this.mapObj.clearMap()
-        var start = new AMap.LngLat(parseFloat(formData_s.start.longtitude), parseFloat(formData_s.start.latitude));
-        var end = new AMap.LngLat(parseFloat(formData_s.end.longtitude), parseFloat(formData_s.end.latitude));
-
-        cFuns.amap.drawTripLine(start, end,this.mapObj,(status,result)=>{
-
-          if(status == 'complete'){
-            this.isShowComputebox = true;
-            var distance = result.routes[0].distance; //计出的距离
-            var distanceStr = cFuns.amap.formatDistance(distance);
-            var dtTime = result.routes[0].time;
-            var dtTimeStr = cFuns.amap.formatTripTime(dtTime,[this.$t('message.hours'),this.$t('message.minutes')]);
-            this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
-            this.formData.distance = distance;
-          }else{
-            var data= this.$t("message['carpool.addtrip.tooLong']");
-            this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
-            this.formData.distance = 0;
-          }
-        });*/
       }
     },
     /**
@@ -376,7 +332,7 @@ export default {
         if(res.data.code === 0) {
           this.$vux.toast.text(this.$t("message.publishSuccess"));
           if(resData.createAddress.length>0){
-            // console.log(rs.data.createAddress)
+
             var newDatas = resData.createAddress;
             for(i=0;i<newDatas.length;i++){
               newDatas[i].addressname = newDatas[i].name;
@@ -409,6 +365,7 @@ export default {
   },
   mounted () {
     var formData_s = this.getDataFormStore()
+    this.formData = Object.assign(this.formData ,formData_s) ;
     if(typeof(this.formData.time[0])=="undefined"){
       let d = new Date();
       this.formData.time = [cFuns.formatDayItemData(d).value, cFuns.fixZero(d.getHours())+"",cFuns.fixZero(d.getMinutes())+""];
@@ -416,7 +373,8 @@ export default {
     if(!this.formData.seat_count){
       this.formData.seat_count = 4;
     }
-    if(this.formData.time && this.formData.start.longtitude && this.formData.end.longtitude &&  ( this.formData.seat_count || this.type == "info" ) ){
+
+    if(this.formData.time && this.formData.start.longitude && this.formData.end.longitude &&  ( this.formData.seat_count || this.type == "info" ) ){
       this.disableSubmitBtn = false ;
     }
     this.mapInit().then((res)=>{
@@ -426,7 +384,7 @@ export default {
       // console.log(res)
     })
 
-    // cFuns.gmap.load().then(()=>{
+    // cGmap.load().then(()=>{
     //   console.log(window.google);
     //   console.log(google.maps);
     //
@@ -444,7 +402,7 @@ export default {
     //   if(!this.formData.seat_count){
     //     this.formData.seat_count = 4;
     //   }
-    //   if(this.formData.time && this.formData.start.longtitude && this.formData.end.longtitude &&  ( this.formData.seat_count || this.type == "info" ) ){
+    //   if(this.formData.time && this.formData.start.longitude && this.formData.end.longitude &&  ( this.formData.seat_count || this.type == "info" ) ){
     //     this.disableSubmitBtn = false ;
     //   }
     // })

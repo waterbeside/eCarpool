@@ -57,6 +57,7 @@ import config from '../config'
 import cFuns from '@/utils/cFuns'
 import CpSearchBox from '@/components/CpSearchBox'
 import cModel from '@/utils/cModel'
+import cGmap from '@/utils/cGmap'
 export default {
   components: {
     CpSearchBox
@@ -100,7 +101,7 @@ export default {
      mapInit (){
       return new Promise ((resolve, reject) => {
         if(!this.mapObj){
-          cFuns.gmap.showMap('cp-map-hidden',{autoCenter:false}).then(map=>{
+          cGmap.showMap('cp-map-hidden',{autoCenter:false}).then(map=>{
             this.mapObj = map;
             this.getList();
             resolve(map);
@@ -258,18 +259,18 @@ export default {
       done(); // call done
     },
     /**
-     * 通过高德查找地址
+     * 通过地图查找地址
      */
     searchMapAddress (kw=""){
       return new Promise ((resolve, reject) => {
 
-        var keyword = kw ? keyword : this.keyword;
+        var keyword = kw ? kw : this.keyword;
         // var keyword = "ROTH";
         // 檢查是存在本地城市信息
         var lang = cFuns.getLanguage();
         var local_city =  this.$store.state.localCity != null && typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.city : "";
         // var local_city =  this.$store.state.localCity != null && typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.province : "";
-        cFuns.gmap.placeSearch(keyword,this.mapObj).then(res=>{
+        cGmap.placeSearch(keyword,this.mapObj).then(res=>{
 
         // cFuns.amap.autoComplete(keyword,{city:local_city}).then(res=>{
           // console.log(res)
@@ -280,14 +281,14 @@ export default {
             if(  results.length>0){
               results.forEach((value,index,arr)=>{
                 if(value.plus_code){
-                  let district = cFuns.gmap.formatPlusCodeCity(value.plus_code.compound_code);
+                  let district = cGmap.formatPlusCodeCity(value.plus_code.compound_code);
                   let itemValue =  {
                     addressid:value.place_id,
                     addressname:value.name,
                     address:value.formatted_address ? value.formatted_address : value.vicinity,
                     district:district,
                     latitude:value.geometry.location.lat(),
-                    longtitude:value.geometry.location.lng(),
+                    longitude:value.geometry.location.lng(),
                   }
                   this.smListDatas.push(itemValue);
                 }
@@ -296,27 +297,12 @@ export default {
             }else{
               reject(res);
             }
-            // console.log(result.tips);
-             /*result.tips.forEach((value,index,arr)=>{
-              if(value.location.lat && value.location.lng){
-                let itemValue =  {
-                  addressid:0,
-                  addressname:value.name,
-                  address:value.address,
-                  district:value.district,
-                  latitude:value.location.lat,
-                  longtitude:value.location.lng,
-                }
-                this.smListDatas.push(itemValue);
-              }
-            })*/
-            // console.log(this.smListDatas);
-            // console.log(result.tips);
+
           }else{
             reject(res);
           }
         }).catch(error=>{
-          this.$vux.toast.text(t.message['networkFail']);
+          this.$vux.toast.text(this.$t('message.networkFail'));
 
         })
       })
@@ -337,72 +323,7 @@ export default {
         this.$router.back();
         return false;
       }
-      /*//如果是修改公司和家的地址。
-      if(to=="home"||to=="work"){
-        // console.log(data);
-        //取得用户信息
-        var userData = this.$store.state.userData;
-        //要提交的数据
-        var  postData = {
-          latitude:data.latitude,
-          longtitude:data.longtitude,
-          aid:data.addressid,
-          name:data.addressname,
-          from: to
-        }
-        //提交修改个人信息（公司或家地址）
-        this.$http.post(config.urls.editProfileAdress,postData).then(res => {
-          var resData = res.data.data
-          if(res.data.code === 0) {
-            var data_n = data;
-            data_n.addressid = typeof(resData.createAddress.addressid)!='undefined' ? resData.createAddress.addressid : data.addressid;
-            data_n.addressname = data.addressname;
-            if(to=='home'){
-              data_n.listorder = 0;
-              data_n.address_type = 'Home';
-              userData.home_address = data.addressname;
-              userData.home_address_id = data.addressid;
-            }else if(to == 'work'){
-              data_n.listorder = 1;
-              data_n.address_type = 'Work';
-              userData.company_address = data.addressname;
-              userData.company_address_id = data.addressid;
-            }
-            //把更新的数据写回到 $store
-            this.$store.commit('setUserData',userData);
-            //把旧的移出home或work位置
-            cModel.myAddress('only',{
-              data:{'address_type':data_n.address_type},
-              success:(result,server)=>{
-                if(result){
-                  var data_o = result;
-                  data_o.listorder = 3;
-                  data_o.address_type = 'Often'
-                  cModel.myAddress('update',{data:data_o});
-                }
-                // return false;
-                //把新的写进home或work位置
-                if(typeof(resData.createAddress.addressid)!='undefined'){
-                   cModel.myAddress('add',{data:data_n});
-                }else{
-                   cModel.myAddress('update',{data:data_n});
-                }
-                // console.log(GB_VAR['user_info']);
-                this.$vux.toast.text(this.$t("message.success"));
-              }
-            })
-          }else{
-            this.$vux.toast.text(this.$t("message.submitFail"));
-          }
-          // this.$router.push({name:'user_profile'});
-          this.$router.back();
-        })
-        .catch(error => {
-          this.$vux.toast.text(this.$t("message.submitFail"));
-          this.$router.back();
-          console.log(error)
-        })
-      }*/
+    
     },
     goCreateAddress (){
       this.$router.push({name:'carpool_address_create',params: {to:this.to,keyword:this.keyword}})

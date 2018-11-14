@@ -49,6 +49,7 @@
 
 import CpFootNavBar from '../components/CpFootNavBar'
 import cFuns from '@/utils/cFuns'
+import cGmap from '@/utils/cGmap'
 
 export default {
   components: {
@@ -76,7 +77,7 @@ export default {
     }
   },
   activated (){
-    cFuns.gmap.load().then(res=>{cFuns.gmap.getCity()});
+    cGmap.load().then(res=>{cGmap.getCity()});
     this.$store.commit('setTripFormData',{});
     this.$store.commit('setIsRefreshCarpoolList',true);
 
