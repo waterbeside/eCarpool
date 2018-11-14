@@ -335,6 +335,7 @@ message: {
   "placeholder.username" :"用户名",
   "placeholder.password" :"密码",
   "placeholder.selectAddress" :"请选择地址",
+  "placeholder.addressname" :"请输入地址名称",
   "placeholder.mobile" :"请输入手机号",
 
 

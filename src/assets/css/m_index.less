@@ -1468,3 +1468,22 @@
   .cp-logo { width: 74px; height:74px; border-radius: 5px}
 }
 .cp-carpool-picwrapper { margin: 0 auto; text-align: center; width: 0px; height: 0px ; display: block; overflow: hidden;}
+
+#Page-address-add {
+  .cp-map-wapper {display: flex;flex-direction:  column; }
+  .cp-form-panel-wrapper {
+    padding:8px 12px;font-size: 14px; border-top:3px solid lighten(@color-primary,10%);
+    .cp-form-group { position: relative; margin-bottom: 12px;
+      label.control-label { bottom: 2px;font-size: 14px;   color:#e6887f;
+        i.fa { margin-right: 5px}
+      }
+      input.form-control {  padding-left: 80px; font-size: 16px;}
+    }
+    .cp-search-btn { position: absolute; right:10px; top:8px;}
+    .addressname { margin-top: -8px;}
+    .address , .addressname {padding-bottom: 5px;}
+    .btn-submit { height: 36px; font-size: 14px;}
+  }
+
+
+}

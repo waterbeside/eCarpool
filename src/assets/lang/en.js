@@ -335,6 +335,7 @@ export default  {
     "placeholder.username" :"Username",
     "placeholder.password" :"Password",
     "placeholder.selectAddress" :"Please Select Address",
+    "placeholder.addressname" :"Please enter the address name",
     "placeholder.mobile" :"Please enter  phone number",
 
 

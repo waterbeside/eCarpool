@@ -334,6 +334,7 @@ message: {
   "placeholder.username" :"Tên người dùng",
   "placeholder.password" :"Mật khẩu",
   "placeholder.selectAddress" :"Vui lòng chọn địa chỉ",
+  "placeholder.addressname" :"Vui lòng nhập tên địa chỉ",
   "placeholder.mobile" :"Vui lòng nhập số điện thoại",
 
 
