@@ -134,7 +134,9 @@ export default {
 
       disableSubmitBtn:true,
       formatDateDisplay: function (value, name) {
-        return name.split(" ")[0]+" "+`${value[1]}`+":"+`${value[2]}`
+        return `${value[0]}`+" "+`${value[1]}`+":"+`${value[2]}`;
+        // return name+" "+`${value[1]}`+":"+`${value[2]}`
+        // return name.split(" ")[0]+" "+`${value[1]}`+":"+`${value[2]}`
       },
       // avatar: config.defaultAvatar,
       defaultAvatar: config.defaultAvatar,
@@ -158,7 +160,12 @@ export default {
       return this.formData.end.addressname ? false : true;
     },
     timeDataArray (){
-      return cFuns.returnNeedTimeDatas(0,0,[this.$t("message.today"),this.$t("message.tomorrow")])
+      return cFuns.returnNeedTimeDatas(0,0,{
+        today:this.$t("message.today"),
+        tomorrow:this.$t("message.tomorrow"),
+        hour:this.$t("message['carpool.addtrip.hour']"),
+        minute:this.$t("message['carpool.addtrip.minute']"),
+      })
     },
     userData (){
       let userData = this.$store.state.userData;

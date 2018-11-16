@@ -172,9 +172,16 @@ var cFuns = {
    * @param  boolean type      1 日期 2 时 3 分
    * @param  boolean onlyNow   取现时
    */
-  returnNeedTimeDatas (type,onlyNow,texts){
+  returnNeedTimeDatas (type,onlyNow,textsSetting){
     type = type || 0;
-    texts = texts || ['今天','明天','后天'];
+    var textDefault = {
+      "today" : '今天',
+      "tomorrow" : '明天',
+      "hour" : '时',
+      "minute" : '分',
+    }
+    var tests = Object.assign(textDefault,textsSetting);
+    // texts = texts || ['今天','明天','后天','时','分'];
     onlyNow = onlyNow || 0;
     var nowDate = new Date();
     // console.log(nowDate.getTimezoneOffset());
@@ -196,8 +203,8 @@ var cFuns = {
       for(let i=0; i<howManyDay;i++){
         var date = getNextDate(i);
         var text = '';
-        if(i==0){text=texts[0];}
-        if(i==1){text=texts[1];}
+        if(i==0){text=tests.today}
+        if(i==1){text=tests.tomorrow}
         // if(i==2){text=texts[2];}
         data_dates[i] = this.formatDayItemData(date,text);
       }
@@ -208,7 +215,7 @@ var cFuns = {
       var hour_start = onlyNow ? nowDate.getHours() : 0 ;
 
       for(let i=hour_start;i<24;i++){
-        data_hours[i-hour_start] = {"value":this.fixZero(i),"name":(i)+'时'}
+        data_hours[i-hour_start] = {"value":this.fixZero(i),"name":(i)+tests.hour}
       }
       if(type>0){return data_hours;}
     }
@@ -216,7 +223,7 @@ var cFuns = {
     if(type==3 || type == 0 ){
       var min_start = onlyNow ? nowDate.getMinutes() : 0 ;
       for(let i=min_start;i<60;i++){
-        data_min[i-min_start] = {"value":this.fixZero(i),"name":(i)+'分'}
+        data_min[i-min_start] = {"value":this.fixZero(i),"name":(i)+tests.minute}
       }
       if(type>0){return data_min;}
     }

@@ -389,6 +389,8 @@ message: {
   "carpool.addtrip.addRequest" : "发布约车需求",
   "carpool.addtrip.shareemptyseat" :  "发布空座位",
   "carpool.addtrip.commonroute" : "历史路线",
+  "carpool.addtrip.hour" : "时",
+  "carpool.addtrip.minute" : "分",
 
 
   "carpool.whetherAccept":"是否接受【{username}】的约车",
