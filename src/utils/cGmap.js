@@ -213,7 +213,7 @@ var cGmap = {
 
   //画线
   drawTripLine(start,end,mapObj,setting={}){
-    console.log(google)
+    // console.log(google)
     start = this.formatCoords(start);
     end = this.formatCoords(end);
     return new Promise ((resolve, reject) => {
