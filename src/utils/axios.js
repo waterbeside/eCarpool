@@ -5,21 +5,20 @@ import axios from 'axios'
 import qs from 'qs'
 
 
-var  lang = localStorage.getItem('language');
-lang = lang ?  lang : localStorage.getItem('lang');
-lang = lang ?  lang : localStorage.getItem('lag');
-var _language = lang;
-lang = lang ? lang : 'zh';
-var t = {message:[]};
-var langPathArray = {
-  'zh' : true,
-  'vi' : true,
-  'en' : true,
+var _language = false;
+var lang = "zh";
+
+function getLanguage(){
+  let  lang_temp = localStorage.getItem('language');
+  lang_temp = lang_temp ?  lang_temp : localStorage.getItem('lang');
+  lang_temp = lang_temp ?  lang_temp : localStorage.getItem('lag');
+  _language = lang_temp;
+  lang = lang_temp ? lang_temp : 'zh';
+  return lang;
 }
 
-if(lang && typeof(langPathArray[lang])!="undefined" && langPathArray[lang]){
-  t =  require('@/assets/lang/'+lang).default;
-}
+
+
 const tokenAxios = axios.create({
   // baseURL: process.env.BASE_API,
   timeout: 10000,
@@ -30,6 +29,7 @@ const tokenAxios = axios.create({
 })
 //POST传参序列化(添加请求拦截器)
 tokenAxios.interceptors.request.use(config => {
+  getLanguage();
   config.isPure = config.isPure || false;
   if(config.isPure) return config;
   var isQs = config.qs || true;
@@ -76,10 +76,7 @@ tokenAxios.interceptors.response.use(res =>{
     if(res.config.isPure){
       return res;
     }
-    if(res.status!==200){
-      Vue.$vux.toast.text(t.message['networkFail']);
-      return Promise.reject(res)
-    }
+
     //对响应数据做些事
     if(res.data.code !==0){
       switch (res.data.code) {
