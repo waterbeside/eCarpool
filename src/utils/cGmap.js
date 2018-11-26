@@ -357,7 +357,7 @@ var cGmap = {
     var plusArray = plusStr.split(' ');
     var a1 = typeof(plusArray[1]) !="undefined" ?  plusArray[1] : "";
     var a2 = typeof(plusArray[2]) !="undefined" ?  plusArray[2] : "";
-    return a1+","+a2
+    return a1+(a2 ? (","+a2) : "");
   },
 
 
