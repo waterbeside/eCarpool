@@ -282,8 +282,11 @@ export default {
               results.forEach((value,index,arr)=>{
                 if(value.plus_code){
                   let district = cGmap.formatPlusCodeCity(value.plus_code.compound_code);
+                  console.log(district)
                   let itemValue =  {
-                    addressid:value.place_id,
+                    addressid:-1,
+                    gid:value.place_id,
+                    map_type: 1,
                     addressname:value.name,
                     address:value.formatted_address ? value.formatted_address : value.vicinity,
                     district:district,
@@ -323,7 +326,7 @@ export default {
         this.$router.back();
         return false;
       }
-    
+
     },
     goCreateAddress (){
       this.$router.push({name:'carpool_address_create',params: {to:this.to,keyword:this.keyword}})

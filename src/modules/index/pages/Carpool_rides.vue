@@ -22,13 +22,13 @@
             v-for="(item,index) in listDatas"
            :key="item.id"
            :id="item.id"
-           :name="item.owner_info.name"
-           :avatar="item.owner_info.imgpath"
-           :phone="item.owner_info.phone"
-           :department="item.owner_info.Department"
-           :carnumber="item.owner_info.carnumber"
-           :start_name="item.start_info.addressname"
-           :end_name="item.end_info.addressname"
+           :name="item.d_name"
+           :avatar="item.d_imgpath"
+           :phone="item.d_phone"
+           :department="item.d_department"
+           :carnumber="item.d_carnumber"
+           :start_name="item.start_addressname"
+           :end_name="item.end_addressname"
            :date = "item.time.split(' ')[0]"
            :time = "item.time.split(' ')[1]"
            :class="[{'cancel':item.status > 1},('item-'+item.id)]"
@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 
@@ -173,13 +174,17 @@ export default {
 
       this.isLoading = 1;
       this.noData = 0;
-      this.$http.get(config.urls.getWallLists,{params:params}).then(res => {
+      this.$http.get(config.urls.trips+"/wall",{params:params}).then(res => {
         let data = res.data.data;
         this.isLoading = 0;
         if(res.data.code === 0) {
-          this.page = data.page.currentPage + 1;
-          this.pageCount = data.page.pageCount;
-
+          // this.page = data.page.currentPage + 1;
+          this.page = data.page.currentPage ;
+          this.pageCount = data.page.lastPage;
+          data.lists.forEach((value,index,arr)=>{
+            value.time = moment(value.time*1000).format('YYYY-MM-DD hh:mm');
+            // console.log(time);
+          })
           if(this.page > 1 ){
             var list = this.listDatas;
             list = list.concat(data.lists);
@@ -222,7 +227,7 @@ export default {
      */
     onInfinite(done) {
       if(this.page < this.pageCount){
-        this.getList(this.page+1,(res)=>{
+        this.getList(parseInt(this.page)+1,(res)=>{
           this.$el.querySelector('.load-more').style.display = 'none';
         });
       }else{

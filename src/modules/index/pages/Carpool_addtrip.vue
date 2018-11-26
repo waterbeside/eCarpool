@@ -99,6 +99,7 @@ longitude<template>
 
 <script>
 
+import moment from 'moment'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 import cModel from '@/utils/cModel'
@@ -319,21 +320,25 @@ export default {
     doSubmit (){
       let startData = this.formData.start;
       let endData = this.formData.end;
+      var datetime = this.formData.time[0]+" "+this.formData.time[1]+":"+this.formData.time[2];
       let postData = {
-        datetime:this.formData.time[0]+" "+this.formData.time[1]+":"+this.formData.time[2],
-        startpid:this.formData.start.addressid,
-        endpid:this.formData.end.addressid ,
+        time: moment(datetime).valueOf()/1000,
+        // startpid:this.formData.start.addressid,
+        // endpid:this.formData.end.addressid ,
         start:this.formData.start,
         end:this.formData.end,
         distance : this.formData.distance,
         from:this.type,
+        map_type:1,
       }
+      console.log(postData);
       postData.start['addressid'] = startData.addressid ? startData.addressid : 0
       if(this.type == "wall"){
         postData.seat_count = this.formData.seat_count
       }
 
-      this.$http.post(config.urls.addTrip,postData).then(res => {
+      this.$http.post(config.urls.trips+"/"+this.type,postData).then(res => {
+      // this.$http.post(config.urls.addTrip,postData).then(res => {
 
         var resData = res.data.data
         if(res.data.code === 0) {
@@ -380,6 +385,8 @@ export default {
     if(!this.formData.seat_count){
       this.formData.seat_count = 4;
     }
+    
+    console.log(this.formData);
 
     if(this.formData.time && this.formData.start.longitude && this.formData.end.longitude &&  ( this.formData.seat_count || this.type == "info" ) ){
       this.disableSubmitBtn = false ;

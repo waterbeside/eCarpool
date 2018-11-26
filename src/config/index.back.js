@@ -15,15 +15,15 @@ let config = {
   aMapKey         : aMapKey,
   avatarBasePath  : baseDomain+'/carpool/images/users/', //头像公共路徑
   defaultAvatar   :  avatarPic, //默认头像
-  urls            : {
-    aMapScript        : 'http://webapi.amap.com/maps?v=1.4.0&key='+aMapKey, //高德地图api
+  urls         : {
+    // aMapScript        : 'https://webapi.amap.com/maps?v=1.4.8&key='+aMapKey, //高德地图api
     uploadAvatar      : baseUrl_8080+'/uploadfile/image',   // 传头像API
     // uploadAvatar      : 'http://localhost:8080/uploadfile/image',   // 传头像API
 
     getUserInfo       : baseUrl + '/carpool/user/get_user', //取得用户信息
     getUserStatis     : baseUrl + '/carpool/user/get_user_statis', //取得用户拼车统计数据
-    getInfoLists      : baseUrl + '/carpool/info/get_lists', //取得需求列表
-    getWallLists      : baseUrl + '/carpool/wall/get_lists', //取空座位求列表
+    // getInfoLists      : baseUrl + '/carpool/info/get_lists', //取得需求列表
+    // getWallLists      : baseUrl + '/carpool/wall/get_lists', //取空座位求列表
     getAddress        : baseUrl + '/carpool/publics/get_address', //取得地址列表
     getMyAddress      : baseUrl + '/carpool/address/get_myaddress', //取得我的地址
     /*addInfo         : baseDomain + 'carpool/info/add', //发布需求
@@ -59,6 +59,8 @@ let config = {
     /** rest 接口 **/
     passport          : baseUrl_8082 + '/api/v1/passport', // 通行证，post登入，delete登出, get验证。
     sms               : baseUrl_8082 + '/api/v1/sms', // 发送短信接口
+    trips             : baseUrl_8082 + '/api/v1/trips', // 行程相关接口 (我和行程)
+
 
     //文档相关
     docs :  baseUrl_8082 + '/api/v1/docs', //

@@ -96,6 +96,7 @@ export default {
       var inDatas = {
         addressid:0,
         listorder:3,
+        map_type:1,
         addressname: this.keyword,
         latitude: pointData.latitude,
         longitude: pointData.longitude,

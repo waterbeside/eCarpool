@@ -21,7 +21,7 @@
                     <h3>{{user.name}}</h3>
                   </div>
                   <h6>{{typeLabel}}</h6>
-                  <h4 class="department">{{user.Department}}</h4>
+                  <h4 class="department">{{user.department}}</h4>
               </div>
               <div class="cp-heading-bg" ></div>
               <!-- / heading -->
@@ -43,7 +43,7 @@
                   <div class="la"><i class="fa fa-clock-o"></i></div>
                   <span class="cp-time">{{detailData.time_format}}</span>
               </div>
-              <cp-trip-box :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname" :labelStart="$t('message[\'label.from\']')"  :labelEnd="$t('message[\'label.to\']')"></cp-trip-box>
+              <cp-trip-box :start_name="detailData.start_addressname" :end_name="detailData.end_addressname" :labelStart="$t('message[\'label.from\']')"  :labelEnd="$t('message[\'label.to\']')"></cp-trip-box>
               <div class="cp-statis-list">
                 <statis-item class="cp-statis-item col-xs-4 cp-time" :title="$t('message[\'label.startTime\']')"   icon="fa fa-clock-o" :duration="1"><b slot="num"  class="num"><p class="date">{{detailData.time_format.split(' ')[0]}}</p>{{detailData.time_format.split(' ')[1]}}</b></statis-item>
                 <statis-item class="cp-statis-item col-xs-4 cp-distance" :title="$t('message[\'carpool.detail.EstimatedDistance\']')"   :num="statis.distance" :unit="statis.distance_unit" icon="fa fa-map-signs" :duration="1"></statis-item>
@@ -98,11 +98,11 @@
               <li class="cp-item " :class="{'cp-finish':item.status==3}" v-for="(item,index) in passengers ">
                 <cp-avatar :src="item.avatar" ></cp-avatar>
                 <div class="cp-txt">
-                  <h4 class="media-heading">{{item.name}}</h4>
-                  <p>{{item.Department}}</p>
+                  <h4 class="media-heading">{{item.p_name}}</h4>
+                  <p>{{item.p_department}}</p>
                 </div>
                 <div class="cp-btns-wrap">
-                  <a :href="'tel:'+item.phone" class="btn  btn-fab btn-fab-mini"><i class="fa fa-phone"></i></a>
+                  <a :href="'tel:'+item.p_mobile" class="btn  btn-fab btn-fab-mini"><i class="fa fa-phone"></i></a>
                 </div>
              </li>
             </ul>
@@ -129,6 +129,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 import cGmap from '@/utils/cGmap'
@@ -160,8 +161,6 @@ export default {
 
       detailData        : {
         time_format    : "0000-00-00 00:00",
-        start_info      : {addressname:'-'},
-        end_info        :{addressname:'-'},
         status          : 0,
         hasTake         : 0,
         hasTake_finish  : 0,
@@ -210,6 +209,8 @@ export default {
 
       //地图相关
       mapObj            :null,
+      directionsDisplay : null,
+
 
 
     }
@@ -282,6 +283,8 @@ export default {
       // console.log(this.type);
       switch (parseInt(status)) {
         case 0:
+        console.log(status);
+
             this.alertText = this.$t("message['carpool.status.alert.waitingCar']");
             this.isShowBtn_cancel = this.uid == this.user.uid ? true : false;
             if(this.type=="wall"){
@@ -330,9 +333,9 @@ export default {
 
             }
             if(this.type=="info"){
-              this.alertText = this.$t("message['carpool.status.alert.hasTakenBy']",{"user":"<img class='cp-avatar' src='"+this.detailData.owner_info.avatar+"' /> "+this.detailData.owner_info.name+""});
-              this.isShowBtn_cancel = this.uid == this.user.uid || this.detailData.owner_info.uid == this.uid ? true : false;
-              this.isShowBtn_finish = this.uid == this.user.uid || this.detailData.owner_info.uid == this.uid ? true : false;
+              this.alertText = this.$t("message['carpool.status.alert.hasTakenBy']",{"user":"<img class='cp-avatar' src='"+this.detailData.d_avatar+"' /> "+this.detailData.d_name+""});
+              this.isShowBtn_cancel = this.uid == this.user.uid || this.detailData.d_uid == this.uid ? true : false;
+              this.isShowBtn_finish = this.uid == this.user.uid || this.detailData.d_uid == this.uid ? true : false;
             }
 
             this.statusText  = this.$t("message['carpool.status.hasTaken']");
@@ -363,32 +366,50 @@ export default {
     getDetail (){
       return new Promise ((resolve, reject) => {
 
-        let url = this.type == "wall" ? config.urls.getRideDetail : config.urls.getRequestDetail;
+        // let url = this.type == "wall" ? config.urls.getRideDetail : config.urls.getRequestDetail;
+        let url = config.urls.trips+"/"+this.type+"/"+this.id;
         this.$store.commit('setLoading',{isShow:true,text:null});
 
-        this.$http.get(url,{params:{id:this.id}}).then(res => {
+        // this.$http.get(url,{params:{id:this.id}}).then(res => {
+        this.$http.get(url).then(res => {
           // console.log(res);
           if(res.data.code === 0) {
             let data = res.data.data;
+
+            data.time_format = moment(data.time*1000).format('YYYY-MM-DD hh:mm');
             this.detailData      = data;
             this.uid             = data.uid;
-            this.detailData.owner_info.avatar = data.owner_info.imgpath ? config.avatarBasePath + data.owner_info.imgpath : this.defaultAvatar;
+            this.detailData.d_avatar = data.d_imgpath ? config.avatarBasePath + data.d_imgpath : this.defaultAvatar;
             if( this.type == "info"){
               this.typeLabel           = this.$t("message.passenger")
-              this.passengers[0]       = data.passenger_info;
-              this.passengers[0].avatar = data.passenger_info.imgpath ? config.avatarBasePath + this.passengers[0].imgpath :this.defaultAvatar ;
+              this.passengers[0]       =  {
+                                            name:data.p_name,
+                                            avatar:data.p_imgpath ? config.avatarBasePath + data.p_imgpath :this.defaultAvatar ,
+                                            department:data.p_department,
+                                            phone:data.p_phone,
+                                            mobile:data.p_mobile,
+                                            uid:data.p_uid
+                                            };
               this.isShowAlert          = true;
-              this.user                 = data.passenger_info
+              this.user                 = this.passengers[0]
 
             }else{
-              this.typeLabel            = data.owner_info.carnumber;
-              this.user                 = data.owner_info;
-              this.user.phone           = this.user.mobile; //海外版暂时用mobile字段替换成phone字段
+              this.typeLabel            = data.d_carnumber;
+              this.user                 = {
+                                            name:data.d_name,
+                                            avatar:this.detailData.d_avatar,
+                                            department:data.d_department,
+                                            phone:data.d_phone,
+                                            mobile:data.d_mobile,
+                                            uid:data.d_uid
+                                            };
               this.statis.seat_count    = data.seat_count;
               this.statis.took_count    = data.took_count;
               this.statis.surplus_count = data.seat_count - data.took_count;
 
             }
+            this.user.phone           = this.user.mobile; //海外版暂时用mobile字段替换成phone字段
+
             this.changeStatus(data.status)
             // this.status = data.status;
             // this.mapObj.clearMap()
@@ -417,11 +438,14 @@ export default {
     },
 
     drawTripLine (data){
-      let start = {lat:data.start_info.latitude,lng:data.start_info.longitude}
-      let end = {lat:data.end_info.latitude,lng:data.end_info.longitude}
+      let start = {lat:data.start_latitude,lng:data.start_longitude}
+      let end = {lat:data.end_latitude,lng:data.end_longitude}
+      if(this.directionsDisplay) this.directionsDisplay.setMap(null);
+
       cGmap.drawTripLine(start, end,this.mapObj).then((res)=>{
         // console.log(res);
         if(res.status == 'OK'){
+          this.directionsDisplay = res.directionsDisplay;
           var leg = res.results.routes[0].legs[0];
           var distance = leg.distance.value; //计出的距离
           var dtTime = leg.duration.value;
@@ -467,13 +491,14 @@ export default {
     loadPassengers (){
       this.isLoading_pss = true;
       let params = {wallid:this.id}
-      this.$http.get(config.urls.getRidePassengers,{params:params}).then(res => {
+      // this.$http.get(config.urls.getRidePassengers,{params:params}).then(res => {
+      this.$http.get(config.urls.trips+"/wall/"+this.id+"/passengers",{params:params}).then(res => {
 
         let data = res.data.data;
         this.isLoading_pss = false;
         if(res.data.code === 0) {
           data.lists.forEach((value,index,arr)=>{
-            value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : this.defaultAvatar;
+            value.avatar = value.p_imgpath ? config.avatarBasePath + value.p_imgpath : this.defaultAvatar;
           })
           this.passengers = data.lists;
           this.took_count = this.passengers.length;
@@ -540,24 +565,26 @@ export default {
        var successText = this.$t("message.success");
        var confirmTitle = this.$t("message.AreYouSure");
        var isJumpToMytrip = false;
+       var postData = {};
+       var baseUrl = config.urls.trips+"/"+this.type+"/"+this.id;
        switch (action) {
          case 'pickup':
-           url = config.urls.acceptRequest;
-           postData = {id:this.id};
+           // url = config.urls.acceptRequest;
+           url = baseUrl+"/type/pickup";
            confirmText = this.$t("message['carpool.confirm.accept']",{"username":this.user.name});
            successText = this.$t("message['carpool.acceptSuccess']") ;
            isJumpToMytrip = true;
            break;
          case 'riding':
-           url = config.urls.riding;
-           postData = {wid:this.id};
+           // url = config.urls.riding;
+           url = baseUrl+"/type/hitchhiking";
            confirmText = this.$t("message['carpool.confirm.riding']",{"username":this.user.name});
            successText = this.$t("message['carpool.ridingSuccess']") ;
            isJumpToMytrip = true;
            break;
          case 'finish':
-           url = config.urls.finishTrip;
-           postData = {id:this.id,from:this.type};
+           // url = config.urls.finishTrip;
+           url =  baseUrl+"/type/finish";
            confirmText = this.$t("message['carpool.confirm.finish']");
            successText = this.$t("message['carpool.finishSuccess']") ;
            isJumpToMytrip = false;
@@ -577,8 +604,7 @@ export default {
            }
            break;
          case 'cancel':
-           url = config.urls.cancelTrip;
-           postData = {id:this.id,from:this.type};
+           url =  baseUrl+"/type/cancel";
            confirmText = this.$t("message['carpool.confirm.cancel']");
            successText = this.$t("message['carpool.cancelSuccess']") ;
            isJumpToMytrip = false;
@@ -604,10 +630,12 @@ export default {
        this.$vux.confirm.show({
          title  : confirmTitle,
          content: confirmText,
+         confirmText: this.$t("message.sure"),
+         cancelText: this.$t("message.cancel"),
          onConfirm : ()=>{
            this.$store.commit('setLoading',{isShow:true,text:this.$t("message.submitting")});
            // return false;
-           this.$http.post(url,postData).then(res => {
+           this.$http.patch(url,postData).then(res => {
              this.$store.commit('setLoading',{isShow:false});
              if(res.data.code === 0) {
                this.$vux.toast.text(successText);
