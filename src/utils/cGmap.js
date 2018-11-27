@@ -140,6 +140,7 @@ var cGmap = {
 
   getCityByGoord (coords){
     return new Promise ((resolve, reject) => {
+      var keyOfCache = "CP_currentCity_"+cFuns.getLanguage();
       var params={
         latlng:coords.latitude+","+coords.longitude,
         key:config.gMapKey
