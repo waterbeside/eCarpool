@@ -1,9 +1,7 @@
-import config from '../config'
-import axios from 'axios';
+import cookie from './cookie';
 
 
 var scrollTimer = null;
-var isGridMapForeign = config.isGridMapForeign;
 var cFuns = {
   /**
    * 取得客户端（浏览器）信息
@@ -174,9 +172,16 @@ var cFuns = {
    * @param  boolean type      1 日期 2 时 3 分
    * @param  boolean onlyNow   取现时
    */
-  returnNeedTimeDatas (type,onlyNow,texts){
+  returnNeedTimeDatas (type,onlyNow,textsSetting){
     type = type || 0;
-    texts = texts || ['今天','明天','后天'];
+    var textDefault = {
+      "today" : '今天',
+      "tomorrow" : '明天',
+      "hour" : '时',
+      "minute" : '分',
+    }
+    var tests = Object.assign(textDefault,textsSetting);
+    // texts = texts || ['今天','明天','后天','时','分'];
     onlyNow = onlyNow || 0;
     var nowDate = new Date();
     // console.log(nowDate.getTimezoneOffset());
@@ -198,8 +203,8 @@ var cFuns = {
       for(let i=0; i<howManyDay;i++){
         var date = getNextDate(i);
         var text = '';
-        if(i==0){text=texts[0];}
-        if(i==1){text=texts[1];}
+        if(i==0){text=tests.today}
+        if(i==1){text=tests.tomorrow}
         // if(i==2){text=texts[2];}
         data_dates[i] = this.formatDayItemData(date,text);
       }
@@ -210,7 +215,7 @@ var cFuns = {
       var hour_start = onlyNow ? nowDate.getHours() : 0 ;
 
       for(let i=hour_start;i<24;i++){
-        data_hours[i-hour_start] = {"value":this.fixZero(i),"name":(i)+'时'}
+        data_hours[i-hour_start] = {"value":this.fixZero(i),"name":(i)+tests.hour}
       }
       if(type>0){return data_hours;}
     }
@@ -218,7 +223,7 @@ var cFuns = {
     if(type==3 || type == 0 ){
       var min_start = onlyNow ? nowDate.getMinutes() : 0 ;
       for(let i=min_start;i<60;i++){
-        data_min[i-min_start] = {"value":this.fixZero(i),"name":(i)+'分'}
+        data_min[i-min_start] = {"value":this.fixZero(i),"name":(i)+tests.minute}
       }
       if(type>0){return data_min;}
     }
@@ -226,263 +231,86 @@ var cFuns = {
   },
 
 
-  //地图类方法
-  amap:{
-
-    showMap (target,setting,callback){
+  getScript (setting){
+    return new Promise ((resolve, reject) => {
       var settingDefault = {
-        gridMapForeign:isGridMapForeign,
-        enableHighAccuracy:true,
-        zoomToAccuracy:true,
+        async:false,
+        defer:false,
       }
       var opt = Object.assign({},settingDefault,setting);
-      var map = new AMap.Map(target, opt);
-      if(opt.enableHighAccuracy){
-        this.getLocalPosition({zoomToAccuracy:opt.zoomToAccuracy },map).then(res=>{
-          var resStr = JSON.stringify(res);
-          localStorage.setItem('carpool_local_info',resStr);
-          if(typeof(callback)=="function"){
-            callback(res);
+      const script = document.createElement('SCRIPT')
+
+      script.setAttribute('src', opt.url)
+      if(opt.async){
+        script.setAttribute('async', '')
+      }
+      if(opt.defer){
+        script.setAttribute('defer', '')
+      }
+      if (script.addEventListener) {
+        script.addEventListener('load',  ()=>{
+            resolve();
+        }, false);
+      } else if (script.attachEvent) {
+          script.attachEvent('onreadystatechange',  ()=>{
+              var target = window.event.srcElement;
+              if (target.readyState == 'loaded') {
+                  resolve();
+              }
+          });
+      }
+      document.body.appendChild(script);
+    })
+  },
+
+
+  getCoords (refresh = 0){
+    return new Promise ((resolve, reject) => {
+      if(!refresh && cookie.get('CP_currentCoords')){
+        let myCoordsStr = cookie.get('CP_currentCoords');
+        let myCoords    = JSON.parse(myCoordsStr);
+        resolve(myCoords);
+      }
+      if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition( (position)=>{
+          var coords = {
+            accuracy:position.coords.accuracy,
+            altitude:position.coords.altitude,
+            altitudeAccuracy:position.coords.altitudeAccuracy,
+            latitude:position.coords.latitude,
+            longitude:position.coords.longitude,
+            speed:position.coords.speed,
           }
+          var coorStr = JSON.stringify(coords);
+          cookie.set('CP_currentCoords',coorStr,60*5);
+          resolve(coords);
+        }, (error)=>{
+            //处理错误
+          /*  switch (error.code) {
+                case 1:
+                    error.message = "位置服务被拒绝";
+                    break;
+                case 2:
+                    error.message = "暂时获取不到位置信息。";
+                    break;
+                case 3:
+                    error.message = "获取信息超时。";
+                    break;
+                default:
+                    error.message = "未知错误";
+                    break;
+            }*/
+            console.log(error)
+            reject(error);
         })
       }else{
-        if(typeof(callback)=="function"){
-          callback({});
-        }
+        reject({"message":"浏览器不支持获取地理信息"})
       }
-      return map;
-    },
-    /**
-     * 定位，并移到中心
-     */
-    getLocalPosition(setting,mapObj) {
-      var settingDefault = {
-        }
-      var opt = Object.assign({},settingDefault,setting);
-      return new Promise ((resolve, reject) => {
-        this.getGeolocation(opt).then(geolocation=>{
-           mapObj.addControl(geolocation);
-           geolocation.getCurrentPosition(function(status,result){
-             if(status=='complete'){
-               resolve(result)
-            }else{
-              reject(result)
-            }
-           });
-        });
-      })
-    },
-    /**
-     * 清地图
-     */
-    clear (mapObj){
-        mapObj.clearMap();
-    },
-    /**
-     * 加marker
-     */
-    addMarker (position,mapObj) {
-      mapObj.setZoomAndCenter(14, position);
-      var marker = new AMap.Marker({
-        icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
-        // position: [116.405467, 39.907761]
-        position: position,
-      });
-      marker.setMap(mapObj);
-      return marker;
-    },
-    /**
-     * 删marker
-     */
-    removeMarker (marker,mapObj){
-      mapObj.remove(marker);
-    },
-    //至中心点
-    setCenter (position,mapObj,zoom) {
-      zoom = zoom || 14
-      // console.log(position);
-      mapObj.setZoomAndCenter(zoom, position);
-    },
-    //画线
-    drawTripLine(start,end,mapObj,callBack){
-      // mapObj.clearMap();
-      AMap.service('AMap.Driving',function(){//回调函数
+    })
+  },
 
-      //实例化Driving
-        let map_draw = new AMap.Driving({
-              map: mapObj,
-              // panel: "panel"
-        });
-        map_draw.search(start, end, function(status, result) {
-           //TODO 解析返回结果，自己生成操作界面和地图展示界面
-           if(typeof(callBack)=='function'){
-  					 callBack(status,result);
-  				 }
-          console.log(result)
-        });
-      })
-    },
-    /**
-     * 取得地理编码组件
-     */
-    getGeocoder(setting) {
-      var options = {};
-      if(typeof(setting)=="string"){
-        options = {city:setting};
-      }
-      var settingDefault = {}
-      var opt = Object.assign({},settingDefault,options);
-      return new Promise ((resolve, reject) => {
-        AMap.plugin('AMap.Geocoder',()=>{
-            var geocoder = new AMap.Geocoder(opt);
-            resolve(geocoder)
-        });
-      })
-    },
-    /**
-     * 取得本地定位组件
-     */
-    getGeolocation(setting) {
-      var settingDefault = {
-        enableHighAccuracy: true,
-        zoomToAccuracy: true,
-        timeout: 10000,
-      }
-      var opt = Object.assign({},settingDefault,setting);
-      return new Promise ((resolve, reject) => {
-        AMap.plugin('AMap.Geolocation',()=>{
-            var geolocation = new AMap.Geolocation(opt);
-            resolve(geolocation)
-        });
-      })
-    },
-    /**
-     * 取得坐标的地址信息
-     * @param  {array} lnglat  [坐标]
-     * @param  {function} callback [回调函数]
-     */
-    getMarkerInfo (lnglat,geocoder){
-      return new Promise ((resolve, reject) => {
-        geocoder.getAddress(lnglat,(status,result)=>{
-          resolve({status:status,result:result})
-        })
-      });
-    },
-    /**
-     * 取得当前城市
-     */
-    getCity (mapObj){
-      return new Promise ((resolve, reject) => {
-        mapObj.getCity((data)=> {
-          // alert(JSON.stringify(data));
-          resolve(data);
-        });
-      })
-    },
-    /**
-     * getPlaceSearch
-     */
-    getPlaceSearch(options){
-      var settingDefault = {
-           pageSize: 15,
-           pageIndex: 1,
-       }
-      var opt = Object.assign({},settingDefault,options);
-      return new Promise ((resolve, reject) => {
-        AMap.service('AMap.PlaceSearch',()=>{
-         var placeSearch = new AMap.PlaceSearch(opt);
-         resolve(placeSearch)
-       })
-      })
-    },
-    /**
-     * 地址搜索
-     */
-    placeSearch(keyword,options){
-      return new Promise ((resolve, reject) => {
-        this.getPlaceSearch(options).then(placeSearch=>{
-          placeSearch.search(keyword, (status, result)=>{
-            resolve({status:status,result:result})
-          })
-        })
 
-      })
-    },
-    /**
-     * getPlaceSearch
-     */
-    getAutocomplete(options){
-      var settingDefault = { }
-      var opt = Object.assign({},settingDefault,options);
-      return new Promise ((resolve, reject) => {
-        AMap.service('AMap.Autocomplete',()=>{
-         var Autocomplete = new AMap.Autocomplete(opt);
-         resolve(Autocomplete)
-       })
-      })
-    },
-    /**
-     * 地址搜索
-     */
-    autoComplete(keyword,options){
-      return new Promise ((resolve, reject) => {
-        this.getAutocomplete(options).then(autoComplete=>{
-          autoComplete.search(keyword, (status, result)=>{
-            resolve({status:status,result:result})
-          })
-        })
 
-      })
-    },
-    /**
-     * 添加窗体覆盖物
-     */
-    showInfoWindow(options,mapObj){
-      var settingDefault = {
-        position:[],
-        content:"",
-        offset: new AMap.Pixel(0, -20),
-      }
-      var opt = Object.assign({},settingDefault,options);
-      // 创建 infoWindow 实例
-      var infoWindow = new AMap.InfoWindow(opt);
-      // 打开信息窗体
-      infoWindow.open(mapObj);
-      return infoWindow;
-    },
-
-    // 格式化行程距离
-    formatDistance (distance,returnType){
-    	returnType = returnType || 0
-    	var distanceStr = distance + 'M';
-    	var unit = 'M';
-    	var dtTimeStr = '';
-    	if(distance > 1000){
-    		distance = (distance/1000).toFixed(1);
-    		unit = 'KM'
-    		distanceStr = distance + 'KM';
-    	}
-    	if(returnType){
-    		return {unit:unit,distance:distance};
-    	}else{
-    		return distanceStr;
-    	}
-
-    },
-
-    // 格式化行程用时
-   formatTripTime (dtTime,texts){
-     texts = texts || ['小时','分钟'];
-    	var dtTimeStr = '';
-    	if(dtTime > 3600){
-        dtTimeStr = (dtTime/3600).toFixed(2)+texts[0];
-    		// dtTimeStr = Math.floor(dtTime/3600)+texts[0] + Math.floor((dtTime%3600)/60)+texts[1];
-    	}else if(dtTime > 60){
-    		dtTimeStr =  Math.floor((dtTime)/60)+texts[1];
-    	}
-    	return dtTimeStr;
-    }
-  }
 }
 
 export default cFuns;
