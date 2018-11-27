@@ -38,6 +38,8 @@ const tokenAxios = axios;
 tokenAxios.interceptors.request.use(config => {
   return config
 },error =>{
+    getLanguage();
+    getLanguageFile();
     Vue.$vux.toast.text(t.message['networkFail']);
     return Promise.reject(error)
 })
