@@ -4,7 +4,7 @@ let lang = cFuns.getLanguage();
 var cModel = {
     config:{
       serverName : 'carpool_u'+ uid+ "_"+lang,
-      version: 1
+      version: 2
     },
     supports: function(){
       var indexedDB       = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || null;
@@ -62,12 +62,12 @@ var cModel = {
       };
       request.onupgradeneeded = function(e){
           var server = e.target.result;
-          var store = server.createObjectStore('my_address', {keyPath: 'addressid', autoIncrement: true});
+          var store = server.createObjectStore('carpool_my_address', {keyPath: 'addressid', autoIncrement: true});
           store.createIndex("listorder", "listorder", { unique: false });
           store.createIndex("address_type", "address_type", { unique: false });
           store.createIndex("addressname", "addressname", { unique: false });
           store.createIndex("latitude", "latitude", { unique: false });
-          store.createIndex("longtitude", "longtitude", { unique: false });
+          store.createIndex("longitude", "longitude", { unique: false });
           store.createIndex("address", "address", { unique: false });
           // console.log('创建对象仓库成功');
       }
