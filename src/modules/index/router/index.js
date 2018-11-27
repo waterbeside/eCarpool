@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
+import store from '../store'
 Vue.use(VueRouter)
 
 
@@ -232,6 +232,14 @@ let router = new VueRouter({
 		  return { x: 0, y: to.meta.savedPosition || 0 }
 		}
 	}*/
+})
+
+router.beforeEach((to, from, next) => {
+  store.commit('setLoading',{isShow:true});
+  next()
+})
+router.afterEach((to, from, next) => {
+  store.commit('setLoading',{isShow:false});
 })
 
 
