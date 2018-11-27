@@ -5,55 +5,77 @@ import {ToastPlugin} from 'vux'
 import axios from '@/utils/axios'
 import config from '../config'
 
-var  lang = localStorage.getItem('language');
-lang = lang ?  lang : localStorage.getItem('lang');
-lang = lang ?  lang : localStorage.getItem('lag');
-var _language = lang;
-lang = lang ? lang : 'zh';
+
+
 var t = {message:[]};
-var langPathArray = {
-  'zh' : true,
-  'vi' : true,
-  'en' : true,
+var lang = "zh";
+
+function getLanguage(){
+  let  lang_temp = localStorage.getItem('language');
+  lang_temp = lang_temp ?  lang_temp : localStorage.getItem('lang');
+  lang_temp = lang_temp ?  lang_temp : localStorage.getItem('lag');
+  lang = lang_temp ? lang_temp : 'zh';
+  return lang;
 }
-if(lang && typeof(langPathArray[lang])!="undefined" && langPathArray[lang]){
-  t =  require('@/assets/lang/'+lang).default;
+
+function getLanguageFile(){
+  var langPathArray = {
+    'zh' : true,
+    'vi' : true,
+    'en' : true,
+  }
+  if(lang && typeof(langPathArray[lang])!="undefined" && langPathArray[lang]){
+    t =  require('@/assets/lang/'+lang).default;
+  }
+  return t;
 }
+
+
 
 const tokenAxios = axios;
 
+//POST传参序列化(添加请求拦截器)
+tokenAxios.interceptors.request.use(config => {
+  return config
+},error =>{
+    getLanguage();
+    getLanguageFile();
+    Vue.$vux.toast.text(t.message['networkFail']);
+    return Promise.reject(error)
+})
+
 //返回状态判断(添加响应拦截器)
 tokenAxios.interceptors.response.use(res =>{
+  getLanguage();
+  getLanguageFile();
   if(res.status!==200){
     Vue.$vux.toast.text(t.message['networkFail']);
     return Promise.reject(res)
   }
-   // console.log(res)
-   //对响应数据做些事
-    if(res.data.code !==0){
-      switch (res.data.code) {
-        case 10004:
-            // console.log(10004)
-            if(router.history.current.name!='login'){
-              Vue.$vux.toast.text(t.message['user.login.pleaselogin']);
-              router.push({ name: 'login'});
-            }
-          break;
-        default:
-      }
-    }
-    return res;
-}, error => {
-    if(error.response.status!==200){
-      this.$vux.toast.text(t.message['networkFail']);
-    }
-    if(error.response.status === 401) {
+  if(res.status === 401) {
 
-    } else {
-       // do something
+  } else {
+     // do something
+  }
+  // console.log(res)
+  //对响应数据做些事
+  if(res.data.code !==0){
+    switch (res.data.code) {
+      case 10004:
+          // console.log(10004)
+          if(router.history.current.name!='login'){
+            Vue.$vux.toast.text(t.message['user.login.pleaselogin']);
+            router.push({ name: 'login'});
+          }
+        break;
+      default:
     }
-    // 返回 response 里的错误信息
-    return Promise.reject(error)
+  }
+  return res;
+}, error => {
+  Vue.$vux.toast.text(t.message['networkFail']);
+  // 返回 response 里的错误信息
+  return Promise.reject(error)
 })
 
 export default tokenAxios;
