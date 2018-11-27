@@ -335,6 +335,7 @@ export default  {
     "placeholder.username" :"Username",
     "placeholder.password" :"Password",
     "placeholder.selectAddress" :"Please Select Address",
+    "placeholder.addressname" :"Please enter the address name",
     "placeholder.mobile" :"Please enter  phone number",
 
 
@@ -380,6 +381,9 @@ export default  {
     "carpool.addtrip.shareemptyseat" :  "Share Your Seats",
     "carpool.addtrip.addRequest" : "Hailing a car",
     "carpool.addtrip.commonroute" : "Common Routes",
+    "carpool.addtrip.hour" : ":",
+    "carpool.addtrip.minute" : "",
+
     "carpool.whetherAccept":"Whether to accept the request or not",
     "carpool.emptySeat":"Empty",
     "carpool.takenSeat":"Taken",

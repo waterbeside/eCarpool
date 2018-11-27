@@ -157,7 +157,6 @@ message: {
 
 
 
-
   //app
 
   "AppName" : "溢起拼车",
@@ -273,6 +272,8 @@ message: {
 
   //历史行程
   "HistoryTrips.title" : "历史行程",
+
+
   "HistoryTrip.MiniTitleDrive" : "我是司机",
   "HistoryTrip.MiniTitlePassenger" : "我是乘客",
   "HistoryTrip.PassengerNum" : "%@个乘客",
@@ -288,9 +289,11 @@ message: {
 
   //请求错误码处理
   "ESUserCodeHandle.loginAgainTitle" : "请重新登录",
+
   "ESUserCodeHandle.loginAgainPHPTokenInvail" : "自动登录密码已过期，请重新登录",
   "ESUserCodeHandle.loginAgainChangePassword" : "您进行了修改密码操作，需要重新登录",
   "ESUserCodeHandle.loginAgainOtherDeviceLogin" : "您在别的设备进行了登录，如果不是您本人，请修改密码，以保证您的账号安全",
+
   "ESUserCodeHandle.loghangeImportantMsg" : "您修改了重要的信息，需要重新登录以确保运行",
 
 
@@ -318,7 +321,9 @@ message: {
   "passenger" : "乘客",
   "driver" : "司机",
   "detail" : "详情",
+
   "disclaimer" :"免责声明",
+
   "placeholder.carNumber" :"请输入车牌号",
   "placeholder.carColor" :"请输入汽车颜色",
   "placeholder.phone" :"请输入手机号",
@@ -335,6 +340,7 @@ message: {
   "placeholder.username" :"用户名",
   "placeholder.password" :"密码",
   "placeholder.selectAddress" :"请选择地址",
+  "placeholder.addressname" :"请输入地址名称",
   "placeholder.mobile" :"请输入手机号",
 
 
@@ -360,15 +366,18 @@ message: {
   "verify.oldPasswordError" :"旧密码错误",
   "verify.modifysuccess" : "修改成功",
   "verify.modifyfail" : "修改失败",
+
   "address.stationName" : "站点名称",
   "address.createAddress":"创建站点",
   "address.noAddress":"没找到您想要的站点？",
+
   "scroller.pullToRefresh" : "下拉更新数据",
   "scroller.refreshing" : "加载中...",
   "scroller.loosenToRefresh" : "松开刷新",
   "scroller.pullUpGetMore" : "上拉加载更多",
   "scroller.loadingMore" : "加载中...",
   "scroller.noData" : "暂时没有数据...",
+
   "btn.passengerpublish":  "发布约车需求",
   "btn.driverpublish": "发布空座位",
 
@@ -380,6 +389,8 @@ message: {
   "carpool.addtrip.addRequest" : "发布约车需求",
   "carpool.addtrip.shareemptyseat" :  "发布空座位",
   "carpool.addtrip.commonroute" : "历史路线",
+  "carpool.addtrip.hour" : "时",
+  "carpool.addtrip.minute" : "分",
 
 
   "carpool.whetherAccept":"是否接受【{username}】的约车",
@@ -387,12 +398,14 @@ message: {
   "carpool.takenSeat":"已搭",
   "carpool.leaveMessage":"留言",
   "carpool.passengers":"乘客列表",
+
   "carpool.detail.btn.goback" : "返 回",
   "carpool.detail.btn.phone" : "电 话",
   "carpool.detail.btn.pickup" : "接受请求",
   "carpool.detail.btn.riding" : "搭 车",
   "carpool.detail.btn.cancel" : "取消行程",
   "carpool.detail.btn.finish" : "结束行程",
+
   "carpool.detail.addComment" : "我要评论",
   "carpool.detail.EstimatedDistance" : "估算路程",
   "carpool.detail.status" : "状态",
@@ -401,6 +414,7 @@ message: {
   "carpool.detail.noComment" : "还未有人评论",
   "carpool.detail.noPassenger" : "未有乘客",
   "carpool.detail.clickLike" : "点赞",
+
   "carpool.comments.title" : "评论",
   "carpool.comments.sendFail" : "发送失败",
   "carpool.comments.fillContent" : "请填写内容",
@@ -427,12 +441,15 @@ message: {
   "carpool.status.alert.hasCanceled": "行程已取消",
   "carpool.status.hasFinished": "已结束",
   "carpool.status.alert.hasFinished": "行程已结束",
+
   "department.title":"选择部门",
   "department.noData":"无须选择部门，请返回。",
+
   "user.avatar.title":"更改头像",
   "user.avatar.selectImage":"选择图片",
   "user.avatar.imageFormat":"图片类型必须是.gif,jpeg,jpg,png,bmp中的一种",
   "user.avatar.failed":"更改失败，请稍候再试",
+
   "user.profile.edit.mobile":"更改联系电话",
   "user.profile.title":"个人资料",
   "user.profile.label.company":"所在公司",

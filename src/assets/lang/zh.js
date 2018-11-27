@@ -340,6 +340,7 @@ message: {
   "placeholder.username" :"用户名",
   "placeholder.password" :"密码",
   "placeholder.selectAddress" :"请选择地址",
+  "placeholder.addressname" :"请输入地址名称",
   "placeholder.mobile" :"请输入手机号",
 
 
@@ -388,6 +389,8 @@ message: {
   "carpool.addtrip.addRequest" : "发布约车需求",
   "carpool.addtrip.shareemptyseat" :  "发布空座位",
   "carpool.addtrip.commonroute" : "历史路线",
+  "carpool.addtrip.hour" : "时",
+  "carpool.addtrip.minute" : "分",
 
 
   "carpool.whetherAccept":"是否接受【{username}】的约车",
@@ -419,7 +422,7 @@ message: {
 
 
   "carpool.confirm.accept" : "是否接受【{username}】的约车",
-  "carpool.acceptSuccess" : "成功添加乘客",
+  "carpool.acceptSuccess" : "接受约车请求成功",
   "carpool.confirm.riding" : "是否要坐【{username}】的车",
   "carpool.ridingSuccess" : "搭车成功",
   "carpool.confirm.finish" : "是否结束本次行程",
