@@ -19,6 +19,7 @@ function getLanguage(){
 }
 
 function getLanguageFile(){
+  getLanguage();
   var langPathArray = {
     'zh' : true,
     'vi' : true,
@@ -38,7 +39,6 @@ const tokenAxios = axios;
 tokenAxios.interceptors.request.use(config => {
   return config
 },error =>{
-    getLanguage();
     getLanguageFile();
     Vue.$vux.toast.text(t.message['networkFail']);
     return Promise.reject(error)
@@ -46,17 +46,17 @@ tokenAxios.interceptors.request.use(config => {
 
 //返回状态判断(添加响应拦截器)
 tokenAxios.interceptors.response.use(res =>{
-  getLanguage();
   getLanguageFile();
-  if(res.status!==200){
-    Vue.$vux.toast.text(t.message['networkFail']);
-    return Promise.reject(res)
-  }
   if(res.status === 401) {
 
   } else {
      // do something
   }
+  if(res.status!==200){
+    // Vue.$vux.toast.text(t.message['networkFail']);
+    return Promise.reject(res)
+  }
+
   // console.log(res)
   //对响应数据做些事
   if(res.data.code !==0){
@@ -73,6 +73,7 @@ tokenAxios.interceptors.response.use(res =>{
   }
   return res;
 }, error => {
+  getLanguageFile();
   Vue.$vux.toast.text(t.message['networkFail']);
   // 返回 response 里的错误信息
   return Promise.reject(error)

@@ -52,7 +52,6 @@ export default {
   },
   methods :{
     init () {
-      const _this = this ;
       if(this.$router.history.current.name=='login'){
         return false;
       }
@@ -65,13 +64,13 @@ export default {
             userDatas.loginname = userDatas.loginname.toLowerCase()
             localStorage.setItem('CP_loginname',userDatas.loginname);
             // _this.$store.commit('setUserBaseData',userDatas);
-            _this.$store.commit('setUserData',userDatas);
+            this.$store.commit('setUserData',userDatas);
             // console.log(config.avatarBasePath + userDatas.avatar)
             if(userDatas.avatar.trim()!=''){
-              _this.$store.commit('setUserAvatar',config.avatarBasePath + userDatas.avatar);
+              this.$store.commit('setUserAvatar',config.avatarBasePath + userDatas.avatar);
             }
           }else{
-            _this.$router.push({ name: 'login'})
+            this.$router.push({ name: 'login'})
           }
         })
         .catch(error => {
