@@ -386,7 +386,7 @@ export default {
           if(res.data.code === 0) {
             let data = res.data.data;
 
-            data.time_format = moment(data.time*1000).format('YYYY-MM-DD hh:mm');
+            data.time_format = moment(data.time*1000).format('YYYY-MM-DD HH:mm');
             this.detailData      = data;
             this.uid             = data.uid;
             this.detailData.d_avatar = data.d_imgpath ? config.avatarBasePath + data.d_imgpath : this.defaultAvatar;

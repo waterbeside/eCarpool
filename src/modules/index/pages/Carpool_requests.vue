@@ -177,7 +177,7 @@ export default {
           this.page = data.page.currentPage ;
           this.pageCount = data.page.pageCount;
           data.lists.forEach((value,index,arr)=>{
-            value.time = moment(value.time*1000).format('YYYY-MM-DD hh:mm');
+            value.time = moment(value.time*1000).format('YYYY-MM-DD HH:mm');
             // console.log(time);
           })
 

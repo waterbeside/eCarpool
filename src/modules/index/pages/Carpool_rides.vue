@@ -37,20 +37,23 @@
            data-from="wall"
            @click.native="goDetail(index)"
          >
+
            <div slot="btnbar" class="cp-btns-wrapper">
-              <div class="cp-fabBtn-wrap " :class="[{'hasLike':item.hasLike===1,'doLike':item.id === doLikeId}]">
+              <!-- <div class="cp-fabBtn-wrap " :class="[{'hasLike':item.hasLike===1,'doLike':item.id === doLikeId}]">
                 <b class="t">{{$t("message['carpool.detail.clickLike']")}}</b>
                 <a href="javascript:void(0);" class="btn  btn-fab" :class="item.hasLike===1 ? 'btn-danger' : 'btn-primary' " @click="likeTrip(item.id,index)">
                   <i class="fa fa-heart" ></i>
                 </a>
                 <b class="num">{{item.like_count}}</b>
-              </div>
+              </div> -->
               <div class="cp-fabBtn-wrap"><b class="t">{{$t("message['carpool.emptySeat']")}}</b><a href="javascript:void(0);" class="btn btn-primary btn-fab "><i class="fa fa-car"></i></a><b class="num">{{item.seat_count - item.took_count}}</b></div>
               <div class="cp-fabBtn-wrap" :class="[{'hasLike':item.hasTake===1}]">
                 <b class="t">{{$t("message['carpool.takenSeat']")}}</b>
 
                 <a href="javascript:void(0);" class="btn btn-fab" :class="item.hasTake===1 ? 'btn-danger' : 'btn-primary' "><i class="fa fa-user"></i></a>
                 <b class="num">{{item.took_count}}</b></div>
+              <span class="pull-right">{{$t("message.detail")}}  <i class="fa fa-arrow-circle-right"></i></span>
+
            </div>
          </cp-trip-card>
 
@@ -182,7 +185,7 @@ export default {
           this.page = data.page.currentPage ;
           this.pageCount = data.page.lastPage;
           data.lists.forEach((value,index,arr)=>{
-            value.time = moment(value.time*1000).format('YYYY-MM-DD hh:mm');
+            value.time = moment(value.time*1000).format('YYYY-MM-DD HH:mm');
             // console.log(time);
           })
           if(this.page > 1 ){
