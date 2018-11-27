@@ -13,10 +13,10 @@
            :name="item.user.name"
            :avatar="item.user.imgpath"
            :phone="item.user.phone"
-           :department="item.user.Department"
+           :department="item.user.department"
            :carnumber="item.user.carnumber"
-           :start_name="item.start_info.addressname"
-           :end_name="item.end_info.addressname"
+           :start_name="item.start_addressname"
+           :end_name="item.end_addressname"
            :date = "item.time.split(' ')[0]"
            :time = "item.time.split(' ')[1]"
            :class="[('item-'+item.id)]"
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 
@@ -89,11 +90,12 @@ export default {
      * @param  {integer} index 数据索引
      */
     goDetail (index){
-      let goName = this.listDatas[index].from =="wall" || this.listDatas[index].love_wall_ID ? "carpool_rides_detail" :'carpool_requests_detail' ;
-      let goId = this.listDatas[index].love_wall_ID ? this.listDatas[index].love_wall_ID : this.listDatas[index].id;
+      let goName = this.listDatas[index].from =="wall" || this.listDatas[index].love_wall_ID > 0? "carpool_rides_detail" :'carpool_requests_detail' ;
+      let goId = this.listDatas[index].love_wall_ID > 0 ? this.listDatas[index].love_wall_ID : this.listDatas[index].id;
       this.$router.push({name:goName,params: { id: goId ,from:this.listDatas[index].from}});
-
     },
+
+
     /**
      * 取得列表
      * @param  {function} success 取得列表成功后执行。
@@ -106,7 +108,8 @@ export default {
 
       this.isLoading = 1;
       this.noData = 0;
-      this.$http.get(config.urls.getMytrip,{params:params}).then(res => {
+      // this.$http.get(config.urls.getMytrip,{params:params}).then(res => {
+      this.$http.get(config.urls.trips,{params:params}).then(res => {
         let data = res.data.data;
         this.isLoading = 0;
         if(res.data.code === 0) {
@@ -115,21 +118,28 @@ export default {
             this.noData = 1 ;
           }
           this.listDatas_o = data.lists;
-          this.listDatas_o.forEach((value,index,arr)=>{
-            this.listDatas.push({
+          data.lists.forEach((value,index,arr)=>{
+            value.time = moment(value.time*1000).format('YYYY-MM-DD hh:mm');
+            value.from = value.infoid > 0 ? "info" : "wall";
+            let formatItem = {
               from : value.from,
-              id : value.id,
+              id : value.from == "wall" ? value.love_wall_ID : value.infoid,
               love_wall_ID : value.love_wall_ID,
               status: value.status,
               time: value.time,
-              start_info:value.start_info,
-              end_info:value.end_info,
-              user : value.from == "wall" || value.show_owner ? value.owner_info : value.passenger_info,
+              start_addressname:value.start_addressname,
+              end_addressname:value.end_addressname,
               typeLabel : value.from == "wall" || value.show_owner ? this.$t('message.driver') : this.$t('message.passenger'),
-              like_count:value.like_count,
-              took_count:value.took_count,
-              seat_count:value.seat_count
-            })
+            }
+
+            let sign = value.from =="wall"|| value.show_owner ? "d" : "p";
+            formatItem.user = {
+              name       : value[sign+"_name"],
+              department : value[sign+"_department"],
+              carnumber : value[sign+"_carnumber"],
+              imgpath : value[sign+"_imgpath"],
+            }
+            this.listDatas.push(formatItem);
           })
 
         }else{
