@@ -4,7 +4,7 @@
       <div class="page-view-content">
         <div class="page-view-header">
           <div class="cp-loginlogo-wrapper">
-            <img class="cp-logo"  src="@/assets/images/login_logo.png">
+            <img class="cp-logo"  src="../../../assets/images/login_logo.png">
           </div>
         </div>
         <div class="container">
