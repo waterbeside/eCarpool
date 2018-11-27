@@ -92,9 +92,7 @@ var cGmap = {
         if(typeof(myCoords)=="object"){
           settingDefault.center = new google.maps.LatLng(myCoords.latitude,myCoords.longitude);
         }
-        this.getCity().then(res=>{
-
-        });
+        this.getCity().then(res=>{});
 
         var opt = Object.assign({},settingDefault,setting);
         var map = new google.maps.Map(document.getElementById(target),opt);
@@ -103,7 +101,7 @@ var cGmap = {
             if(opt.autoCenter){
               map.setCenter(new google.maps.LatLng(res.latitude,res.longitude));
             }
-          });
+          }).catch(error=>{});
         }
         resolve(map);
       }).catch((e)=>{
@@ -124,31 +122,40 @@ var cGmap = {
         return resolve(myCity);
       }
       cFuns.getCoords().then(coords=>{
-        var params={
-          latlng:coords.latitude+","+coords.longitude,
-          key:config.gMapKey
-       };
-        axios.get('https://maps.google.cn/maps/api/geocode/json',{"params":params,'isPure':true}).then(res=>{
-          if(res.status !== 200){
-            reject(res);
-          }
-          if(typeof(res.data.results)=="object"){
-            let results = res.data.results;
-            var cityObj = this.formatCitys(results[1]);
-            // cityObj.street = results[1].address_components[0].short_name,
-            // console.log(results)
-            var cityStr = JSON.stringify(cityObj);
-            cookie.set(keyOfCache,cityStr,60*5);
-            resolve(results);
-          }else{
-            reject(res);
-          }
-        }).catch(e=>{
-          reject(e);
-
-        })
+        this.getCityByGoord(coords).then(res=>{
+          resolve(res);
+        }).catch(error=>{
+          reject(error)
+        });
+      }).catch(error=>{
+        reject(error)
+        // this.getCityByGoord(coords);
       })
+    })
+  },
 
+  getCityByGoord (coords){
+    return new Promise ((resolve, reject) => {
+      var params={
+        latlng:coords.latitude+","+coords.longitude,
+        key:config.gMapKey
+      };
+      axios.get('https://maps.google.cn/maps/api/geocode/json',{"params":params,'isPure':true}).then(res=>{
+        if(res.status !== 200){
+          reject(res);
+        }
+        if(typeof(res.data.results)=="object"){
+          let results = res.data.results;
+          var cityObj = this.formatCitys(results[1]);
+          // cityObj.street = results[1].address_components[0].short_name,
+          // console.log(results)
+          var cityStr = JSON.stringify(cityObj);
+          cookie.set(keyOfCache,cityStr,60*5);
+          resolve(results);
+        }else{
+          reject(res);
+        }
+      })
     })
   },
 
@@ -281,10 +288,12 @@ var cGmap = {
         if(opt.location){
           if(!keyword){
             service.nearbySearch(opt, (results, status)=>{
+              // console.log(results)
               resolve({status:status,results:results})
             });
           }else{
             service.textSearch(opt, (results, status)=>{
+              // console.log(results)
               resolve({status:status,results:results})
             });
           }
@@ -294,7 +303,7 @@ var cGmap = {
             this.placeSearch(keyword,mapObj,opt).then(res=>{
               resolve(res);
             }).catch(error=>{
-              console.log(error)
+              // console.log(error)
               reject(error);
             });
           })
@@ -310,6 +319,7 @@ var cGmap = {
       var geocoder = new google.maps.Geocoder;
       geocoder.geocode({'location': position}, function(results, status) {
         var res = {results,status}
+        // console.log(results);
         if (status === 'OK') {
           resolve(results);
         /*  if (results[0]) {
