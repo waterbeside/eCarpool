@@ -640,10 +640,12 @@
       .num {color:darken(@color-fabBtn-red,5%);}
     }
   }
-  .cp-btns-wrapper { padding: 0 10px; text-align: center;
+  .cp-btns-wrapper { padding: 0 12px; /*text-align: center;*/
     .tips-text { float: left; padding-left: 12px;}
-    .cp-fabBtn-wrap  {margin: -4px 0 8px;}
-    .cp-btns .cp-btn { width: 36px; height: 36px; line-height: 36px; margin:-8px 0 8px 12px;}
+    .cp-fabBtn-wrap  {margin: -4px 0 8px;
+      .t {display: block; min-width: 80px}
+    }
+    .cp-btns .cp-btn { width: 36px; height: 36px; line-height: 36px; margin:-8px 0 8px 20px;}
     // .cp-btn {  margin:0 10px; border-radius: 50%; border:1px solid @color-primary ; color: @color-primary; font-size: 22px; width:36px; height: 36px; line-height: 34px; text-align: center;}
   }
   .cp-goDetail-wrapper {
