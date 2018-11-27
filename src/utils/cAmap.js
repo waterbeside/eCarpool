@@ -8,28 +8,31 @@ var isGridMapForeign = config.isGridMapForeign;
 var cAmap = {
 
     showMap (target,setting,callback){
-      var settingDefault = {
-        gridMapForeign:isGridMapForeign,
-        enableHighAccuracy:true,
-        zoomToAccuracy:true,
-      }
-      var opt = Object.assign({},settingDefault,setting);
-      var map = new AMap.Map(target, opt);
-      if(opt.enableHighAccuracy){
-        this.getLocalPosition({zoomToAccuracy:opt.zoomToAccuracy },map).then(res=>{
-          var resStr = JSON.stringify(res);
-          localStorage.setItem('carpool_local_info',resStr);
-          if(typeof(callback)=="function"){
-            callback(res);
-          }
-        })
-      }else{
-        if(typeof(callback)=="function"){
-          callback({});
+      return new Promise ((resolve, reject) => {
+        var settingDefault = {
+          gridMapForeign:isGridMapForeign,
+          enableHighAccuracy:true,
+          zoomToAccuracy:true,
         }
-      }
-      return map;
+        var opt = Object.assign({},settingDefault,setting);
+        var map = new AMap.Map(target, opt);
+        if(opt.enableHighAccuracy){
+          this.getLocalPosition({zoomToAccuracy:opt.zoomToAccuracy },map).then(res=>{
+            var resStr = JSON.stringify(res);
+            localStorage.setItem('carpool_local_info',resStr);
+            if(typeof(callback)=="function"){
+              callback(res,map);
+            }
+          })
+        }else{
+          if(typeof(callback)=="function"){
+            callback({},map);
+          }
+        }
+        resolve(map);
+      })
     },
+
     /**
      * 定位，并移到中心
      */
@@ -59,16 +62,53 @@ var cAmap = {
     /**
      * 加marker
      */
-    addMarker (position,mapObj) {
-      mapObj.setZoomAndCenter(14, position);
-      var marker = new AMap.Marker({
-        icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
-        // position: [116.405467, 39.907761]
+    addMarker (position,mapObj,setting) {
+      var settingDefault = {
         position: position,
-      });
+        autoCenter: false,
+        color:'blue',
+      }
+      var opt = Object.assign({},settingDefault,setting)
+      if(!opt.icon){
+        switch (opt.color) {
+          case 'blue':
+            opt.icon=  "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png";
+            break;
+          case 'red':
+            opt.icon=  "http://webapi.amap.com/theme/v1.3/markers/n/mark_r.png";
+            break;
+          default:
+            opt.icon=  "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png";
+        }
+      }
+      if(opt.autoCenter){
+        mapObj.setZoomAndCenter(14, position);
+      }
+      var marker = new AMap.Marker(opt);
       marker.setMap(mapObj);
       return marker;
     },
+
+    setMarkerColor (marker,color){
+      var src = "";
+      switch (color) {
+        case 'blue':
+          src =  "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png";
+          break;
+        case 'red':
+          src=  "http://webapi.amap.com/theme/v1.3/markers/n/mark_r.png";
+          break;
+        default:
+          src=  "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png";
+      }
+      var markerContent = document.createElement("div");
+      var markerImg = document.createElement("img");
+      markerImg.className = "markerlnglat";
+      markerImg.src = src;
+      markerContent.appendChild(markerImg);
+      marker.setContent(markerContent); //更新点标记内容
+    },
+
     /**
      * 删marker
      */
@@ -96,7 +136,6 @@ var cAmap = {
            if(typeof(callBack)=='function'){
   					 callBack(status,result);
   				 }
-          console.log(result)
         });
       })
     },
