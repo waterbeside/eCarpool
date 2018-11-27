@@ -119,7 +119,7 @@ export default {
           }
           this.listDatas_o = data.lists;
           data.lists.forEach((value,index,arr)=>{
-            value.time = moment(value.time*1000).format('YYYY-MM-DD hh:mm');
+            value.time = moment(value.time*1000).format('YYYY-MM-DD HH:mm');
             value.from = value.infoid > 0 ? "info" : "wall";
             let formatItem = {
               from : value.from,

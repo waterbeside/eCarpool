@@ -81,7 +81,7 @@ export default {
           this.isLoading = 0;
           if(res.data.code === 0) {
             data.lists.forEach((value,index,arr)=>{
-              value.time = moment(value.time*1000).format('YYYY-MM-DD hh:mm');
+              value.time = moment(value.time*1000).format('YYYY-MM-DD HH:mm');
             })
             this.listDatas = data.lists;
           }else{

@@ -17,7 +17,7 @@
            :avatar="item.p_imgpath"
            :phone="item.p_phone"
            :department="item.p_department"
-           :carnumber="item.p_carnumber"
+
            :start_name="item.start_addressname"
            :end_name="item.end_addressname"
            :date = "item.time.split(' ')[0]"
@@ -177,7 +177,7 @@ export default {
           this.page = data.page.currentPage ;
           this.pageCount = data.page.pageCount;
           data.lists.forEach((value,index,arr)=>{
-            value.time = moment(value.time*1000).format('YYYY-MM-DD hh:mm');
+            value.time = moment(value.time*1000).format('YYYY-MM-DD HH:mm');
             // console.log(time);
           })
 
