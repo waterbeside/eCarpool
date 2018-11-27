@@ -22,8 +22,7 @@
           <!-- <popup-picker title="性别" :data="sexs" v-model="sex"   @on-change="onChangeSex" :display-format="formatSexDisplay"  ></popup-picker> -->
           <!-- <cell :title="$t('message.phone')"   @click.native="$router.push({name:'user_profile_phone'})" :is-loading="false" :value="userData.phone" is-link></cell> -->
         </group>
-        <group class="cp-group">
-          <!-- <cell title="公司" @click.native="goEdit('company')" :is-loading="false" :value="company" is-link></cell> -->
+        <!-- <group class="cp-group">
           <popup-picker
           :title="$t('message[\'user.profile.label.company\']')"
           :data="companys" v-model="company"
@@ -32,19 +31,18 @@
            :confirmText="$t('message.done')">
           </popup-picker>
 
-          <cell :title="$t('message[\'user.profile.label.department\']')" @click.native="$router.push({name:'user_profile_departments'})" :is-loading="false" :value="userData.Department" is-link v-show="userData.company_id > 0"></cell>
-          <!-- <cell title="工号" @click.native="goEdit('loginname')" :is-loading="false" :value="userData.loginname" is-link></cell> -->
-        </group>
+          <cell :title="$t('message[\'user.profile.label.department\']')" @click.native="$router.push({name:'user_profile_departments'})" :is-loading="false" :value="userData.department" is-link v-show="userData.company_id > 0"></cell>
+        </group> -->
         <group  class="cp-group">
           <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-car"></i>{{$t("message['user.profile.label.carInformation']")}}</group-title>
           <cell :title="$t('message[\'user.profile.label.licensePlateNo\']')" class="cp-profile-item"    @click.native="goEdit('carnumber')" :is-loading="false" :value="userData.carnumber" is-link></cell>
           <cell :title="$t('message[\'user.profile.label.carColor\']')"   class="cp-profile-item"  @click.native="goEdit('carcolor')" :is-loading="false" :value="userData.carcolor" is-link></cell>
         </group>
-        <!--<group  class="cp-group">
+        <!-- <group  class="cp-group">
           <group-title class="cp-group-title" slot="title"><i  class="cp-title-icon fa fa-map-marker"></i>{{ $t("message['user.profile.label.address']")}} </group-title>
           <cell :title="$t('message[\'user.profile.label.home\']')"  class="cp-profile-item"   @click.native="selectAddress('home')" :is-loading="false" :value="userData.home_address" is-link></cell>
           <cell :title="$t('message[\'user.profile.label.company\']')" class="cp-profile-item"   @click.native="selectAddress('work')" :is-loading="false" :value="userData.company_address" is-link></cell>
-        </group>-->
+        </group> -->
 
       </cp-scroller>
     </div>
@@ -125,7 +123,8 @@ export default {
     */
     loadUserInfo () {
      var that = this;
-     this.$http.get(config.urls.getUserInfo,{}).then(res => {
+     // this.$http.get(config.urls.getUserInfo,{}).then(res => {
+     this.$http.get(config.urls.passport,{params:{type:2}}).then(res => {
 
        if(res.data.code === 0) {
          let data = res.data.data;

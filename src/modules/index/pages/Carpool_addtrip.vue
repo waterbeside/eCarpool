@@ -1,4 +1,4 @@
-longitude<template>
+<template>
   <div class="page-view"  id="Page-trip-add">
     <div class="page-view-inner" >
       <!-- <title-bar  :left-options="{showBack: true}">{{type=="info"?"发布约车需求":"发布空座位"}}</title-bar> -->
@@ -385,7 +385,7 @@ export default {
     if(!this.formData.seat_count){
       this.formData.seat_count = 4;
     }
-    
+
     console.log(this.formData);
 
     if(this.formData.time && this.formData.start.longitude && this.formData.end.longitude &&  ( this.formData.seat_count || this.type == "info" ) ){
