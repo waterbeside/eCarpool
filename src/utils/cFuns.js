@@ -263,11 +263,10 @@ var cFuns = {
     })
   },
 
-
-  getCoords (refresh = 0){
+  getCoord (refresh = 0){
     return new Promise ((resolve, reject) => {
-      if(!refresh && cookie.get('CP_currentCoords')){
-        let myCoordsStr = cookie.get('CP_currentCoords');
+      if(!refresh && cookie.get('CP_currentCoord')){
+        let myCoordsStr = cookie.get('CP_currentCoord');
         let myCoords    = JSON.parse(myCoordsStr);
         resolve(myCoords);
       }
@@ -282,7 +281,7 @@ var cFuns = {
             speed:position.coords.speed,
           }
           var coorStr = JSON.stringify(coords);
-          cookie.set('CP_currentCoords',coorStr,60*5);
+          cookie.set('CP_currentCoord',coorStr,60*10);
           resolve(coords);
         }, (error)=>{
             //处理错误

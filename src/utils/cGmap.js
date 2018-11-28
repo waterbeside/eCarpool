@@ -85,12 +85,12 @@ var cGmap = {
           // zoomControl: false,
           // disableDefaultUI:true,
         }
-        if( cookie.get('CP_currentCoords')){
-          var myCoordsStr = cookie.get('CP_currentCoords');
-          var myCoords    = JSON.parse(myCoordsStr);
+        if( cookie.get('CP_currentCoord')){
+          var myCoordtr = cookie.get('CP_currentCoord');
+          var myCoord    = JSON.parse(myCoordtr);
         }
-        if(typeof(myCoords)=="object"){
-          settingDefault.center = new google.maps.LatLng(myCoords.latitude,myCoords.longitude);
+        if(typeof(myCoord)=="object"){
+          settingDefault.center = new google.maps.LatLng(myCoord.latitude,myCoord.longitude);
         }
         this.getCity().then(res=>{
 
@@ -98,8 +98,8 @@ var cGmap = {
 
         var opt = Object.assign({},settingDefault,setting);
         var map = new google.maps.Map(document.getElementById(target),opt);
-        if(typeof(myCoords)!="object"){
-          cFuns.getCoords(1).then(res=>{
+        if(typeof(myCoord)!="object"){
+          cFuns.getCoord(1).then(res=>{
             if(opt.autoCenter){
               map.setCenter(new google.maps.LatLng(res.latitude,res.longitude));
             }
@@ -125,7 +125,7 @@ var cGmap = {
         let myCity    = JSON.parse(myCityStr);
         return resolve(myCity);
       }
-      cFuns.getCoords().then(coords=>{
+      cFuns.getCoord().then(coords=>{
         this.getCityByGoord(coords).then(res=>{
           resolve(res);
         }).catch(error=>{
@@ -303,7 +303,7 @@ var cGmap = {
             });
           }
         }else{
-          cFuns.getCoords().then(res=>{
+          cFuns.getCoord().then(res=>{
             opt.location = new google.maps.LatLng(res.latitude,res.longitude);
             this.placeSearch(keyword,mapObj,opt).then(res=>{
               resolve(res);
