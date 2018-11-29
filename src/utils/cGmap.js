@@ -2,6 +2,7 @@ import config from '../config'
 import cookie from './cookie';
 import axios from './axios';
 import cFuns from './cFuns';
+import cCoord from './cCoord';
 
 //谷歌地圖方法。
 var cGmap = {
@@ -69,6 +70,7 @@ var cGmap = {
   //显示地图
   showMap (target,setting,loadsetting={}){
     return new Promise ((resolve, reject) => {
+      var Coord = new cCoord();
       this.load(loadsetting).then(()=>{
         var settingDefault = {
           center: new google.maps.LatLng(22.88907, 112.910868),
@@ -85,29 +87,20 @@ var cGmap = {
           // zoomControl: false,
           // disableDefaultUI:true,
         }
-        if( cookie.get('CP_currentCoord')){
-          var myCoordtr = cookie.get('CP_currentCoord');
-          var myCoord    = JSON.parse(myCoordtr);
-        }
-        if(typeof(myCoord)=="object"){
-          settingDefault.center = new google.maps.LatLng(myCoord.latitude,myCoord.longitude);
-        }
-        this.getCity().then(res=>{
+        Coord.default().then(defaultCoord=>{
 
-        });
-
-        var opt = Object.assign({},settingDefault,setting);
-        var map = new google.maps.Map(document.getElementById(target),opt);
-        if(typeof(myCoord)!="object"){
-          cFuns.getCoord(1).then(res=>{
+          settingDefault.center = new google.maps.LatLng(defaultCoord.latitude,defaultCoord.longitude);
+          var opt = Object.assign({},settingDefault,setting);
+          var map = new google.maps.Map(document.getElementById(target),opt);
+          Coord.currentPosition(1).then(res=>{
             if(opt.autoCenter){
-              map.setCenter(new google.maps.LatLng(res.latitude,res.longitude));
+                map.setCenter(new google.maps.LatLng(res.latitude,res.longitude));
             }
-          }).catch(error=>{
+            this.getCity().then(res=>{});
+          })
+          resolve(map);
+        })
 
-          });
-        }
-        resolve(map);
       }).catch((e)=>{
         reject(e);
       })
@@ -125,7 +118,7 @@ var cGmap = {
         let myCity    = JSON.parse(myCityStr);
         return resolve(myCity);
       }
-      cFuns.getCoord().then(coords=>{
+      cCoord().currentPosition(1).then(coords=>{
         this.getCityByGoord(coords).then(res=>{
           resolve(res);
         }).catch(error=>{
@@ -153,9 +146,8 @@ var cGmap = {
           let results = res.data.results;
           var cityObj = this.formatCitys(results[1]);
           // cityObj.street = results[1].address_components[0].short_name,
-          console.log(results)
           var cityStr = JSON.stringify(cityObj);
-          cookie.set(keyOfCache,cityStr,60*5);
+          cookie.set(keyOfCache,cityStr,60*2);
           resolve(results);
         }else{
           reject(res);
@@ -245,7 +237,6 @@ var cGmap = {
 
      directionsDisplay.setMap(mapObj);
      directionsService.route(params, function(results, status) {
-       console.log(results)
        var res = {
          results,status,directionsDisplay
        }
@@ -286,24 +277,22 @@ var cGmap = {
     return new Promise ((resolve, reject) => {
       var service = new google.maps.places.PlacesService(mapObj);
         var settingDefault = {
-          radius: 10000,
+          radius: 20000,
           query: keyword,
         }
         var opt = Object.assign({},settingDefault,options);
         if(opt.location){
           if(!keyword){
             service.nearbySearch(opt, (results, status)=>{
-              console.log(results)
               resolve({status:status,results:results})
             });
           }else{
             service.textSearch(opt, (results, status)=>{
-              console.log(results)
               resolve({status:status,results:results})
             });
           }
         }else{
-          cFuns.getCoord().then(res=>{
+          cCoord().default().then(res=>{
             opt.location = new google.maps.LatLng(res.latitude,res.longitude);
             this.placeSearch(keyword,mapObj,opt).then(res=>{
               resolve(res);

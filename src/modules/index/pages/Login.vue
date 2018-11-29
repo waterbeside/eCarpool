@@ -59,10 +59,8 @@ export default {
   },
   methods :{
     resetError (){
-
-        this.iconType = ''
-        this.isShowError = false;
-
+      this.iconType = ''
+      this.isShowError = false;
     },
     login (){
       // console.log(config.urls.checkLogin)

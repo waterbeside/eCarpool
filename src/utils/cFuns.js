@@ -263,52 +263,6 @@ var cFuns = {
     })
   },
 
-  getCoord (refresh = 0){
-    return new Promise ((resolve, reject) => {
-      if(!refresh && cookie.get('CP_currentCoord')){
-        let myCoordsStr = cookie.get('CP_currentCoord');
-        let myCoords    = JSON.parse(myCoordsStr);
-        resolve(myCoords);
-      }
-      if(navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition( (position)=>{
-          var coords = {
-            accuracy:position.coords.accuracy,
-            altitude:position.coords.altitude,
-            altitudeAccuracy:position.coords.altitudeAccuracy,
-            latitude:position.coords.latitude,
-            longitude:position.coords.longitude,
-            speed:position.coords.speed,
-          }
-          var coorStr = JSON.stringify(coords);
-          cookie.set('CP_currentCoord',coorStr,60*10);
-          resolve(coords);
-        }, (error)=>{
-            //处理错误
-          /*  switch (error.code) {
-                case 1:
-                    error.message = "位置服务被拒绝";
-                    break;
-                case 2:
-                    error.message = "暂时获取不到位置信息。";
-                    break;
-                case 3:
-                    error.message = "获取信息超时。";
-                    break;
-                default:
-                    error.message = "未知错误";
-                    break;
-            }*/
-            console.log(error)
-            reject(error);
-        })
-      }else{
-        reject({"message":"浏览器不支持获取地理信息"})
-      }
-    })
-  },
-
-
 
 }
 
