@@ -50,6 +50,7 @@
 import CpFootNavBar from '../components/CpFootNavBar'
 import cFuns from '@/utils/cFuns'
 import cGmap from '@/utils/cGmap'
+import cCoord from '@/utils/cCoord'
 
 export default {
   components: {
@@ -73,10 +74,10 @@ export default {
         this.$store.commit('setJumpTo',{});
         this.$router.push(jumpToSetting);
       }
-
     }
   },
   activated (){
+    cCoord().push(); // 上传用户坐标。
     cGmap.load().then(res=>{cGmap.getCity()});
     this.$store.commit('setTripFormData',{});
     this.$store.commit('setIsRefreshCarpoolList',true);

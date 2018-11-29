@@ -17,6 +17,8 @@
 <script>
 const sessionHistory = window.sessionStorage
 import config from './config'
+import cCoord from '@/utils/cCoord'
+
 export default {
   name: 'app',
   data () {
@@ -80,6 +82,8 @@ export default {
   },
   mounted () {
     this.init()
+    cCoord().push(); // 上传用户坐标。
+
     /*setTimeout(()=>{
       this.init();
     },100)*/

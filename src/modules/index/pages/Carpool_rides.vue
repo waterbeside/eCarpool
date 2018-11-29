@@ -76,6 +76,7 @@ import cFuns from '@/utils/cFuns'
 
 import CpSearchBox from '@/components/CpSearchBox'
 import CpTripCard from '../components/CpTripCard'
+import cCoord from '@/utils/cCoord'
 
 export default {
   components: {
@@ -243,6 +244,8 @@ export default {
   created () {
     this.init();
     this.getList(1);
+    cCoord().push(); // 上传用户坐标。
+    
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
