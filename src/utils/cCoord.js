@@ -1,312 +1,152 @@
 import cookie from './cookie';
+import axios from './axios';
+import config from '../config'
 
 
-var scrollTimer = null;
-var cFuns = {
+var  coord = ()=>{
+  var cacheKey_currentCoord = "CP_currentCoord";
+  var cacheKey_defaultCoord = "CP_defaultCoord";
+  var cacheKey_isPushing = "CP_isPushingCoord";
+  var cacheKey_unablePush = "CP_unablePushCoord";
+  var cacheKey_jwt = "CP_U_TOKEN"
   /**
-   * 取得客户端（浏览器）信息
+   * 格式化坐标
+   * @param  object|array|string  position 坐标位置
+   * @return object               返回坐标
    */
-  getClientType (){
-    var  browser  =   {
-        versions:   function()  {
-            var  u  =  window.navigator.userAgent;
-            return  {
-                trident:  u.indexOf('Trident')  >  -1, //IE内核
-                presto:  u.indexOf('Presto')  >  -1, //opera内核
-                Alipay:  u.indexOf('Alipay')  >  -1, //支付宝
-                webKit:  u.indexOf('AppleWebKit')  >  -1, //苹果、谷歌内核
-                gecko:  u.indexOf('Gecko')  >  -1  &&  u.indexOf('KHTML')  ==  -1, //火狐内核
-                mobile:  !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
-                ios:  !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
-                android:  u.indexOf('Android')  >  -1  , //android终端
-                linux:   u.indexOf('Linux')  >  -1, //linux
-                iPhone:  u.indexOf('iPhone')  >  -1   , //是否为iPhone
-                mac:    u.indexOf('Mac')  >  -1, //是否为mac
-                //iPhone: u.match(/iphone|ipod|ipad/),//
-                iPad:  u.indexOf('iPad')  >  -1, //是否为iPad
-                webApp:  u.indexOf('Safari')  ==  -1, //是否为web应用程序，没有头部与底部
-                weixin:  u.indexOf('MicroMessenger')  >  -1, //是否为微信浏览器
-                qq: u.match(/\sQQ/i) !== null, //是否QQ
-                Safari:  u.indexOf('Safari')  >  -1,
-                  ///Safari浏览器,
-            };
-        }()
-    };
-    return  browser.versions;
-  },
-
-  /**
-   * 取得连接参数
-   * @param  String name 参数key
-   */
-  getRequest (name){
-    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-    var r = window.location.search.substr(1).match(reg);
-    if (r != null) {
-        return unescape(r[2]);
+  this.format = (position)=>{
+    if(typeof(position)=="string"){
+      position = position.split(',');
     }
-    return null;
-},
+    if(typeof(position)=="object"){
 
-  // 切换页面，并错误提示
-  turnPage: (message, url) => {
-    if (message) {
-      alert(message)
-    }
-    if (url) {
-      if (pageMap[url]) {
-        url = pageMap[url]
-      }
-      window.location.href = url
-    }
-  },
-
-  /**
-   * 页面跳转
-   * @param  string url URL
-   * @param  object win 窗口对像
-   */
-  redirect (url,win){
-    var lct = typeof(win)!="undefined" ? win.location : location;
-    //console.log(lct);
-    lct.href = url;
-  },
-
-  getLanguage (dontFromCache){
-    dontFromCache = dontFromCache || 0;
-    let lang = "";
-    if(localStorage && !dontFromCache){
-      lang = localStorage.getItem('language');
-      lang = lang ?  lang : localStorage.getItem('lang');
-      lang = lang ?  lang : localStorage.getItem('lag');
-    }
-    if(lang){
-      return lang;
-    }
-    var _language = "en";
-    if (navigator.language) {
-      _language = navigator.language;
-    }else {
-      _language = navigator.browserLanguage;
-    }
-    return _language;
-  },
-
-  formartLanguage(_language){
-    var arrowLang = "zh,zh-tw,zh-hk,vi,en,"
-    var lang = _language;
-    var language_lower = _language.toLowerCase();
-    if(arrowLang.indexOf(language_lower) == -1){
-      lang = "en";
-    }
-    if(language_lower.indexOf('-')>0){
-      var langTempArr = language_lower.split('-');
-      lang = langTempArr[0];
-    }
-    return lang;
-  },
-
-  /**
-   * 验证反回码是否未登入
-   * @param  int code      [返回码]
-   * @param  object vueObj    [VUE对像]
-   * @param  boolean showToast [是否显示吐司]
-   */
-  checkLoginByCode (code,vueObj,showToast){
-  	showToast = showToast || 1
-  	if(code===10004){
-
-  		if(showToast && vueObj){
-  			vueObj.$vux.toast.text('请先登入');
-  		}
-      if(vueObj){
-        vueObj.$router.push({ name: 'login'});
-      }else{
-        this.redirect("/#/login");
-      }
-  		return false;
-  	}
-  	return true;
-  },
-
-
- formatDate(date,fmt){
-  	var o = {
-  			 "m+": date.getMonth() + 1, //月份
-  			 "d+": date.getDate(), //日
-  			 "h+": date.getHours(), //小时
-  			 "i+": date.getMinutes(), //分
-  			 "s+": date.getSeconds(), //秒
-  			 "q+": Math.floor((date.getMonth() + 3) / 3), //季度
-  			 "S": date.getMilliseconds() //毫秒
-  	 };
-  	 if (/(y+)/.test(fmt)) {
-  			 fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
-  	 }
-  	 for (var k in o)
-  			 if (new RegExp("(" + k + ")").test(fmt))
-  					 fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-  	 return fmt;
-
-  },
-
-  //个位数补充0
-   fixZero (num){
-    num = num >= 0 && num <= 9 ?   "0" + num : num;
-    return num;
-  },
-
-  //格式化日期数据
-   formatDayItemData (date,text){
-    text = text || '';
-    var month = date.getMonth() + 1;
-    month = this.fixZero(month);
-    var day = date.getDate();
-    day = this.fixZero(day);
-    text = text.trim()=='' ? date.getFullYear() + '-' + month + '-' + day : text;
-    return {"value":(date.getFullYear()+'-'+month+'-'+day),"name":text}
-  },
-
-  /**
-   * 取得日期时间列表数据
-   * @param  boolean type      1 日期 2 时 3 分
-   * @param  boolean onlyNow   取现时
-   */
-  returnNeedTimeDatas (type,onlyNow,textsSetting){
-    type = type || 0;
-    var textDefault = {
-      "today" : '今天',
-      "tomorrow" : '明天',
-      "hour" : '时',
-      "minute" : '分',
-    }
-    var tests = Object.assign(textDefault,textsSetting);
-    // texts = texts || ['今天','明天','后天','时','分'];
-    onlyNow = onlyNow || 0;
-    var nowDate = new Date();
-    // console.log(nowDate.getTimezoneOffset());
-    // console.log(nowDate.getUTCHours());
-    var month = nowDate.getMonth() + 1;
-    var howManyDay = 7;
-    var data_dates = [];
-    var data_hours = [];
-    var data_min = [];
-    //取得n天后的Date对像。
-    function getNextDate(n){
-      var nextDate = new Date();
-      nextDate.setDate(nowDate.getDate()+n);
-      return nextDate;
-    }
-
-    //取日期数据数组
-    if(type==1 || type == 0 ){
-      for(let i=0; i<howManyDay;i++){
-        var date = getNextDate(i);
-        var text = '';
-        if(i==0){text=tests.today}
-        if(i==1){text=tests.tomorrow}
-        // if(i==2){text=texts[2];}
-        data_dates[i] = this.formatDayItemData(date,text);
-      }
-      if(type>0){return data_dates;}
-    }
-    //时数组
-    if(type==2 || type == 0 ){
-      var hour_start = onlyNow ? nowDate.getHours() : 0 ;
-
-      for(let i=hour_start;i<24;i++){
-        data_hours[i-hour_start] = {"value":this.fixZero(i),"name":(i)+tests.hour}
-      }
-      if(type>0){return data_hours;}
-    }
-    //分数组
-    if(type==3 || type == 0 ){
-      var min_start = onlyNow ? nowDate.getMinutes() : 0 ;
-      for(let i=min_start;i<60;i++){
-        data_min[i-min_start] = {"value":this.fixZero(i),"name":(i)+tests.minute}
-      }
-      if(type>0){return data_min;}
-    }
-    return [data_dates,data_hours,data_min]
-  },
-
-
-  getScript (setting){
-    return new Promise ((resolve, reject) => {
-      var settingDefault = {
-        async:false,
-        defer:false,
-      }
-      var opt = Object.assign({},settingDefault,setting);
-      const script = document.createElement('SCRIPT')
-
-      script.setAttribute('src', opt.url)
-      if(opt.async){
-        script.setAttribute('async', '')
-      }
-      if(opt.defer){
-        script.setAttribute('defer', '')
-      }
-      if (script.addEventListener) {
-        script.addEventListener('load',  ()=>{
-            resolve();
-        }, false);
-      } else if (script.attachEvent) {
-          script.attachEvent('onreadystatechange',  ()=>{
-              var target = window.event.srcElement;
-              if (target.readyState == 'loaded') {
-                  resolve();
-              }
-          });
-      }
-      document.body.appendChild(script);
-    })
-  },
-
-
-  coord (){
-    var cacheKey_currentCoord = "CP_currentCoord";
-    var cacheKey_defaultCoord = "CP_defaultCoord";
-    //取得默认座标
-    this.defaults =  ()=>{
-      return new Promise ((resolve, reject) => {
-        let defaultCoord = localStorage.getItem(cacheKey_defaultCoord);
-        if(defaultCoord && typeof(JSON.parse(myCoordsStr))=="object" ){
-          defaultCoord = JSON.parse(myCoordsStr);
-          return resolve(defaultCoord);
-        }else{
-
+      if(typeof(position.lat)=="function"  && typeof(position.lng)=="function"){
+        position = {
+          longitude : position.lng(),
+          latitude : position.lat()
         }
-      })
-    }
-
-    //取得用户之前上传到服务器的座标
-    this.get = (uid)=>{
-      return new Promise ((resolve, reject) => {
-
-      })
-    }
-    //取得浏览器定位座标
-    //上传座标
-    this.post = ()=>{
-      return new Promise ((resolve, reject) => {
-
-      })
+      }else if(typeof(position['longitude'])!="undefined"||typeof(position['lng'])!="undefined"){
+        position = {
+          longitude : position['longitude'] ? position['longitude'] : position['lng'],
+          latitude : position['latitude'] ? position['latitude'] : position['lat']
+        }
+      }else if(position.length > 0 && typeof(position[0])!="undefined" ){
+        position = {
+          longitude : position[0],
+          latitude : position[1]
+        }
+      }else{
+        return false;
+      }
+      return position;
+    }else{
+      return false;
     }
   },
-  getDefaultCoord (){
-  },
 
-
-  getCoord (refresh = 0){
+  /**
+   * 取得默认坐标
+   * @return Promise
+   */
+  this.default =  ()=>{
     return new Promise ((resolve, reject) => {
-      if(!refresh && cookie.get('CP_currentCoord')){
-        let myCoordsStr = cookie.get('CP_currentCoord');
-        let myCoords    = JSON.parse(myCoordsStr);
-        resolve(myCoords);
+      let currentCoord = cookie.get(cacheKey_currentCoord);
+      let defaultCoord = localStorage.getItem(cacheKey_defaultCoord);
+      var position = false;
+      if(currentCoord ){
+        position = this.format(JSON.parse(currentCoord));
+      }else  if(defaultCoord ){
+        position = this.format(JSON.parse(defaultCoord));
+      }
+      if(position){
+        return resolve(position);
+      }else{
+        this.get('pull').then(res=>{
+          return resolve(res);
+        }).catch(err=>{
+          position = this.format([112.910868,22.88907]);
+          return resolve(position);
+        })
+      }
+    })
+  }
+
+  /**
+   * 取得用户之前上传到服务器的坐标
+   * @param  Number [uid=0] 用户id, 为0时即取当前用户
+   * @return Promise
+   */
+  this.pull = (uid = 0)=>{
+    return new Promise ((resolve, reject) => {
+      axios.get(config.urls.user+"/"+uid+"/position").then(res=>{
+        if(res.data.code ===0){
+          resolve(res.data);
+        }else{
+          reject(res.data);
+        }
+      }).catch(err=>{
+        reject(err);
+      });
+    })
+  }
+
+
+
+  /**
+   * 上传用户坐标
+   * @param  object|array [position] 用户坐标, 如果为空时，自动获取
+   * @return Promise
+   */
+  this.push = (position = false)=>{
+    return new Promise ((resolve, reject) => {
+      if(cookie.get(cacheKey_isPushing) == 1 ||  cookie.get(cacheKey_unablePush) == 1 || !localStorage.getItem(cacheKey_jwt)  ){
+        return reject({message:'pushing or not login or too offen'});
+      }
+      position = this.format(position);
+      if(!position){
+        this.currentPosition().then(myCoord=>{
+          this.push(myCoord).then(res=>{
+            return resolve(res);
+          }).catch(err=>{
+            return reject(err);
+          })
+        }).catch(err=>{
+          return reject(err);
+        })
+      }else{
+        cookie.set(cacheKey_isPushing,1);
+        cookie.set(cacheKey_unablePush,1,60*5);
+        axios.post(config.urls.user+"/0/position",position).then(res=>{
+          cookie.set(cacheKey_isPushing,0);
+          if(res.data.code === 0){
+            resolve(res.data);
+          }else{
+            reject(res.data);
+          }
+        }).catch(err=>{
+          cookie.set(cacheKey_isPushing,0);
+          reject(err);
+        });
+      }
+
+    })
+  }
+  /**
+   * 取得浏览器定位坐标
+   * @param  0|1 [cache] 是否从缓存取
+   * @return Promise
+   */
+  this.currentPosition = (cache = 0)=>{
+    return new Promise ((resolve, reject) => {
+      var cacheCurrentCoord = cookie.get(cacheKey_currentCoord);
+      if(cache && cacheCurrentCoord){
+        let myCoords    = JSON.parse(cacheCurrentCoord);
+        return resolve(myCoords);
       }
       if(navigator.geolocation) {
+        console.log('Getting position');
         navigator.geolocation.getCurrentPosition( (position)=>{
+          console.log('Getting position complete');
           var coords = {
             accuracy:position.coords.accuracy,
             altitude:position.coords.altitude,
@@ -316,8 +156,9 @@ var cFuns = {
             speed:position.coords.speed,
           }
           var coorStr = JSON.stringify(coords);
-          cookie.set('CP_currentCoord',coorStr,60*10);
-          resolve(coords);
+          cookie.set('CP_currentCoord',coorStr,60*3);
+          localStorage.setItem(cacheKey_defaultCoord,JSON.stringify(this.format(coords)));
+          return resolve(coords);
         }, (error)=>{
             //处理错误
           /*  switch (error.code) {
@@ -335,16 +176,53 @@ var cFuns = {
                     break;
             }*/
             console.log(error)
-            reject(error);
+            return reject(error);
         })
       }else{
-        reject({"message":"浏览器不支持获取地理信息"})
+        return reject({"message":"浏览器不支持获取地理信息"})
       }
     })
-  },
+  }
+  /**
+   * 多途径取用户坐标
+   * @return Promise
+   */
+  this.get = (type="all")=>{
+    switch (type) {
+      case 'default':
+        return  this.default();
+        break;
+      case 'pull':
+        return new Promise ((resolve, reject) => {
+          this.pull().then(res=>{
+            position = this.format(res.data);
+            localStorage.setItem(cacheKey_defaultCoord,JSON.stringify(position));
+            return resolve(position);
+          }).catch(err=>{
+            reject(err);
+          })
+        })
+        break;
+      case 'current':
+        return this.currentPosition();
+        break;
+      default:
+        return new Promise ((resolve, reject) => {
+          this.currentPosition(1).then(res=>{
+            return resolve(res);
+          }).catch(error=>{
+            this.default().then(res=>{
+              return resolve(res);
+            }).catch(err=>{
+              return reject(err)
+            })
+          })
+        })
+    }
 
+  }
 
-
+  return this;
 }
 
-export default cFuns;
+export default coord;
