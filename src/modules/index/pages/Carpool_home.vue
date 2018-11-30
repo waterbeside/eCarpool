@@ -48,6 +48,7 @@
 <script>
 
 import CpFootNavBar from '../components/CpFootNavBar'
+import cCoord from '@/utils/cCoord'
 
 export default {
   components: {
@@ -75,6 +76,7 @@ export default {
     }
   },
   activated (){
+    cCoord().push(); // 上传用户坐标。
     this.$store.commit('setTripFormData',{});
     this.$store.commit('setIsRefreshCarpoolList',true);
 

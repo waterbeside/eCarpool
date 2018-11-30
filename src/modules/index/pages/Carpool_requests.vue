@@ -55,6 +55,7 @@
 import moment from 'moment'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
+import cCoord from '@/utils/cCoord'
 import CpSearchBox from '@/components/CpSearchBox'
 import CpTripCard from '../components/CpTripCard'
 
@@ -235,6 +236,7 @@ export default {
   created () {
     this.init();
     this.getList(1);
+    cCoord().push(); // 上传用户坐标。
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })

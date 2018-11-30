@@ -48,6 +48,7 @@
 import moment from 'moment'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
+import cCoord from '@/utils/cCoord'
 
 import CpTripCard from '../components/CpTripCard'
 
@@ -184,6 +185,7 @@ export default {
       this.$store.commit('setIsRefreshCarpoolList',false);
     // }
     this.$el.querySelector('.load-more').style.display = 'none';
+    cCoord().push(); // 上传用户坐标。
   }
 }
 
