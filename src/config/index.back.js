@@ -35,6 +35,7 @@ let config = {
     trips             : baseUrl_8082 + '/api/v1/trips', // 行程相关接口 (我和行程)
     address           : baseUrl_8082 + '/api/v1/address', // 地址相关
     docs              : baseUrl_8082 + '/api/v1/docs', //文档相关
+    user              : baseUrl_8082 + '/api/v1/user', //用户相关
   }
 }
 
