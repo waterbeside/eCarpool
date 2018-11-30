@@ -383,6 +383,10 @@ message: {
 
 
 
+  "carpool.title.requests":"乘客约车需求",
+  "carpool.title.rides":"墙上空座位",
+  "carpool.title.myTrip":"我的行程",
+
   "carpool.addtrip.tooLong":"路线太长，无法估算",
   "carpool.addtrip.estimate":"预计",
   "carpool.addtrip.shareemptyseat" :  "发布空座位",
@@ -422,7 +426,7 @@ message: {
 
 
   "carpool.confirm.accept" : "是否接受【{username}】的约车",
-  "carpool.acceptSuccess" : "成功添加乘客",
+  "carpool.acceptSuccess" : "接受约车请求成功",
   "carpool.confirm.riding" : "是否要坐【{username}】的车",
   "carpool.ridingSuccess" : "搭车成功",
   "carpool.confirm.finish" : "是否结束本次行程",

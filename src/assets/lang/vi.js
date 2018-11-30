@@ -161,6 +161,8 @@ message: {
   "agreeToSuccess" : "Phê duyệt thành công",
   "reject" : "Từ chối",
   "overdue" : "Quá hạn",
+  "launchApp" : "Chạy ứng dụng",
+  "launchH5" : "H5",
 
   //app
 
@@ -252,14 +254,11 @@ message: {
   //Discover
 
   "discover.trips" :"Tuyến đường",
-  "discover.currenttrip" : "Tuyến đường của tôi",
   "discover.share" : "Xe đưa rước",
-  "discover.request" : "Đặt xe",
   "discover.join" : "Đón xe",
   "discover.carryPassengers" : "Hành khách",
   "discover.onlineMap" : "Bản đồ",
   "discover.realTimeLocation" : "Vị trí thực",
-  "discover.ridesharewall" : "Các xe trống hiện có",
   "discover.busTimetable" : "Thời gian đưa đón",
   "discover.timetable" : "Thời gian đưa đón",
   "discover.MarketShop" : "Second Hand Market",
@@ -268,6 +267,9 @@ message: {
   "discover.inputNeedBus" : "Vui lòng nhập thông tin xe đưa rước bạn cần tìm",
   "discover.notFindBus" : "Không tìm thấy xe",
   "discover.notFindBus.locationCheck" : "Không tìm thấy xe, vui lòng kiểm tra lại thông tin tìm kiếm đã nhập",
+  // "discover.currenttrip" : "Tuyến đường của tôi",
+  // "discover.ridesharewall" : "Các xe trống hiện có",
+  // "discover.request" : "Đặt xe",
 
 
 
@@ -372,6 +374,11 @@ message: {
   "scroller.noData" : "Không có dữ liệu…...",
   "btn.passengerpublish":  "Request",
   "btn.driverpublish": "Post seats",
+
+  "carpool.title.requests":"Đặt xe",
+  "carpool.title.rides":"Các xe trống hiện có",
+  "carpool.title.myTrip":"Tuyến đường của tôi",
+
   "carpool.addtrip.tooLong":"The route is too long to predict the journey time",
   "carpool.addtrip.estimate":"ước tính",
   "carpool.addtrip.shareemptyseat" :  "Chia sẻ chỗ ngồi trống",
@@ -379,7 +386,7 @@ message: {
   "carpool.addtrip.commonroute" : "Tuyến đường thường đi",
   "carpool.addtrip.hour" : ":",
   "carpool.addtrip.minute" : "",
-  
+
   "carpool.whetherAccept":"Dù chấp nhận yêu cầu",
   "carpool.emptySeat":"Còn trống",
   // "carpool.emptySeat":"Empty",
@@ -397,10 +404,14 @@ message: {
   "carpool.detail.EstimatedDistance" : "Khoảng cách",
   "carpool.detail.status" : "Tình trạng",
   "carpool.detail.seatsLeft" : "Ghế còn lại",
+  "carpool.detail.seatsLeftNum" : "Còn {num} chỗ trống",
   "carpool.detail.seeAllComments" : "Tổng cộng có {num} ý kiến, tất cả đều thấy ",
   "carpool.detail.noComment" : "Chưa có bình luận nào",
   "carpool.detail.noPassenger" : "Không có hành khách",
   "carpool.detail.clickLike" : "Like",
+
+  "carpool.detail.openInBrowser" : "Nếu bạn không thể bắt đầu hoặc tải xuống ứng dụng, vui lòng chọn [Mở trong trình duyệt] ở góc trên bên phải của nút.",
+  "carpool.detail.autoStartTips" : "Bạn đã mở trang chia sẻ và ứng dụng sẽ tự động khởi động.  Nếu bạn chưa cài đặt [Filling Carpooling], bạn có thể nhấp vào nút tải xuống ở phía dưới để cài đặt. Bạn cũng có thể sử dụng H5 để trải nghiệm nó.",
 
 
   "carpool.comments.title" : "Nhận xét",

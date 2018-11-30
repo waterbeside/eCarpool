@@ -154,6 +154,8 @@ message: {
   "agreeToSuccess" : "同意成功",
   "reject" : "已拒绝",
   "overdue" : "已过期",
+  "launchApp" : "启动APP",
+  "launchH5" : "H5版",
 
 
 
@@ -250,7 +252,6 @@ message: {
   //Discover 发现
 
   "discover.trips" :"行程",
-  "discover.currenttrip" : "我的行程",
   "discover.share" : "班车",
   "discover.onlineMap" : "在线地图",
   "discover.realTimeLocation" : "实时位置",
@@ -262,11 +263,11 @@ message: {
   "discover.inputNeedBus" : "输入要查找的班车",
   "discover.notFindBus" : "找不到您要找的车",
   "discover.notFindBus.locationCheck" : "找不到您要找的车,请检查搜索信息是否正确",
-  "discover.request" : "乘客约车需求",
   "discover.join" : "搭车",
   "discover.carryPassengers" : "载客",
-  "discover.ridesharewall" : "墙上空座位",
-
+  // "discover.ridesharewall" : "墙上空座位",
+// "discover.currenttrip" : "我的行程",
+// "discover.request" : "乘客约车需求",
 
 
 
@@ -383,6 +384,10 @@ message: {
 
 
 
+  "carpool.title.requests":"乘客约车需求",
+  "carpool.title.rides":"墙上空座位",
+  "carpool.title.myTrip":"我的行程",
+
   "carpool.addtrip.tooLong":"路线太长，无法估算",
   "carpool.addtrip.estimate":"预计",
   "carpool.addtrip.shareemptyseat" :  "发布空座位",
@@ -405,15 +410,20 @@ message: {
   "carpool.detail.btn.riding" : "搭 车",
   "carpool.detail.btn.cancel" : "取消行程",
   "carpool.detail.btn.finish" : "结束行程",
-
   "carpool.detail.addComment" : "我要评论",
   "carpool.detail.EstimatedDistance" : "估算路程",
   "carpool.detail.status" : "状态",
   "carpool.detail.seatsLeft" : "剩余空位",
+  "carpool.detail.seatsLeftNum" : "剩余{num}个空位",
   "carpool.detail.seeAllComments" : "共{num}条评论，查看全部",
   "carpool.detail.noComment" : "还未有人评论",
   "carpool.detail.noPassenger" : "未有乘客",
   "carpool.detail.clickLike" : "点赞",
+
+  "carpool.detail.openInBrowser" : "如果您无法启动或下载APP，请在右上角的按钮，选择【在浏览器中打开】。",
+  "carpool.detail.autoStartTips" : "您已打开分享页面，App将会自动启动， 如果没有安装【溢起拼车】，可点击底部的下载按钮安装使用，你亦可使用H5使进行体验。",
+
+
 
   "carpool.comments.title" : "评论",
   "carpool.comments.sendFail" : "发送失败",
