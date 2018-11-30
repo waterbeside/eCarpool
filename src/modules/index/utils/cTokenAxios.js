@@ -20,13 +20,22 @@ function getLanguage(){
 
 function getLanguageFile(){
   getLanguage();
-  var langPathArray = {
-    'zh' : true,
-    'vi' : true,
-    'en' : true,
+  var langArray = {
+    'zh' : {
+      networkFail:'网络不畅，请稍候再试',
+      pleaselogin:'您还没登录,请先登录',
+    },
+    'vi' : {
+      networkFail:'Internet không hoạt động, hãy thử lại sau',
+      pleaselogin:'Vui lòng đăng nhập',
+    },
+    'en' : {
+      networkFail:'The Internet is not working, please try again later',
+      pleaselogin:'Login Please',
+    },
   }
-  if(lang && typeof(langPathArray[lang])!="undefined" && langPathArray[lang]){
-    t =  require('@/assets/lang/'+lang).default;
+  if(lang && typeof(langArray[lang])!="undefined" && langArray[lang]){
+    t.message =  langArray[lang];
   }
   return t;
 }
@@ -64,7 +73,7 @@ tokenAxios.interceptors.response.use(res =>{
       case 10004:
           // console.log(10004)
           if(router.history.current.name!='login'){
-            Vue.$vux.toast.text(t.message['user.login.pleaselogin']);
+            Vue.$vux.toast.text(t.message['pleaselogin']);
             router.push({ name: 'login'});
           }
         break;
