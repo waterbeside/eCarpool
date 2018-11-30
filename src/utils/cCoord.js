@@ -160,24 +160,9 @@ var  coord = ()=>{
           localStorage.setItem(cacheKey_defaultCoord,JSON.stringify(this.format(coords)));
           return resolve(coords);
         }, (error)=>{
-            //处理错误
-          /*  switch (error.code) {
-                case 1:
-                    error.message = "位置服务被拒绝";
-                    break;
-                case 2:
-                    error.message = "暂时获取不到位置信息。";
-                    break;
-                case 3:
-                    error.message = "获取信息超时。";
-                    break;
-                default:
-                    error.message = "未知错误";
-                    break;
-            }*/
             console.log(error)
             return reject(error);
-        })
+        },{timeout: 30000, enableHighAccuracy: true, maximumAge: 75000})
       }else{
         return reject({"message":"浏览器不支持获取地理信息"})
       }
