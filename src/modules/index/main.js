@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+import VueI18n from 'vue-i18n'
 import router from './router'
 import store from './store'
 
@@ -10,9 +11,6 @@ import tokenAxios from './utils/cTokenAxios';
 import cFuns from '@/utils/cFuns';
 import VueAMap from 'vue-amap';
 import {Group, Cell, XInput, XButton , PopupPicker, Spinner,  Divider, ConfirmPlugin,ToastPlugin,Loading,Toast} from 'vux'
-import VueI18n from 'vue-i18n'
-
-
 
 
 import config from './config'
@@ -52,8 +50,6 @@ Vue.prototype.$http = tokenAxios;
 var _language = cFuns.getLanguage(1);
 var lang = cFuns.formartLanguage(_language);
 localStorage.setItem('language',_language);
-
-
 const i18n = new VueI18n({
   // locale: _language, // 语言标识
     locale: lang, // 语言标识
