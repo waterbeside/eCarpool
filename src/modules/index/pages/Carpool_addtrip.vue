@@ -200,7 +200,6 @@ export default {
         if(!this.mapObj || refresh){
           cGmap.showMap('mapContainer-addtrip').then(map=>{
             this.mapObj = map;
-            console.log(map);
             resolve(map);
           }).catch(error=>{
             reject(error);
@@ -386,7 +385,6 @@ export default {
       this.formData.seat_count = 4;
     }
 
-    console.log(this.formData);
 
     if(this.formData.time && this.formData.start.longitude && this.formData.end.longitude &&  ( this.formData.seat_count || this.type == "info" ) ){
       this.disableSubmitBtn = false ;
@@ -424,7 +422,6 @@ export default {
   },
 
   activated (){
-    console.log(1)
     // this.mapInit().then((res)=>{})
   }
 
