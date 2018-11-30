@@ -318,7 +318,7 @@ export default {
             if(this.type=="info"){
               this.isShowBtn_pickup = this.uid == this.user.uid ? false : true;
             }
-            this.statusText  = this.$t("message['carpool.status.waitingDriver']");;
+            this.statusText  = this.$t("message['carpool.status.waitingDriver']");
             this.statusIcon  = "fa fa-user";
           break;
         case 1:

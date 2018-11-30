@@ -9,7 +9,7 @@
               <dt> {{ $t("message['discover.trips']" )}} </dt>
               <dd>
                 <router-link  class="btn btn-ripple" to="/carpool/mytrip">
-                  <i class="fa fa-map"></i> {{ $t("message['discover.currenttrip']" )}}
+                  <i class="fa fa-map"></i> {{ $t("message['carpool.title.myTrip']" )}}
                 </router-link>
                 </dd>
             </dl>
@@ -17,7 +17,7 @@
               <dt>{{ $t("message['discover.carryPassengers']" )}}</dt>
               <dd>
                 <router-link  class="btn btn-ripple" to="/carpool/requests">
-                  <i class="fa fa-car"></i> {{ $t("message['discover.request']" )}}
+                  <i class="fa fa-car"></i> {{ $t("message['carpool.title.requests']" )}}
                 </router-link>
               </dd>
             </dl>
@@ -25,7 +25,7 @@
               <dt>{{ $t("message['discover.join']" )}}</dt>
               <dd>
                 <router-link  class="btn btn-ripple" to="/carpool/rides">
-                  <i class="fa fa-heart"></i> {{ $t("message['discover.ridesharewall']" )}}
+                  <i class="fa fa-heart"></i> {{ $t("message['carpool.title.rides']" )}}
                 </router-link>
               </dd>
             </dl>

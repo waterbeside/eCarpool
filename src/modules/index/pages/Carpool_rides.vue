@@ -1,7 +1,7 @@
 <template>
   <div class="page-view  ">
     <title-bar  :left-options="{showBack: true, preventGoBack:true}" @onClickBack="goHome">
-      <span v-show="isShowSearchBox==0">{{$t("message['discover.ridesharewall']")}}</span>
+      <span v-show="isShowSearchBox==0">{{$t("message['carpool.title.rides']")}}</span>
       <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)"
       @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch"
       :placeholder="$t('message[\'placeholder.keyword\']')"></cp-search-box>

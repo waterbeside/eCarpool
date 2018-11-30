@@ -1,7 +1,7 @@
 <template>
   <div class="page-view  ">
     <title-bar  :left-options="{showBack: true, preventGoBack:true}" @onClickBack="goHome">
-      <span  >{{$t("message['discover.currenttrip']")}}</span>
+      <span  >{{$t("message['carpool.title.myTrip']")}}</span>
     </title-bar>
     <div class="page-view-main"   >
       <cp-scroller  :position="{top:'46px'}"  :on-refresh="onRefresh"   :dataList="scrollData" :enableInfinite="false">

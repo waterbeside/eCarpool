@@ -1,7 +1,7 @@
 <template>
   <div class="page-view cp-overhide">
     <title-bar  :left-options="{showBack: true, preventGoBack:true}" @onClickBack="goHome">
-      <span v-show="!isShowSearchBox">{{$t("message['discover.request']")}}</span>
+      <span v-show="!isShowSearchBox">{{$t("message['carpool.title.requests']")}}</span>
       <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)"
       @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch"
       :placeholder="$t('message[\'placeholder.keyword\']')"></cp-search-box>
