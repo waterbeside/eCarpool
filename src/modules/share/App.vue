@@ -4,7 +4,7 @@
       <!-- 如果是在微信里打开则显示 -->
       <div class="wx-tips-wrap" v-show="isShowWxTips" style="">
   		    <img class="arrow-pic" src="../../assets/images/arrow-topright-s.png" >
-  		    <h3>如果您无法启动或下载APP，请在右上角的按钮，选择【在浏览器中打开】”。</h3>
+  		    <h3>{{$t("message['carpool.detail.openInBrowser']")}}</h3>
       </div>
       <cp-view-box>
         <div class="container ">
@@ -22,11 +22,11 @@
                 </div>
                 <div class="cp-heading-bg" ></div>
               </div>
-              <cp-trip-box v-if="detailData" :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname"></cp-trip-box>
+              <cp-trip-box v-if="detailData" :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname" :labelStart="$t('message[\'label.from\']')"  :labelEnd="$t('message[\'label.to\']')"></cp-trip-box>
               <div class="cp-cell cp-cell-time">
                   <div class="la"><i class="fa fa-clock-o"></i></div>
                   <span class="cp-time">{{detailData.time_format}}</span>
-                  <small class="cp-label">出发时间</small>
+                  <small class="cp-label">{{$t("message['label.startTime']")}}</small>
               </div>
               <div class="cp-cell ">
                   <div class="la"><i class="fa fa-info"></i></div>
@@ -35,7 +35,7 @@
             </div>
 
             <div class="alert alert-warning" style="box-shadow: 0 0 10px rgba(0,0,0,.1);">
-              您已打开分享页面，App将会自动启动，<br />如果没有安装【溢起拼车】，可点击底部的下载按钮安装使用，你亦可使用H5使进行体验。
+              {{$t("message['carpool.detail.autoStartTips']")}}
             </div>
 
           </div>
@@ -44,25 +44,25 @@
               <div class="router-link cp-bar-tab-item "  >
                 <a href="http://m.esquel.cn/apps/gek/Carpool/downloadandroid.php">
                   <i class="cp-iconfont fa fa-android"></i>
-                  <div class="cp-bar-tab-label">安卓下载</div>
+                  <div class="cp-bar-tab-label">{{ $t("message['downloadapp.android']" )}}</div>
                 </a>
               </div>
               <div   class="router-link cp-bar-tab-item">
                 <a href="http://m.esquel.cn/apps/gek/Carpool/downloadios.php">
                   <i class="cp-iconfont fa fa-apple"></i>
-                  <div class="cp-bar-tab-label">苹果下载</div>
+                  <div class="cp-bar-tab-label">{{ $t("message['downloadapp.ios']" )}}</div>
                 </a>
               </div>
               <div   class="router-link cp-bar-tab-item" >
                 <a :href="h5Url">
                   <i class="cp-iconfont fa fa-html5"></i>
-                  <div class="cp-bar-tab-label">进入H5版</div>
+                  <div class="cp-bar-tab-label">{{ $t("message['launchH5']" )}}</div>
                 </a>
               </div>
               <div   class="router-link cp-bar-tab-item cp-btn-go" >
                 <a @click="launchApp" >
                   <i class="cp-iconfont fa fa-caret-right"></i>
-                  <div class="cp-bar-tab-label">启动APP</div>
+                  <div class="cp-bar-tab-label">{{ $t("message['launchApp']" )}}</div>
                 </a>
               </div>
           </div>
@@ -108,7 +108,9 @@ export default {
   },
   computed: {
     typeLabel (){
-      return this.r=="info"?"乘客约车需求":"司机空座位";
+      return this.r=="info"? this.$t("message['carpool.title.requests']") : this.$t("message['carpool.title.rides']");
+
+      //
     },
     statusText (){
       let status = parseInt(this.detailData.status);
@@ -119,26 +121,26 @@ export default {
           case "info":
             switch (status) {
               case 0:
-                return "等待搭载"
+                return this.$t("message['carpool.status.waitingDriver']")
                 break;
               case 1:
-                return "已搭车成功"
+                return this.$t("message['carpool.status.hasTaken']");
                 break;
               case 2:
-                return "已取消"
+                return this.$t("message['carpool.status.hasCanceled']");
                 break;
               case 3:
-                return "已完成"
+                return this.$t("message['carpool.status.hasFinished']");
                 break;
             }
             break;
           case "lovewall":
             if(status<2){
-              return "剩余 <b>"+(this.detailData.seat_count-this.detailData.took_count)+"</b> 个空座位"
+              return this.$t("message['carpool.detail.seatsLeftNum']",{"num":(this.detailData.seat_count-this.detailData.took_count)});
             }else if(status==2){
-              return "空座位已取消"
+              return this.$t("message['carpool.status.hasCanceled']");
             }else if(status==3){
-              return "行程已完结"
+              return this.$t("message['carpool.status.hasFinished']");
             }
             break;
           default:
