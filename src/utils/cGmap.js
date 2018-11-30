@@ -313,7 +313,6 @@ var cGmap = {
       var geocoder = new google.maps.Geocoder;
       geocoder.geocode({'location': position}, function(results, status) {
         var res = {results,status}
-        console.log(results);
         if (status === 'OK') {
           resolve(results);
         /*  if (results[0]) {
