@@ -189,7 +189,8 @@ export default {
       let params = {keyword:this.keyword,page:1};
       this.isLoading = 1;
       this.noData = 0;
-      this.$http.get(config.urls.getMyAddress,{params:params}).then(res => {
+      // this.$http.get(config.urls.getMyAddress,{params:params}).then(res => {
+      this.$http.get(config.urls.address+"/my",{params:params}).then(res => {
         // console.log(res)
           this.isLoading = 0;
           if(res.data.code === 0) {
