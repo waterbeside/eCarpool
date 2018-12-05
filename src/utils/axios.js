@@ -9,7 +9,7 @@ var _language = false;
 var lang = "zh";
 
 function getLanguage(){
-  let  lang_temp = localStorage.getItem('language');
+  let  lang_temp = localStorage ? localStorage.getItem('language') : 'zh';
   lang_temp = lang_temp ?  lang_temp : localStorage.getItem('lang');
   lang_temp = lang_temp ?  lang_temp : localStorage.getItem('lag');
   _language = lang_temp;
@@ -58,12 +58,14 @@ tokenAxios.interceptors.request.use(config => {
    config.headers['X-Requested-With'] = 'XMLHttpRequest'
    // config.withCredentials = false
   // 下面会说在什么时候存储 token
-  if(_language  && !unsetLanguage){
-    config.headers['Accept-Language'] = _language;
-  }
-  // token放到头
-  if (localStorage.getItem('CP_U_TOKEN') && !unsetAuthorization  ) {
-    config.headers.Authorization = 'Bearer ' + localStorage.getItem('CP_U_TOKEN');
+  if(localStorage){
+    if(_language  && !unsetLanguage){
+      config.headers['Accept-Language'] = _language;
+    }
+    // token放到头
+    if (localStorage.getItem('CP_U_TOKEN') && !unsetAuthorization  ) {
+      config.headers.Authorization = 'Bearer ' + localStorage.getItem('CP_U_TOKEN');
+    }
   }
   return config
 },error =>{
