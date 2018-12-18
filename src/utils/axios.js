@@ -32,7 +32,7 @@ tokenAxios.interceptors.request.use(config => {
   getLanguage();
   config.isPure = config.isPure || false;
   if(config.isPure) return config;
-  var isQs = config.qs || true;
+  var isQs = config.qs === false ? false  : true;
   var unsetAuthorization = config.unsetAuthorization || false;
   var unsetLanguage = config.unsetLanguage || false;
 
@@ -55,7 +55,7 @@ tokenAxios.interceptors.request.use(config => {
        config.data = formData
        */
    }
-   config.headers['X-Requested-With'] = 'XMLHttpRequest'
+   // config.headers['X-Requested-With'] = 'XMLHttpRequest'
    // config.withCredentials = false
   // 下面会说在什么时候存储 token
   if(localStorage){
