@@ -73,7 +73,7 @@ var cGmap = {
       var Coord = new cCoord();
       this.load(loadsetting).then(()=>{
         var settingDefault = {
-          center: new google.maps.LatLng(22.88907, 112.910868),
+          center: new google.maps.LatLng(10.782053,106.683886),
           zoom: 10,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           autoCenter:true,
