@@ -1,6 +1,3 @@
-import Vue from 'vue'
-import {ToastPlugin} from 'vux'
-
 import axios from 'axios'
 import qs from 'qs'
 
