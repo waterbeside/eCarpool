@@ -1,7 +1,7 @@
 <template>
   <div class="page-view-index" id="Page-user-index">
     <div class="page-view-header">
-        <div class="cp-heading btn-ripple" @click="$router.push({ name:'user_profile'})"  >
+        <div class="cp-heading btn-ripple" @click="$router.push({ name:'user_profile_avatar'})"  >
             <cp-avatar :src="avatar"></cp-avatar>
             <div class="cp-txt">
               <h3> {{userName}} </h3>
