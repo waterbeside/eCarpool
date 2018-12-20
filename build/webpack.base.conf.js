@@ -35,6 +35,7 @@ const webpackConfig = {
   },
   //无需打包的第三方类库
   externals: {
+    'moment': 'moment',
     // 'vue': 'Vue',
      // 'vue-router':"VueRouter"
   },
