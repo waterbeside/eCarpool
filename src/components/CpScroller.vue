@@ -1,7 +1,7 @@
 <template lang="html">
     <div class="cp-scroll"  :class="{'down':(state===0),'up':(state==1),refresh:(state===2),touch:touching}" :style="style"  @touchstart="touchStart($event)" @touchmove="touchMove($event)" @touchend="touchEnd($event)" @scroll="scroll($event)">
         <slot name="before-inner"></slot>
-        <section :id="innerID" class="cp-scroll-inner" :class="{'cp-enableRefresh':enableRefresh}" :style="innerStyleEX"  >
+        <section :id="innerID" class="cp-scroll-inner" :class="{'cp-enableRefresh':enableRefresh}" :style="innerStyleEX"  ref="scrollInner">
             <div class="pull-refresh" v-show="enableRefresh">
                 <slot name="pull-refresh">
                     <span class="down-tip">{{$t("message['scroller.pullToRefresh']")}}</span>
@@ -219,95 +219,5 @@
     }
 </script>
 <style lang="less">
-.cp-scroll {
-  font-size: 14px;
-  position: absolute;
-  top:0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  overflow: auto;
-  z-index: 100;
-  height: auto;
-  -webkit-overflow-scrolling: touch;
-  .cp-scroll-inner {
-      position: absolute;
 
-      width: 100%;
-      height: auto;
-      padding-bottom: 15px;
-      transition-duration: 300ms;
-      &.cp-enableRefresh {
-        top: -30px;
-      }
-      .pull-refresh {
-          position: relative;
-          left: 0;
-          top: 0;
-          width: 100%;
-          height: 30px;
-          display: flex;
-          display: -webkit-flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 14px;
-      }
-      .load-more {
-          height: 60px;
-          line-height: 60px;
-          display: flex;
-          text-align: center;
-          align-items: center;
-          justify-content: center;
-          display: none;
-          font-size: 14px;
-      }
-      .nullData {
-          //暂无更多数据样式
-          font-size: 14px;
-          color: #999999;
-          height: 60px;
-          line-height: 60px;
-          text-align: center;
-      }
-      .down-tip,
-      .refresh-tip,
-      .up-tip {
-          display: none;
-      }
-      .up-tip:before,
-      .refresh-tip:before {
-          content: '';
-          display: inline-block;
-          width: 160px;
-          height: 70px;
-          background-size: 70% !important;
-          position: absolute;
-          top: 0;
-          left: 20%;
-      }
-      .up-tip:before {
-          // background: url(../img/pull-refresh/down-logo.png) no-repeat center;
-      }
-      .refresh-tip:before {
-          // background: url(../img/pull-refresh/refresh-logo.gif) no-repeat center;
-      }
-  }
-}
-
-.cp-scroll.touch .cp-scroll-inner {
-transition-duration: 0;
-}
-
-.cp-scroll.down .down-tip {
-display: block;
-}
-
-.cp-scroll.up .up-tip {
-display: block;
-}
-
-.cp-scroll.refresh .refresh-tip {
-display: block;
-}
 </style>
