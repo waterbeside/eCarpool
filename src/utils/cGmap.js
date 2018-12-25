@@ -185,10 +185,18 @@ var cGmap = {
    * 加marker
    */
   addMarker (position,mapObj,setting) {
-    position = this.formatCoords(position);
     var settingDefault = {
-      position: position,
-      animation:google.maps.Animation.DROP
+      // animation:google.maps.Animation.DROP
+    }
+    if(typeof(position.position)=="object"){
+      position.position = this.formatCoords(position.position);
+      setting = position;
+      if(typeof(position.map)=="object"){
+        mapObj = position.map;
+      }
+    }else{
+      position = this.formatCoords(position);
+      settingDefault.position = position;
     }
     var opt = Object.assign({},settingDefault,setting)
     var marker = new google.maps.Marker(opt);
