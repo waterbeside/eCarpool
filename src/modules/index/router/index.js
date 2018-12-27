@@ -73,7 +73,7 @@ const routes = [
   },
   // 行程细览
   {
-    path: '/carpool/requests/detail/:id',
+    path: '/carpool/requests/:id',
     name: 'carpool_requests_detail',
     component (resolve) {
       require(['../pages/Carpool_detail'], resolve)
@@ -82,16 +82,34 @@ const routes = [
   },
   // 行程细览
   {
-    path: '/carpool/rides/detail/:id',
+    path: '/carpool/rides/:id',
     name: 'carpool_rides_detail',
     component (resolve) {
       require(['../pages/Carpool_detail'], resolve)
     },
     meta: {keepAlive: true }
   },
+  //用户位置
+  {
+    path: '/carpool/position/:uid',
+    name: 'carpool_position',
+    component (resolve) {
+      require(['../pages/carpool_position'], resolve)
+    },
+    meta: {keepAlive: false }
+  },
+  //用户位置
+  {
+    path: '/carpool/position/:uid/:infoid',
+    name: 'carpool_position',
+    component (resolve) {
+      require(['../pages/carpool_position'], resolve)
+    },
+    meta: {keepAlive: false }
+  },
   // 评论
   {
-    path: '/carpool/rides/comments/:id',
+    path: '/carpool/rides/:id/comments',
     name: 'carpool_rides_comments',
     component (resolve) {
       require(['../pages/carpool_rides_comments'], resolve)

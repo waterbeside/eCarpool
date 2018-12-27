@@ -250,10 +250,10 @@ export default {
     this.sharer = cFuns.getRequest('sharer');
     switch (this.r) {
       case "info":
-        this.h5Url = this.h5Url+"#/carpool/requests/detail/"+this.id;
+        this.h5Url = this.h5Url+"#/carpool/requests/"+this.id;
         break;
       case "lovewall":
-        this.h5Url = this.h5Url+"#/carpool/rides/detail/"+this.id;
+        this.h5Url = this.h5Url+"#/carpool/rides/"+this.id;
         break;
       default:
     }
