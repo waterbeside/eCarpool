@@ -59,18 +59,15 @@
             </div>
             <template v-if="comments.length">
               <ul class="cp-comment-list">
-                <li v-for="(item,index) in comments" class="cp-comment-item">
-                  <div class="cp-avatarbox">
-                    <cp-avatar :src="item.avatar"></cp-avatar>
-                  </div>
-                  <div class="cp-mainbox">
-                    <div class="cp-title">
-                      <b class="name">{{item.name}}</b>
-                      <span class="time">{{item.time}}</span>
-                    </div>
-                    <div class="cp-content">{{item.content}}</div>
-                  </div>
-                </li>
+                <comment-item
+                  v-for="(item,index) in comments "
+                  :key = "index"
+                  :avatar = "item.avatar"
+                  :name = "item.name"
+                  :time = "item.time"
+                  :content = "item.content"
+                ></comment-item>
+
                 <li class="cp-commentLists-tips" ><router-link   :to="{ name:'carpool_rides_comments', params: {id: id} }">{{$t("message['carpool.detail.seeAllComments']",{"num":comments_total})}}</router-link></li>
               </ul>
 
@@ -80,23 +77,25 @@
             <div class="text-center"><router-link class="btn btn-default"  :to="{ name:'carpool_rides_comments', params: {id: id} }"><i class="fa fa-edit"></i> {{$t("message['carpool.detail.addComment']")}}</router-link></div>
           </div>
           <!-- /留言 -->
-
           <div class="cp-content-item" :key="2" v-show="tabIndex == 2">
             <div class="text-center"  v-show="isLoading_pss">
               <spinner type="dots" size="60px"></spinner>
             </div>
-            <ul class="cp-wallView-passenger" v-if="passengers.length > 0">
-              <li class="cp-item " :class="{'cp-finish':item.status==3}" v-for="(item,index) in passengers ">
-                <cp-avatar :src="item.avatar" ></cp-avatar>
-                <div class="cp-txt">
-                  <h4 class="media-heading">{{item.p_name}}</h4>
-                  <p>{{item.p_department ? item.p_department : "-"}}</p>
-                </div>
-                <div class="cp-btns-wrap">
-                  <a :href="'tel:'+item.p_mobile" class="btn  btn-fab btn-fab-mini"><i class="fa fa-phone"></i></a>
-                </div>
-             </li>
-            </ul>
+            <div class="cp-wallView-passenger" v-if="passengers.length > 0">
+              <passenger-item class="cp-item"
+              :class="{'cp-finish':item.status==3}"
+              v-for="(item,index) in passengers "
+              :key = "index"
+              :avatar = "item.avatar"
+              :name = "item.p_name"
+              :department = "item.p_department"
+              :phone = "item.p_mobile"
+              :start_name = "item.start_addressname"
+              :end_name = "item.end_addressname"
+              :time = "item.format_time"
+              >
+              </passenger-item>
+           </div>
             <p class="cp-nodata-tips" v-else v-show="!isLoading_pss">{{$t("message['carpool.detail.noPassenger']")}}</p>
           </div>
           <!-- /乘客 -->
@@ -120,24 +119,24 @@
 </template>
 
 <script>
-import moment from 'moment'
+import {Tab, TabItem ,dateFormat} from 'vux'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 import cGmap from '@/utils/cGmap'
 import cCoord from '@/utils/cCoord';
-import {Tab, TabItem} from 'vux'
-import { lazyAMapApiLoaderInstance } from 'vue-amap';
-
 
 import CpAvatar from '@/components/CpAvatar'
 import CpTripBox from '../components/CpTripBox'
+import PassengerItem from '../components/CpTripPassengerItem'
+import CommentItem from '../components/CpTripComment'
 
 import StatisItem from '@/components/StatisItem'
 
 
 export default {
   components: {
-    CpAvatar,CpTripBox,StatisItem,Tab,TabItem
+    CpAvatar,CpTripBox,StatisItem,Tab,TabItem,PassengerItem,CommentItem
+
   },
   data () {
     return {
@@ -395,8 +394,7 @@ export default {
           // console.log(res);
           if(res.data.code === 0) {
             let data = res.data.data;
-
-            data.time_format = moment(data.time*1000).format('YYYY-MM-DD HH:mm');
+            data.time_format = dateFormat(data.time*1000,'YYYY-MM-DD HH:mm');
             this.detailData      = data;
             this.uid             = data.uid;
             this.detailData.d_avatar = data.d_imgpath ? config.avatarBasePath + data.d_imgpath : this.defaultAvatar;
@@ -519,6 +517,7 @@ export default {
         if(res.data.code === 0) {
           data.lists.forEach((value,index,arr)=>{
             value.avatar = value.p_imgpath ? config.avatarBasePath + value.p_imgpath : this.defaultAvatar;
+            value.format_time = dateFormat(value.time*1000,'YYYY-MM-DD HH:mm');
           })
           this.passengers = data.lists;
           this.took_count = this.passengers.length;

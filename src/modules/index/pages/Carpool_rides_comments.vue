@@ -4,21 +4,16 @@
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}"  :on-refresh="onRefresh"  :dataList="scrollData" :enableInfinite="enableInfinite" id="cp-scroll-wrapper" innerID="cp-scroll-inner">
         <ul v-if="comments.length" class="cp-comment-list">
-          <li v-for="(item,index) in comments" class="cp-comment-item">
-            <div class="cp-avatarbox">
-              <cp-avatar :src="item.avatar"></cp-avatar>
-            </div>
-            <div class="cp-mainbox">
-              <div class="cp-title">
-                <b class="name">{{item.name}}</b>
-                <span class="time">{{item.time}}</span>
-              </div>
-              <div class="cp-content">
-                {{item.content}} <i v-show="item.isSubmiting" class="cp-loadingIcon fa fa-circle-o-notch fa-spin "></i>
-                <span v-show="item.isError" class="cp-error">{{$t("message['carpool.comments.sendFail']" )}} </span>
-              </div>
-            </div>
-          </li>
+          <comment-item
+            v-for="(item,index) in comments "
+            :key = "index"
+            :avatar = "item.avatar"
+            :name = "item.name"
+            :time = "item.time"
+            :content = "item.content"
+            :isSubmiting = "item.isSubmiting"
+            :isError = "item.isError"
+          ></comment-item>
         </ul>
 
 
@@ -50,12 +45,13 @@ import config from '../config'
 import cFuns from '@/utils/cFuns'
 
 import CpAvatar from '@/components/CpAvatar'
+import CommentItem from '../components/CpTripComment'
 
 
 
 export default {
   components: {
-    CpAvatar
+    CpAvatar,CommentItem
   },
   data () {
     return {
