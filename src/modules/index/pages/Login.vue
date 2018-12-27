@@ -113,7 +113,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  lang="less">
-@import "../../../assets/css/cp_base.less";
+@import "../../../assets/css/_base.less";
 
 #Page-login {
   @color-placeholder:lighten( desaturate(@color-primary,10%),40%);

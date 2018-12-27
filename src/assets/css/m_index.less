@@ -1,4 +1,4 @@
-@import "cp_base.less";
+@import "_base.less";
 @import "./components/_CpScroller.less";
 
 .cp-all { position: relative; z-index: 0}
@@ -55,7 +55,7 @@
 
 
 .btn.btn-fab.btn-fab-mini, .btn-group-sm .btn.btn-fab, .navbar .navbar-nav>li>a.btn.btn-fab.btn-fab-mini, .btn-group-sm .navbar .navbar-nav>li>a.btn.btn-fab {
-  @height:40px; height: @height; min-width: @height; width: @height;
+  @height:40px; height: @height; min-width: 20px; width: @height;
   &.material-icons {top: -3.5px; left: -3.5px}
   .material-icons {font-size: 17px}
 }
@@ -341,7 +341,7 @@
 .cp-nodata-tips { margin-top: 10px; text-align:  center;}
 
 /*路线盒*/
-.cp-trip-box {clear: both;padding:0px 20px 10px 24px; border-bottom: 1px dotted #DDD; position: relative; display: flex;
+.cp-trip-box {clear: both; padding:0px 20px 10px 24px; border-bottom: 1px dotted #DDD; position: relative; display: flex;
 
   .cp-trip-line { padding: 20px 0 10px 0; position: relative;}
   .cp-trip-content { width: 100%}
@@ -1149,11 +1149,14 @@
 /* 乘客列表 */
 
 .cp-wallView-passenger {
+  @btn-size:30px;
+  @avatar-size:40px;
+  @padding: 8px;
   list-style: none;margin: 0; padding: 0;
-
-  .cp-item { position: relative; list-style: none; padding: 12px 15px; border-bottom: 1px dotted #ddd; font-size: 12px;
-    .cp-avatar { float: left;width: 40px; height: 40px; margin:-2px 15px 0 0; border-radius: 50%}
-    .media-heading { font-size: 15px; margin-top: 1px; margin-bottom: 5px;color: #666; font-weight: 400}
+  .cp-item { position: relative; list-style: none;  border-bottom: 1px solid @color-border; font-size: 12px; padding-top: 12px;
+    .cp-avatar { float: left; width: @avatar-size; height: @avatar-size; margin:(@padding - 2) 15px 0 @padding; border-radius: 50%}
+    .cp-txt { padding-top: @padding;}
+    .media-heading { font-size: 15px; margin: 0 0  5px;color: #666; font-weight: 400}
     p {margin: 0; color:#999}
     &.cp-finish {
       background: #fafafa; color: #DDD;
@@ -1162,10 +1165,46 @@
       .media-heading { color: #aaa; }
       .btn-fab-mini { background-color:lighten(@color-primary,50%); color:lighten(@color-primary,30%)}
     }
-
   }
-  .cp-btns-wrap { position: absolute; right:12px; top:10px; padding: 0 !important;}
-  .btn-fab-mini {width: 40px; height: 40px; line-height: 40px; box-shadow: none; background-color:lighten(@color-primary,55%); color:lighten(@color-primary,10%)}
+  .time {position: absolute; right: 4px; top:4px; color:@color-gray}
+  .cp-trip-box {
+    @p-size: 8px;
+    padding: 8px 8px ; border: none; /* border-top:1px dotted @color-border;*/
+    .cp-trip-content {
+      display: flex;
+    }
+    .cp-trip-line { display: none}
+    .cp-center-wrap { width: 10%;
+      .inner {border-bottom: 2px dotted @color-border; padding-top: 10px;}
+    }
+    .cp-p {
+      left:4px; top:6px;border-width: 2px; width: @p-size; height: @p-size;
+    }
+    h4 {font-size: 12px !important; margin: 0!important; padding: 0;line-height:20px; color:@color-silver; padding: 0 4px;}
+    .cp-start , .cp-end {
+      overflow: hidden;
+      margin: 0;padding: 0 0 0 10px;
+      background: @color-dark-white;
+      width: 45%;
+      border-bottom: none; border: 1px solid @color-gray-l1;   border-radius: 3px;
+      .ellipsis();
+      label {display: none}
+    }
+  }
+  .cp-btns-bar {
+    @color-btn:lighten(@color-primary,55%);
+    @color-btn-border:darken(@color-btn,5%);
+    border-top:1px solid   @color-btn-border;
+    right:12px; top:10px; padding: 0 !important;  display: flex;
+    background-color:@color-btn;
+    text-align: right;
+    .btn  {
+        flex:1; border-right: 1px solid @color-btn-border; border-radius: 0; text-align: center; padding:4px 8px;
+       color:darken(@color-btn,45%);
+       &[disabled] {color:darken(@color-btn,15%)}
+     }
+     .btn + .btn { border-right: none}
+    }
 }
 
 /* 评论列表 */
