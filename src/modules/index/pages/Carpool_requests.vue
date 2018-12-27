@@ -52,7 +52,8 @@
 </template>
 
 <script>
-import moment from 'moment'
+
+import {dateFormat} from 'vux'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 import CpSearchBox from '@/components/CpSearchBox'
@@ -178,7 +179,7 @@ export default {
           this.page = data.page.currentPage ;
           this.pageCount = data.page.pageCount;
           data.lists.forEach((value,index,arr)=>{
-            value.time = moment(value.time*1000).format('YYYY-MM-DD HH:mm');
+            value.time = dateFormat(value.time*1000,'YYYY-MM-DD HH:mm');
             // console.log(time);
           })
 

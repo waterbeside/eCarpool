@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import {dateFormat} from 'vux'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 
@@ -186,7 +186,7 @@ export default {
           this.page = data.page.currentPage ;
           this.pageCount = data.page.lastPage;
           data.lists.forEach((value,index,arr)=>{
-            value.time = moment(value.time*1000).format('YYYY-MM-DD HH:mm');
+            value.time = dateFormat(value.time*1000,'YYYY-MM-DD HH:mm');
             // console.log(time);
           })
           if(this.page > 1 ){

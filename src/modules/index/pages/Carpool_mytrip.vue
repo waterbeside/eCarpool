@@ -45,11 +45,11 @@
 </template>
 
 <script>
-import moment from 'moment'
+
+import {dateFormat} from 'vux'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 import cCoord from '@/utils/cCoord'
-
 import CpTripCard from '../components/CpTripCard'
 
 export default {
@@ -120,7 +120,8 @@ export default {
           }
           this.listDatas_o = data.lists;
           data.lists.forEach((value,index,arr)=>{
-            value.time = moment(value.time*1000).format('YYYY-MM-DD HH:mm');
+            value.time = dateFormat(value.time*1000,'YYYY-MM-DD HH:mm');
+
             value.from = value.infoid > 0 ? "info" : "wall";
             let formatItem = {
               from : value.from,

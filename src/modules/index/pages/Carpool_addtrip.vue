@@ -99,7 +99,6 @@
 
 <script>
 
-import moment from 'moment'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 import cModel from '@/utils/cModel'
@@ -321,7 +320,7 @@ export default {
       let endData = this.formData.end;
       var datetime = this.formData.time[0]+" "+this.formData.time[1]+":"+this.formData.time[2];
       let postData = {
-        time: moment(datetime).valueOf()/1000,
+        time: (new Date(datetime)).valueOf()/1000,
         // startpid:this.formData.start.addressid,
         // endpid:this.formData.end.addressid ,
         start:this.formData.start,

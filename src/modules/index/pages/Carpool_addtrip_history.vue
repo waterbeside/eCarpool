@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import {dateFormat} from 'vux'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 
@@ -81,7 +81,7 @@ export default {
           this.isLoading = 0;
           if(res.data.code === 0) {
             data.lists.forEach((value,index,arr)=>{
-              value.time = moment(value.time*1000).format('YYYY-MM-DD HH:mm');
+              value.time = dateFormat(value.time*1000,'YYYY-MM-DD HH:mm');
             })
             this.listDatas = data.lists;
           }else{
@@ -110,7 +110,7 @@ export default {
 
     onSelect (index){
       let data =  this.listDatas[index]
-      
+
       let formData = this.$store.state.tripFormData;
       let today = cFuns.formatDayItemData(new Date).value;
       let hm = data.time.split(' ')[1]
