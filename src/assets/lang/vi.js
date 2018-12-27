@@ -108,6 +108,10 @@ message: {
   "accept" : "Chấp nhận",
   "reject" : "Từ chối",
 
+  "contact" : "Tiếp xúc",
+  "position" : "Chức vụ",
+
+
 
   "wait" : "Vui lòng chờ...",
   "sendingApply" : "Đang gửi yêu cầu...",
@@ -412,6 +416,8 @@ message: {
 
   "carpool.detail.openInBrowser" : "Nếu bạn không thể bắt đầu hoặc tải xuống ứng dụng, vui lòng chọn [Mở trong trình duyệt] ở góc trên bên phải của nút.",
   "carpool.detail.autoStartTips" : "Bạn đã mở trang chia sẻ và ứng dụng sẽ tự động khởi động.  Nếu bạn chưa cài đặt [Filling Carpooling], bạn có thể nhấp vào nút tải xuống ở phía dưới để cài đặt. Bạn cũng có thể sử dụng H5 để trải nghiệm nó.",
+
+  "carpool.detail.noPhone" : "Người dùng không thiết lập điện thoại",
 
 
   "carpool.comments.title" : "Nhận xét",
