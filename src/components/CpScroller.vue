@@ -100,8 +100,10 @@
                 this.startScroll = this.$el.scrollTop || 0;
                 this.touching = true; //留着有用，不能删除
 
-                this.dataList.noFlag = false;
-                this.$el.querySelector('.load-more').style.display = 'block';
+                // this.dataList.noFlag = false;
+                if(!this.dataList.noFlag){
+                  this.$el.querySelector('.load-more').style.display = 'block';
+                }
             },
             touchMove(e) {
 

@@ -110,6 +110,7 @@ message: {
 
   "contact" : "Tiếp xúc",
   "position" : "Chức vụ",
+  "goBack": "Trở về",
 
 
 
@@ -433,6 +434,8 @@ message: {
   "carpool.finishSuccess" : "sự thành công",
   "carpool.confirm.cancel" : "Bạn có chắc chắn hủy chuyến đi này không?",
   "carpool.cancelSuccess" : "Thành công",
+  "carpool.confirm.cancelPassenger" : "Bạn có chắc chắn muốn hủy hành khách này?",
+
   "carpool.status.waitingCar": "Đang chờ xe",
   "carpool.status.waitingDriver": "Chờ xe đến",
   "carpool.status.alert.waitingCar": "Hành khách đang đợi",

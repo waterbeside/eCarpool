@@ -157,6 +157,7 @@ export default  {
 
     "contact" : "Contact",
     "position" : "Position",
+    "goBack": "Return",
 
 
     //app
@@ -431,6 +432,7 @@ export default  {
     "carpool.finishSuccess" : "Success",
     "carpool.confirm.cancel" : "Are you sure to cancel this trip?",
     "carpool.cancelSuccess" : "Success",
+    "carpool.confirm.cancelPassenger" : "Are you sure you want to cancel this passenger?",
 
 
     "carpool.status.waitingCar": "Waiting car",

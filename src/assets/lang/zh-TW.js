@@ -159,6 +159,7 @@ export default  {
 
     "contact" : "联系",
     "position" : "位置",
+    "goBack": "返回",
 
 
     //app
@@ -442,6 +443,7 @@ export default  {
     "carpool.finishSuccess" : "本次行程已完成",
     "carpool.confirm.cancel" : "您确定要取消本次行程吗？",
     "carpool.cancelSuccess" : "取消成功",
+    "carpool.confirm.cancelPassenger" : "您确定要取消该乘客吗？",
 
 
     "carpool.status.waitingCar": "等待车主接受",

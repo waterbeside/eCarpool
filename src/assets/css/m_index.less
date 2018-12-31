@@ -1,5 +1,7 @@
 @import "_base.less";
+@import "./components/_CpAvatar.less";
 @import "./components/_CpScroller.less";
+@import "./components/_CpNameCard.less";
 
 .cp-all { position: relative; z-index: 0}
 .cp-pull-right { float: right}
@@ -563,7 +565,7 @@
 .cp-tripCard-item-inner { position: relative; border:1px solid @color-border; /*border-left:4px solid @color-itemLeft;*/ background: #FFF; margin:0 0 4px; border-radius:44px @border-radius @border-radius @border-radius;box-shadow: 0px 0px 16px rgba(0,0,0,0.1);}
   .cp-avatar-wrap {
     position: absolute; width: @avatar-width; height:@avatar-width;  border:1px solid #DDD; top:-4px; left:-9px; z-index: 3; border-radius: 50%;/*box-shadow:-2px -1px 4px rgba(0,0,0,0.2) ;*/
-    .cp-avatar { width: 100%; height: 100%; border-radius: 50%; /*border:1px solid rgba(255,255,255,.2); */ }
+    .cp-avatar { width: 100%; height: 100%; /*border:1px solid rgba(255,255,255,.2); */ }
   }
   .cp-user-wrapper {
     // background: lighten(@color-userInfo-bar,52%);
@@ -586,9 +588,11 @@
     }
   }
   .cp-userInfo-bar {
+    display: flex;  justify-content:space-between;
      position: relative; height: 22px; right:0; padding: 3px 8px 3px 60px;border-radius: 40px 3px 0 0; font-size: 12px;
      color: lighten(@color-userInfo-bar,36%); /*border-top: 1px solid lighten(@color-userInfo-bar,30%); */border-bottom: 1px solid lighten(@color-userInfo-bar,30%);
-    .cp-carnumber {   float: right;font-weight: 400;font-size: 12px;}
+    .cp-carnumber {  display: block; font-weight: 300;font-size: 12px; min-width: 50px;  text-align: right;white-space: nowrap;  }
+    .cp-dept {display: block; padding-right: 10px; .ellipsis()}
   }
 
   .cp-trip-box { margin: 20px 0 15px;padding: 0 10px 0px 23px;  position: relative; color:#666;
@@ -825,7 +829,7 @@
        font-size: 12px; line-height: 20px; text-align: left;
        // border-radius:4px 4px 0 0 ;
       .cp-avatar-wrap {position: absolute; bottom:-9px; left:8px;text-align: center;}
-      .cp-avatar { width: 44px; height:44px; border-radius: 50%; border:3px solid lighten(@color-primary,12%);}
+      .cp-avatar { width: 44px; height:44px;  border:3px solid lighten(@color-primary,12%);}
     }
     .cp-map-form-inner {background: rgba(255,255,255,0.9); border-radius:0 0 4px 4px; padding: 12px 10px 2px ; }
     .form-group { margin-top: 8px;  }
@@ -1011,11 +1015,29 @@
 
 
 #Page-trip-detail {
+  @color-bg: @color-gray-l2;
+
+  .cp-group { overflow-x: hidden;  box-shadow: 0 0 8px rgba(0,0,0,.1);
+    .weui-cells.vux-no-group-title  {
+      box-shadow:  0 0 10px rgba(0,0,0,.1); overflow: auto; font-size: 14px;
+      // margin-bottom: 12px;
+    }
+  }
+  .cp-group-title  {
+    // color:#FFF;
+    color:mix(@color-silver-d1,@color-primary);
+    font-size: 12px; text-align: left;
+    padding: 8px ; margin: 4px 0 0; font-weight: 700;
+    .cp-refresh { font-size: 14px;}
+  }
+
+
+
   .page-view-title { z-index: 200}
-  .cp-map-content { position: absolute; top:0; bottom: 0; height: 100%; width:100%; z-index: 1; transition: all .1s;}
+  .cp-map-content { position: absolute; top:0; bottom: 0; height: 100%; width:100%; z-index: 1; transition: all .1s; background-color: @color-bg;}
   .cp-scroll {transition: all .5s;}
   .cp-scroll-inner { z-index: 2 ; margin-top: 240px; padding-bottom: 0;transition: all .5s;}
-  .cp-main { position: relative; min-height: 320px; background: #FFF; padding-bottom: 50px;height: 100%; box-shadow: 0 -4px 4px rgba(0,0,0,0.1)}
+  .cp-main { position: relative; min-height: 320px;  background-color: @color-bg;   padding-bottom: 50px;height: 100%; box-shadow: 0 -4px 4px rgba(0,0,0,0.1)}
   //返回按钮
   .cp-btn-goback-wrapper{
     transition: all .5s;
@@ -1023,24 +1045,28 @@
       .cp-btn-goback {background: rgba(0,0,0,.3);}
     }
   }
-   @avatar-width : 68px;
-   //用户信息栏
-  .cp-heading  {
-    position: absolute; top: 0;clear:both;
-    width: 100%;   text-align: center; z-index: 2;
-    color:#FFF;
-    .cp-avatar { border: 2px solid #FFF; box-shadow: 0 -4px 4px rgba(0,0,0,0.2);width: @avatar-width; height: @avatar-width; border-radius: 50%; margin:  -@avatar-width/2 + 8 auto 0;transition: all .5s;}
-    label { position: absolute; right:50%; top: @avatar-width/2 - 18px ; margin-right: @avatar-width/2 + 5px; color: lighten(@color-primary,50%); font-size: 12px; font-weight: 300}
-    .cp-txt {
-      h3 { margin: 2px 0 5px; font-size: 22px; transition: all .5s; }
+
+  .cp-heading-wrapper {
+    @avatar-width : 40px;
+    @name-size:20px;
+    background: url(../images/carpool_bg.jpg); background-size: cover;
+    .cp-department-bar {
+      display: flex;  justify-content:space-between; color:lighten(@color-primary,30%); padding: 4px 8px; background: @color-primary;
+      h6, .department { margin: 0 ;  font-size: 12px; }
+      h6 {   text-align: right;white-space: nowrap;}
+      .department {display: block; padding-right: 10px; .ellipsis(); }
     }
-    h6 , .department{
-      position: absolute; top:2px; right:4px; margin: 0; line-height: 1.2;
-      color: lighten(@color-primary,40%); font-size: 12px;
+      //用户信息栏
+    .cp-heading  {
+      display: flex; width: 100%; padding: 10px; z-index: 2; color:#FFF; box-shadow: 0 2px 8px rgba(0,0,0,.2);
+      .cp-avatar { border: 2px solid rgba(255,255,255,.8); min-width:@avatar-width; width: @avatar-width; height: @avatar-width; transition: all .5s;}
+      .cp-name { display: flex; align-items:center; width: 100%; margin-left: 8px;  transition: all .5s;.ellipsis();
+        h3 { margin: 0 ;font-size:@name-size ; .ellipsis(); }
+      }
+      .btns-bar {display: flex; }
     }
-    .department {    left:4px; right: auto; }
   }
-  .cp-heading-bg { margin-top:@avatar-width/2  ; border-top:20px solid @color-primary ;  height:80px; background: url(../images/carpool_bg.jpg); background-size: cover;}
+
 
 
   // 按键
@@ -1071,13 +1097,7 @@
       .cp-btn-disable  { background: lighten(desaturate(@color-primary,20%),20%); color: #FFF;}
   }
 
-  .cp-heading-wrapper.cp-sticky {
-      width: 100%;
-    // position: sticky;
-     // transform: translate(0,-30px);
-      .cp-avatar { transform:  /*translate(0,0)*/ translate(0,100px); opacity: 0; z-index: 0; position: relative;}
-      .cp-txt h3 { font-size: 18px;transform: translate(0,0);}
-  }
+
 
   .cp-tab-wrapper{ transition: all .5s; position: relative; z-index: 2}
   .cp-tab-item {
@@ -1087,7 +1107,7 @@
   .cp-tab-item:first-child .cp-inner{ border-left: none; }
 
   .alert { margin: 10px 10px 12px;
-    .cp-avatar { width: 22px;height:22px; border-radius: 50%; border:1px solid #FFF; }
+    .cp-avatar { width: 22px;height:22px;  border:1px solid #FFF; }
   }
 
 
@@ -1123,9 +1143,9 @@
   }
 
   .cp-statis-list { clear: both;
-    margin-bottom: 10px;
+
     border-bottom:1px solid #eee;
-    background: lighten(@color-primary,56%);overflow: hidden;}
+    background: lighten(@color-primary,57%);overflow: hidden;}
   .cp-statis-item {
     border-left:1px solid #eee;
     &:first-child { border-left: none; }
@@ -1133,8 +1153,8 @@
     .cp-iconfont {color:lighten(@color-primary,18%); font-size: 19px}
     .num_unit_wrapper { margin-top: 2px;}
     .num { display: inline;  font-weight: 700; color:lighten(@color-primary,18%)}
-    &.cp-time .num { font-size: 18px; padding-top: 0px; line-height: 1; font-weight: 700}
-    .date { font-size: 11px; margin: 0; line-height: 1; font-weight: 400; color: lighten(@color-primary,20%);white-space:nowrap}
+    &.cp-time .num { font-size: 15px; padding-top: 0px; line-height: 1; font-weight: 700}
+    .date { font-size: 11px; margin: 0 0 -2px; line-height: 1;   color: lighten(@color-primary,20%);white-space:nowrap}
     &.cp-distance {
       .unit {display: inline;}
     }
@@ -1154,16 +1174,19 @@
   @padding: 8px;
   list-style: none;margin: 0; padding: 0;
   .cp-item { position: relative; list-style: none;  border-bottom: 1px solid @color-border; font-size: 12px; padding-top: 12px;
-    .cp-avatar { float: left; width: @avatar-size; height: @avatar-size; margin:(@padding - 2) 15px 0 @padding; border-radius: 50%}
+    .cp-avatar { float: left; width: @avatar-size; height: @avatar-size; margin:(@padding - 2) 12px 0 @padding;  }
     .cp-txt { padding-top: @padding;}
-    .media-heading { font-size: 15px; margin: 0 0  5px;color: #666; font-weight: 400}
-    p {margin: 0; color:#999}
+    .media-heading { font-size: 16px; margin: 0 0  5px;color:@color-black-l2; font-weight: 700}
+    p {margin: 0; color:@color-silver; }
     &.cp-finish {
       background: #fafafa; color: #DDD;
       p {color: #ccc}
       .cp-avatar { opacity: .6}
       .media-heading { color: #aaa; }
       .btn-fab-mini { background-color:lighten(@color-primary,50%); color:lighten(@color-primary,30%)}
+    }
+    &.hide {
+      display: none;
     }
   }
   .time {position: absolute; right: 4px; top:4px; color:@color-gray}
@@ -1192,18 +1215,23 @@
     }
   }
   .cp-btns-bar {
-    @color-btn:lighten(@color-primary,55%);
-    @color-btn-border:darken(@color-btn,5%);
+    @color-bg:lighten(@color-primary,25%);
+    @color-btn:fade(@color-black-l2,36);
+    @color-btn-border:darken(@color-bg,5%);
+    @color-btn-text:#fff;
+    box-shadow: inset 0 0 4px rgba(0,0,0,.1);
     border-top:1px solid   @color-btn-border;
     right:12px; top:10px; padding: 0 !important;  display: flex;
-    background-color:@color-btn;
+    background-color:@color-bg;
+    background-image: url(../images/carpool_bg.jpg); background-size: cover;
     text-align: right;
     .btn  {
-        flex:1; border-right: 1px solid @color-btn-border; border-radius: 0; text-align: center; padding:4px 8px;
-       color:darken(@color-btn,45%);
-       &[disabled] {color:darken(@color-btn,15%)}
+      background-color:@color-btn;
+        flex:1;  border-radius: 0; text-align: center; padding:4px 8px;
+       color:@color-btn-text;
+       &[disabled] , &.disabled { color:fade(@color-btn-text,80)}
      }
-     .btn + .btn { border-right: none}
+     .btn +.btn { border-left: 1px solid @color-btn-border;}
     }
 }
 
@@ -1214,10 +1242,10 @@
   .cp-comment-count { position: absolute; right:12px; top:12px; font-size: 12px;
     b { padding: 2px 4px; border-radius: 5px;background: lighten(@color-primary,60%); color: lighten(@color-primary,20%); border:1px solid lighten(@color-primary,40%)}
   }
-  .cp-comment-list { margin-bottom: 12px}
-
-  .cp-commentLists-tips { padding: 10px; text-align: center; border-bottom: 1px solid #eee; background: #f2f2ed; color: #c3c2bc;}
 }
+.cp-comment-list { margin-bottom: 12px}
+.cp-commentLists-tips { padding: 10px; text-align: center; border-bottom: 1px solid #eee; background: #f2f2ed; color: #c3c2bc; font-size: 14px;}
+
 
 
 @keyframes show_comment_item {
@@ -1297,7 +1325,7 @@
     .cp-txt { margin:30px 15px 0  100px ; font-size: 14px;
       h3 { margin: 0 0 5px; font-size: 22px; }
     }
-    .cp-avatar { float: left;border:2px solid rgba(255,255,255,.3); border-radius: 50%;   width: @avatar-width; height: @avatar-width;}
+    .cp-avatar { float: left;border:2px solid rgba(255,255,255,.3);   width: @avatar-width; height: @avatar-width;}
   }
   .cp-statis-list {
     background: #FFF;
@@ -1346,7 +1374,7 @@
       h3 { margin: 10px 0 10px; font-size: 22px; color: lighten(@color-primary,16%); }
     }
   }
-  .cp-avatar { width: @avatar-width; height: @avatar-width; border-radius: 50%; margin: 0 auto; border:2px solid rgba(255,255,255,.8);  transition: all .5s;}
+  .cp-avatar { width: @avatar-width; height: @avatar-width;  margin: 0 auto; border:2px solid rgba(255,255,255,.8);  transition: all .5s;}
   .cp-container { padding-top: 110px;}
   .weui-cells {
     label { font-weight: 400; color: #444; margin: 0}
@@ -1526,5 +1554,14 @@
     .btn-submit { height: 36px; font-size: 14px;}
   }
 
+}
 
+
+#Page-position {
+  .page-view-main {
+    display: flex; flex-direction: column;
+  }
+  .cp-main-panel-wrapper {
+     height: 100px; width: 100%;
+  }
 }
