@@ -15,7 +15,7 @@
       </div>-->
     </title-bar>
     <div class="page-view-main"   >
-      <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
+      <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite" @on-scroll="onScroll"   ref="scroller">
 
          <cp-trip-card
             v-if="listDatas"
@@ -25,7 +25,7 @@
            :name="item.d_name"
            :avatar="item.d_imgpath"
            :phone="item.d_phone"
-           :department="item.d_department"
+           :department="item.d_department_format"
            :carnumber="item.d_carnumber"
            :start_name="item.start_addressname"
            :end_name="item.end_addressname"
@@ -70,7 +70,6 @@
 </template>
 
 <script>
-import {dateFormat} from 'vux'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 
@@ -96,7 +95,7 @@ export default {
       scrollData: {
           noFlag: false //暂无更多数据显示
       },
-      enableInfinite:false,
+      enableInfinite:true,
 
     }
   },
@@ -186,7 +185,9 @@ export default {
           this.page = data.page.currentPage ;
           this.pageCount = data.page.lastPage;
           data.lists.forEach((value,index,arr)=>{
-            value.time = dateFormat(value.time*1000,'YYYY-MM-DD HH:mm');
+            value.time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
+            value.d_department_format = value.d_full_department ? cFuns.formatDepartment(value.d_full_department) : value.d_department;
+
             // console.log(time);
           })
           if(this.page > 1 ){
@@ -201,7 +202,7 @@ export default {
             this.listDatas = data.lists;
           }
 
-          this.enableInfinite = this.listDatas.length < 4 || this.pageCount ==1  ? false : true;
+          // this.enableInfinite = this.listDatas.length < 4 || this.pageCount ==1  ? false : true;
         }else{
           if(res.data.code === 20002 && this.page < 2){
             this.noData = 1 ;
@@ -239,6 +240,13 @@ export default {
         this.$el.querySelector('.load-more').style.display = 'none';
       }
       done();
+    },
+    /**
+     * 滚动事件
+     */
+    onScroll(e){
+      let sTop = e.target.scrollTop;
+      this.$store.commit('setCarpoolListScrollTop',sTop);
     }
   },
   created () {
@@ -255,18 +263,23 @@ export default {
   },
 
   activated (){
+    this.$refs.scroller.$el.scrollTop = this.$store.state.carpoolListScrollTop ;
+    this.$el.querySelector('.load-more').style.display = 'none';
+
     /*if(this.$store.state.isRefreshCarpoolList){
       this.listDatas = [];
       this.getList(1);
       this.$store.commit('setIsRefreshCarpoolList',false);
     }
-    this.$el.querySelector('.load-more').style.display = 'none';*/
+    */
+    console.log(this.isLoading);
   },
   beforeRouteLeave(to, from, next) {
     if (to.name == "carpool_rides_detail"  ) {
       to.meta.keepAlive = true;
     }else{
       to.meta.keepAlive = false;
+      this.$store.commit('setCarpoolListScrollTop',0);
     }
     next();
   }
