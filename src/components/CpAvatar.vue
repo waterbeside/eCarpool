@@ -1,5 +1,8 @@
 <template>
-  <img class="cp-avatar " :src="src" :onerror="'this.src=\''+defaultAvatar+'\';return false'">
+  <div class="cp-avatar" >
+    <div class="cp-avatar-inner" :style="{backgroundImage:'url('+src+')'}"></div>
+  </div>
+  <!-- <img class="cp-avatar " :src="src" :onerror="'this.src=\''+defaultAvatar+'\';return false'"> -->
 </template>
 
 <script>
