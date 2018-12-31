@@ -41,6 +41,7 @@
 </template>
 
 <script>
+
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 
@@ -96,8 +97,10 @@ export default {
       }
       this.isLoading = true;
 
-      let params = {wid:this.id};
-      this.$http.get(config.urls.wallComments,{params:params}).then(res => {
+      let params = {
+        // pagesize:20
+      };
+      this.$http.get(config.urls.trips+'/wall/'+this.id+'/comments',{params:params}).then(res => {
 
         this.isLoading = false;
         if(res.data.code == 0){
@@ -108,6 +111,7 @@ export default {
           data.lists.forEach((value,index,arr)=>{
             value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : this.defaultAvatar;
             value.isSubmiting = false;
+            value.time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
           })
           this.comments_total = data.total ? data.total : 0;
           this.comments = data.lists;
@@ -153,9 +157,9 @@ export default {
 
 
 
-      let postDatas = {wid:this.id,content:this.content}
+      let postDatas = {content:this.content}
 
-      this.$http.post(config.urls.wallComments,postDatas).then(res => {
+      this.$http.post(config.urls.trips+'/wall/'+this.id+'/comments',postDatas).then(res => {
         if(res.data.code === 0){
           this.content = "";
         }else{
