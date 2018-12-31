@@ -82,7 +82,7 @@ export default {
   },
   mounted () {
     this.init()
-    cCoord().push(); // 上传用户坐标。
+    cCoord().push().catch(err=>{console.log(err)}); // 上传用户坐标。
 
     /*setTimeout(()=>{
       this.init();
