@@ -7,7 +7,7 @@
       </title-bar>
       <cp-goback-btn v-show="!isSticky" :class="{'cp-sticky':isSticky}"></cp-goback-btn>
 
-      <cp-scroller :enableInfinite="false" :enableRefresh="false" id="cp-scroll-wrapper" :innerStyle="{marginTop:(mapDefaultHeight-40)+'px'}" @on-scroll="onScroll"  ref="scroller">
+      <cp-scroller :enableInfinite="false" :enableRefresh="false" id="cp-scroll-wrapper" :innerStyle="{marginTop:(mapDefaultHeight-20)+'px'}" @on-scroll="onScroll"  ref="scroller" >
         <div  slot="before-inner" id="mapContainer-detail" class="cp-map-content map-box" :style="{height:mapHeight+'px',marginTop:mapTop+'px'}"></div>
 
         <!-- <el-amap slot="before-inner" class="cp-map-content map-box" :vid="'amap-vue'" :events="mapEvents" :plugin="mapPlugin">  </el-amap> -->
@@ -24,7 +24,7 @@
                     <h3>{{user.name}}</h3>
                   </div>
                   <div class="btns-bar">
-                    <button><i class="fa fa-map-marker"></i></button>
+                    <button @click="goPosition"><i class="fa fa-map-marker"></i></button>
                   </div>
               </div>
 
@@ -170,12 +170,6 @@ export default {
         hasTake_finish  : 0,
       },
 
-      coord_d           : null,
-      coord_p           : null,
-      markers           : {
-        driver: null,
-        passenger: null,
-      },
 
       //alert框相关
       isShowAlert       :false,
@@ -230,28 +224,6 @@ export default {
     },
     type (val,oldval){
       this.changeStatus(this.detailData.status);
-    },
-    "coord_d" (val,oldval){
-      if(!this.mapObj){
-        return false;
-      }
-      if(this.markers.driver){
-        return cGmap.removeMarker(this.markers.driver);
-      }
-      if(val){
-        this.markers.driver = this.showUserCoord(val);
-      }
-    },
-    "coord_p" (val,oldval){
-      if(!this.mapObj){
-        return false;
-      }
-      if(this.markers.passenger){
-        return cGmap.removeMarker(this.markers.passenger);
-      }
-      if(val){
-        this.markers.passenger = this.showUserCoord(val);
-      }
     },
   },
   methods :{
@@ -587,60 +559,7 @@ export default {
        });
      },
 
-     /**
-      * 拉取用户坐标
-      */
-     getUserCoord (uid,type = 0, showToast = 1){
-       return new Promise ((resolve, reject) => {
-         cCoord().pull(uid).then((res)=>{
-           if(res.code === 0 ){
-             if(type){
-               this.coord_p = res.data;
-             }else{
-               this.coord_d = res.data;
-             }
-           }
-           return resolve(res);
-         }).catch(error=>{
-           console.log(error)
-           return reject(error);
-         });
-       })
-     },
-     /**
-      * 显示用户坐标
-      */
-     showUserCoord (data,setting){
-       var position = {lat:data.latitude,lng:data.longitude};
-       var image = {
-          url: require('@/assets/images/car.png'),
-          // This marker is 20 pixels wide by 32 pixels high.
-          size: new google.maps.Size(20, 40),
-          // // The origin for this image is (0, 0).
-          // origin: new google.maps.Point(0, 0),
-          // // The anchor for this image is the base of the flagpole at (0, 32).
-          // anchor: new google.maps.Point(0, 20)
-        };
-        // Shapes define the clickable region of the icon. The type defines an HTML
-        // <area> element 'poly' which traces out a polygon as a series of X,Y points.
-        // The final coordinate closes the poly by connecting to the first coordinate.
-        var shape = {
-          coords: [1, 1, 1, 20, 18, 20, 18, 1],
-          type: 'poly'
-        };
-        var mapObj = this.mapObj;
-        var defaults = {
-          position:position,
-          map: mapObj,
-          icon: image,
-          // shape: shape,
-          title: '司机',
-          zIndex: 2
-        }
 
-      // return cGmap.addMarker({lat: 22.9054378951, lng: 112.8592886032},mapObj,defaults);
-       return cGmap.addMarker(defaults);
-     },
      /**
       * 滚动事件
       */
@@ -654,6 +573,14 @@ export default {
          this.isSticky = false;
        }
        this.$store.commit('setCarpoolDetailScrollTop',sTop);
+     },
+
+     /**
+      * 路到位置页
+      */
+     goPosition(){
+       this.$router.push({name:'carpool_position',params:{from:this.type,id:this.id,uid:this.user.uid}})
+
      }
 
 
@@ -684,12 +611,7 @@ export default {
     this.id = this.$route.params.id;
     cCoord().push().catch(err=>{console.log(err)}); // 上传用户坐标。
     if(!this.$store.state.unRefreshCarpoolDetail){
-      if(this.markers.driver){
-         cGmap.removeMarker(this.markers.driver);
-      }
-      if(this.markers.passenger){
-         cGmap.removeMarker(this.markers.passenger);
-      }
+
       this.tabIndex   = 0;
       this.isSticky   = false;
       this.passengers = [];
@@ -697,12 +619,7 @@ export default {
       this.comments          = [];
       this.comments_time     = 0;
       this.comments_total    = 0;
-      this.coord_d     = null;
-      this.coord_p     = null;
-      this.markers     = {
-        driver: null,
-        passenger: null,
-      };
+
       this.detailData =  {
         time_format     : "0000-00-00 00:00",
         start_info      : {addressname:'-'},
@@ -717,7 +634,6 @@ export default {
       this.getDetail().then(res=>{
         this.mapInit().then(map=>{
           this.drawTripLine(res);
-          this.getUserCoord(res.d_uid);
         });
       })
 
