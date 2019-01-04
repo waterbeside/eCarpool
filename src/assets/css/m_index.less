@@ -1559,9 +1559,23 @@
 
 #Page-position {
   .page-view-main {
-    display: flex; flex-direction: column;
+    display: flex; flex-direction: column; justify-content:space-between;
+  }
+  .cp-map-wrapper {  position: relative; height: 100%; }
+
+  .cp-msg {
+    position: absolute; right: 60px; left: 8px;bottom:24px;  padding:4px 8px; color:#FFF;
+    background-color:fade(@color-black,80%); z-index: 100; border-radius: 3px; /*border:1px solid @color-dark-white;*/ box-shadow: 0 0 8px rgba(0,0,0,.2);
   }
   .cp-main-panel-wrapper {
-     height: 100px; width: 100%;
+      position: relative;
+       width: 100%;  border-top:1px solid @color-black-l1; box-shadow: 0 -2px 8px rgba(0,0,0,.8);
+       background: @color-black-l2;
+  }
+  .cp-name-card {
+    .cp-mainbox {width: 100%}
+    .name { color:lighten(@color-silver-d2,40%); }
+    .department {color:@color-silver-l1}
+    .cp-name-card-btns { display: flex; font-size: 16px; color:lighten(@color-silver,30%) }
   }
 }
