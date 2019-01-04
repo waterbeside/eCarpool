@@ -91,21 +91,12 @@ const routes = [
   },
   //用户位置
   {
-    path: '/carpool/position/:uid',
+    path: '/carpool/:from/:id/:uid/position',
     name: 'carpool_position',
     component (resolve) {
       require(['../pages/carpool_position'], resolve)
     },
-    meta: {keepAlive: false }
-  },
-  //用户位置
-  {
-    path: '/carpool/position/:uid/:infoid',
-    name: 'carpool_position',
-    component (resolve) {
-      require(['../pages/carpool_position'], resolve)
-    },
-    meta: {keepAlive: false }
+    meta: {keepAlive: true }
   },
   // 评论
   {

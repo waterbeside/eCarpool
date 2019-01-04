@@ -84,7 +84,7 @@ export default {
         this.$emit('on-click-position',id,uid,e);
       }else{
         this.$store.commit('setCarpoolInfoDetail',this.data);
-        this.$router.push({name:'carpool_position_info',params:{infoid:id,uid:uid}})
+        this.$router.push({name:'carpool_position',params:{from:'info',id:id,uid:uid}})
       }
     },
     onClickCancel (id,uid,e){
