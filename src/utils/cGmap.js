@@ -187,6 +187,7 @@ var cGmap = {
   addMarker (position,mapObj,setting) {
     var settingDefault = {
       // animation:google.maps.Animation.DROP
+      autoCenter: false,
     }
     if(typeof(position.position)=="object"){
       position.position = this.formatCoords(position.position);
@@ -200,7 +201,11 @@ var cGmap = {
     }
     var opt = Object.assign({},settingDefault,setting)
     var marker = new google.maps.Marker(opt);
+    if(opt.autoCenter){
+      mapObj.panTo(opt.position);
+    }
     marker.setMap(mapObj);
+    
     return marker;
   },
   /**
