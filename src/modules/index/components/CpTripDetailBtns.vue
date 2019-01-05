@@ -210,10 +210,8 @@ export default {
           }
           break;
       }
-      if(typeof(success)==="function"){
-        success();
-      }
     
+
       // event.stopPropagation();
       this.$vux.confirm.show({
         title  : confirmTitle,
