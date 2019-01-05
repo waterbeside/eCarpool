@@ -170,13 +170,9 @@ var cModel = {
               var rq = store.get(options.key);
               rq.onsuccess = successHandler;
             break;
-
         }
-
       };
-
     }
-
   }
 
 export default cModel;
