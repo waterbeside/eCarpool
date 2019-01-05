@@ -155,6 +155,9 @@ export default  {
     "launchApp" : "Launch App",
     "launchH5" : "H5",
 
+    "contact" : "Contact",
+    "position" : "Position",
+    "goBack": "Return",
 
 
     //app
@@ -413,6 +416,7 @@ export default  {
 
     "carpool.detail.openInBrowser" : "If you can't start or download the app, please select [Open in Browser] in the upper right corner of the button.",
     "carpool.detail.autoStartTips" : "You have opened the sharing page and the app will start automatically. If you don't have [Filling Carpooling] installed, you can click the download button at the bottom to install it. You can also use H5 to experience it.",
+    "carpool.detail.noPhone" : "The user has not set a contact number",
 
 
     "carpool.comments.title" : "Comments",
@@ -428,6 +432,7 @@ export default  {
     "carpool.finishSuccess" : "Success",
     "carpool.confirm.cancel" : "Are you sure to cancel this trip?",
     "carpool.cancelSuccess" : "Success",
+    "carpool.confirm.cancelPassenger" : "Are you sure you want to cancel this passenger?",
 
 
     "carpool.status.waitingCar": "Waiting car",
