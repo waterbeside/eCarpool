@@ -91,8 +91,11 @@ export default {
                 this.city = this.$store.state.localCity;
                 this.searchMap(1)
               }
-            })
-            resolve(this.mapObj);
+              resolve(this.mapObj);
+            }).catch((error) => {
+                reject(error);
+              }
+            )
           }).catch((error) => {
               reject(error);
             }

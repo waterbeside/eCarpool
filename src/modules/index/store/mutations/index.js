@@ -16,6 +16,11 @@ export default {
   setIsRefreshCarpoolList(state,datas){
     state.isRefreshCarpoolList = datas;
   },
+
+  //设置是否刷新拼车页面
+  setUnRefreshCarpoolDetail(state,datas){
+    state.unRefreshCarpoolDetail = datas;
+  },
   //设置用户基础数据
 /*  setUserBaseData(state,datas){
     state.userBaseData = datas;
@@ -52,5 +57,25 @@ export default {
   setAddressDefaultList(state,datas){
     state.addressDefaultList = datas ? datas : null
   },
+
+
+  setCarpoolDetailScrollTop(state,datas){
+    state.carpoolDetailScrollTop = datas ? datas : 0
+  },
+
+  setCarpoolListScrollTop(state,datas){
+    state.carpoolListScrollTop = datas ? datas : 0
+  },
+
+  setCarpoolInfoDetail(state,datas){
+    state.carpoolInfoDetail = datas ? datas : null
+  },
+
+  setCarpoolWallDetail(state,datas){
+    state.carpoolWallDetail = datas ? datas : null
+  },
+
+
+
 
 }
