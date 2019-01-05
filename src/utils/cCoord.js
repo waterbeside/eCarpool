@@ -63,11 +63,7 @@ var  coord = ()=>{
         return resolve(position);
       }else{
         this.get('pull').then(res=>{
-          if(res.code === 0){
-            return resolve(res);
-          }else{
-            return resolve(defaultPosition);
-          }
+          return resolve(res);
         }).catch(err=>{
           return resolve(defaultPosition);
         })
