@@ -1,0 +1,60 @@
+@color-primary : #59488d;//#55acee;//#4e69a2; //#59488d;
+@color-primary-dark: darken(@color-primary ,8%); //#3b5998 ; //#3e2d70;
+@color-black: #242f3b;
+@color-black-l1: #374150;
+@color-black-l2: #4a5562;
+
+@color-silver: #8492A6;
+@color-silver-l1: #99A9BF;
+@color-silver-l2: #C0CCDA;
+@color-silver-d1: darken(@color-silver,5%);
+@color-silver-d2: darken(@color-silver,10%);;
+@color-silver-d3: darken(@color-silver,20%);;
+
+@color-gray: #D3DCE6;
+@color-gray-l1: #E5E9F2;
+@color-gray-l2: #EFF2F7;
+@color-dark-white: #F9FAFC;
+
+@color-red : #b9381c;
+@color-green: #579c64;
+@color-orange : #E6A23C;
+
+@color-danger :  #F56C6C;
+@color-success : #67C23A;
+@color-warning : #E6A23C;
+@color-purple:   #7663af;
+@color-info:     #909399;
+@color-text-main: #303133;
+@color-text-common: #606266;
+@color-border: #DCDFE6;
+@color-placeholder: #C0C4CC;
+
+@topbar-height: 46px;
+
+
+/*页面主体*/
+
+html,body, .cp-all,.cp-main-body,.cp-modal-body,#app, .page-view ,.page-view-index { height: 100%}
+body {background: #fafafa; color:@color-text-main ; margin: 0}
+.blank(@height){
+  display: block; line-height: 0; overflow: hidden; height:@height;
+}
+.cp-clear { .blank(0); clear: both;}
+.blank10 { .blank(10px)}
+.blank15 { .blank(15px)}
+.blank20 { .blank(20px)}
+.blank60 { .blank(60px)}
+.ellipsis {white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
+
+
+//毛玻璃效果
+.mix-blur(@blur){
+  -webkit-filter: blur(@blur); /* Chrome, Opera */
+     -moz-filter: blur(@blur);
+      -ms-filter: blur(@blur);
+          filter: blur(@blur);
+}
+.cp-blur-2 {.mix-blur(2px)}
+.cp-blur-5 {.mix-blur(5px)}
+.cp-blur {.mix-blur(10px)}
