@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 
@@ -81,7 +80,7 @@ export default {
           this.isLoading = 0;
           if(res.data.code === 0) {
             data.lists.forEach((value,index,arr)=>{
-              value.time = moment(value.time*1000).format('YYYY-MM-DD HH:mm');
+               value.time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
             })
             this.listDatas = data.lists;
           }else{

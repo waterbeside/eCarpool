@@ -230,7 +230,9 @@ var cFuns = {
     return [data_dates,data_hours,data_min]
   },
 
-
+  /**
+   * 加载js
+   */
   getScript (setting){
     return new Promise ((resolve, reject) => {
       var settingDefault = {
@@ -261,6 +263,17 @@ var cFuns = {
       }
       document.body.appendChild(script);
     })
+  },
+
+  formatDepartment(fullNameStr){
+    if(fullNameStr.indexOf(',')>0){
+      var fullArr = fullNameStr.split(',');
+      var departmentName_per = typeof(fullArr[3]) !="undefined" ?  fullArr[3] : "";
+      var departmentName = typeof(fullArr[4]) !="undefined" ?  fullArr[4] : "";
+      return departmentName_per+','+departmentName;
+    }else{
+      return fullNameStr;
+    }
   },
 
 

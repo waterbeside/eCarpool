@@ -4,7 +4,7 @@
       <span  >{{$t("message['carpool.title.myTrip']")}}</span>
     </title-bar>
     <div class="page-view-main"   >
-      <cp-scroller  :position="{top:'46px'}"  :on-refresh="onRefresh"   :dataList="scrollData" :enableInfinite="false">
+      <cp-scroller  :position="{top:'46px'}"  :on-refresh="onRefresh"   :dataList="scrollData" :enableInfinite="false"  @on-scroll="onScroll"   ref="scroller">
 
          <cp-trip-card
             v-for="(item,index) in listDatas"
@@ -45,11 +45,10 @@
 </template>
 
 <script>
-import moment from 'moment'
+
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 import cCoord from '@/utils/cCoord'
-
 import CpTripCard from '../components/CpTripCard'
 
 export default {
@@ -120,7 +119,8 @@ export default {
           }
           this.listDatas_o = data.lists;
           data.lists.forEach((value,index,arr)=>{
-            value.time = moment(value.time*1000).format('YYYY-MM-DD HH:mm');
+            value.time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
+
             value.from = value.infoid > 0 ? "info" : "wall";
             let formatItem = {
               from : value.from,
@@ -167,6 +167,13 @@ export default {
       done(); // call done
 
     },
+    /**
+     * 滚动事件
+     */
+    onScroll(e){
+      let sTop = e.target.scrollTop;
+      this.$store.commit('setCarpoolListScrollTop',sTop);
+    }
 
   },
   mounted () {
@@ -174,18 +181,28 @@ export default {
   },
   created () {
     this.init();
+    cCoord().push(); // 上传用户坐标。
+    this.listDatas = [];
+    this.getList();
+    this.$store.commit('setIsRefreshCarpoolList',false);
+  // }
+    // this.$el.querySelector('.load-more').style.display = 'none';
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
   },
   activated (){
     // if(this.$store.state.isRefreshCarpoolList){
-      this.listDatas = [];
-      this.getList();
-      this.$store.commit('setIsRefreshCarpoolList',false);
-    // }
-    this.$el.querySelector('.load-more').style.display = 'none';
-    cCoord().push(); // 上传用户坐标。
+    this.$refs.scroller.$el.scrollTop = this.$store.state.carpoolListScrollTop;
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name == "carpool_rides_detail" || to.name == "carpool_requests_detail" ) {
+      to.meta.keepAlive = true;
+    }else{
+      to.meta.keepAlive = false;
+      this.$store.commit('setCarpoolListScrollTop',0);
+    }
+    next();
   }
 }
 

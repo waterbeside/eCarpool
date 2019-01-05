@@ -6,11 +6,8 @@
 
       <div class="page-view-main" >
 
-
           <div   class="cp-map-wapper cp-map-wapper-addtrip">
             <div   id="mapContainer-addtrip"  class="amap-box"  style="height:100%"></div>
-
-
 
             <div class="cp-tools-wrapper">
               <router-link    :to="'/carpool/addtrip/history/'+type">
@@ -101,7 +98,6 @@
 
 <script>
 
-import moment from 'moment'
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 import cModel from '@/utils/cModel'
@@ -316,7 +312,7 @@ export default {
       let endData = this.formData.end;
       var datetime = this.formData.time[0]+" "+this.formData.time[1]+":"+this.formData.time[2];
       let postData = {
-        time: moment(datetime).valueOf()/1000,
+        time: (new Date(datetime)).valueOf()/1000,
         // startpid:this.formData.start.addressid,
         // endpid:this.formData.end.addressid ,
         start:this.formData.start,
