@@ -1,0 +1,11 @@
+.ellipsis() {white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
+
+.cp-name-card {
+  display: flex; padding: 10px;
+  .cp-mainbox {
+    padding-left: 8px; .ellipsis();
+    .name { font-weight: 700; font-size: 16px; .ellipsis();}
+    .department { font-size: 12px;.ellipsis();}
+  }
+  .cp-avatar { width: 40px; height: 40px;}
+}
