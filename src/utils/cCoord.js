@@ -49,6 +49,7 @@ var  coord = ()=>{
    * @return Promise
    */
   this.default =  ()=>{
+    var defaultPosition = this.format([112.910868,22.88907]);
     return new Promise ((resolve, reject) => {
       let currentCoord = cookie.get(cacheKey_currentCoord);
       let defaultCoord = localStorage.getItem(cacheKey_defaultCoord);
@@ -64,8 +65,7 @@ var  coord = ()=>{
         this.get('pull').then(res=>{
           return resolve(res);
         }).catch(err=>{
-          position = this.format([112.910868,22.88907]);
-          return resolve(position);
+          return resolve(defaultPosition);
         })
       }
     })
@@ -74,16 +74,13 @@ var  coord = ()=>{
   /**
    * 取得用户之前上传到服务器的坐标
    * @param  Number [uid=0] 用户id, 为0时即取当前用户
-   * @return Promise
+   * @return Promise (带有code data desc的信息)
    */
   this.pull = (uid = 0)=>{
     return new Promise ((resolve, reject) => {
       axios.get(config.urls.user+"/"+uid+"/position").then(res=>{
-        if(res.data.code ===0){
-          resolve(res.data);
-        }else{
-          reject(res.data);
-        }
+        // if(res.data.code ===0){}
+        resolve(res.data);
       }).catch(err=>{
         reject(err);
       });
@@ -170,7 +167,7 @@ var  coord = ()=>{
   }
   /**
    * 多途径取用户坐标
-   * @return Promise
+   * @return Promise (直接返回坐标，不返code)
    */
   this.get = (type="all")=>{
     switch (type) {
@@ -180,11 +177,15 @@ var  coord = ()=>{
       case 'pull':
         return new Promise ((resolve, reject) => {
           this.pull().then(res=>{
-            position = this.format(res.data);
-            localStorage.setItem(cacheKey_defaultCoord,JSON.stringify(position));
-            return resolve(position);
+            if(res.code === 0){
+              var position = this.format(res.data);
+              localStorage.setItem(cacheKey_defaultCoord,JSON.stringify(position));
+              return resolve(position);
+            }else{
+              return reject(res);
+            }
           }).catch(err=>{
-            reject(err);
+            return reject(err);
           })
         })
         break;
