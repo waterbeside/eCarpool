@@ -7,7 +7,7 @@
       :placeholder="$t('message[\'placeholder.keyword\']')"></cp-search-box>
     </title-bar>
     <div class="page-view-main"   >
-      <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
+      <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite"  @on-scroll="onScroll"   ref="scroller">
          <cp-trip-card
           v-if="listDatas"
           v-for="(item,index) in listDatas"
@@ -16,7 +16,7 @@
            :name="item.p_name"
            :avatar="item.p_imgpath"
            :phone="item.p_phone"
-           :department="item.p_department"
+           :department="item.p_department_format"
 
            :start_name="item.start_addressname"
            :end_name="item.end_addressname"
@@ -52,12 +52,12 @@
 </template>
 
 <script>
-import moment from 'moment'
+
 import config from '../config'
 import cFuns from '@/utils/cFuns'
-import cCoord from '@/utils/cCoord'
 import CpSearchBox from '@/components/CpSearchBox'
 import CpTripCard from '../components/CpTripCard'
+import cCoord from '@/utils/cCoord'
 
 export default {
   components: {
@@ -76,9 +76,15 @@ export default {
       scrollData: {
           noFlag: false //暂无更多数据显示
       },
-      enableInfinite:false,
+      enableInfinite:true,
       // msg      : 'Welcome to Your Vue.js App'
     }
+  },
+  watch :{
+    "scrollData.noFlag"(val,oldval){
+
+    }
+
   },
   methods :{
     init (){
@@ -178,7 +184,9 @@ export default {
           this.page = data.page.currentPage ;
           this.pageCount = data.page.pageCount;
           data.lists.forEach((value,index,arr)=>{
-            value.time = moment(value.time*1000).format('YYYY-MM-DD HH:mm');
+            value.time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
+            value.p_department_format = value.p_full_department ? cFuns.formatDepartment(value.p_full_department) : value.p_department;
+
             // console.log(time);
           })
 
@@ -194,7 +202,7 @@ export default {
             this.listDatas = data.lists;
           }
 
-          this.enableInfinite = this.listDatas.length < 4 || this.pageCount ==1  ? false : true;
+          // this.enableInfinite = this.listDatas.length < 4 || this.pageCount ==1  ? false : true;
         }else{
           if(res.data.code === 20002 && this.page < 2){
             this.noData = 1 ;
@@ -231,6 +239,13 @@ export default {
         this.$el.querySelector('.load-more').style.display = 'none';
       }
       done();
+    },
+    /**
+     * 滚动事件
+     */
+    onScroll(e){
+      let sTop = e.target.scrollTop;
+      this.$store.commit('setCarpoolListScrollTop',sTop);
     }
   },
   created () {
@@ -244,17 +259,21 @@ export default {
   mounted () {
   },
   activated (){
+    this.$refs.scroller.$el.scrollTop = this.$store.state.carpoolListScrollTop - 50;
+    this.$el.querySelector('.load-more').style.display = 'none';
     /*if(this.$store.state.isRefreshCarpoolList){
       this.listDatas = [];
       this.$store.commit('setIsRefreshCarpoolList',false);
     }
-    this.$el.querySelector('.load-more').style.display = 'none';*/
+    */
+
   },
   beforeRouteLeave(to, from, next) {
     if (to.name == "carpool_requests_detail"  ) {
       to.meta.keepAlive = true;
     }else{
       to.meta.keepAlive = false;
+      this.$store.commit('setCarpoolListScrollTop',0);
     }
     next();
   }
