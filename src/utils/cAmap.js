@@ -59,15 +59,46 @@ var cAmap = {
     clear (mapObj){
         mapObj.clearMap();
     },
+
+    //格式化坐标
+    formatCoords(position,type=0){
+      var pos = [];
+      if(typeof(position.longitude)!='undefined'){
+        pos = [parseFloat(position.longitude),parseFloat(position.latitude)];
+      }else if(typeof(position.lng)!='undefined'){
+        pos = [parseFloat(position.lng),parseFloat(position.lat)];
+      }else if( typeof(position[0]) == "number" && typeof(position[1]) == "number"){
+        pos = position
+      }else{
+        return false;
+      }
+      if(type){
+        position = new AMap.LngLat(pos[0], pos[1]);
+      }else{
+        position = pos
+      }
+      return position
+    },
     /**
      * 加marker
      */
     addMarker (position,mapObj,setting) {
+
       var settingDefault = {
-        position: position,
         autoCenter: false,
         color:'blue',
       }
+      if(typeof(position.position)=="object"){
+        position.position = this.formatCoords(position.position);
+        setting = position;
+        if(typeof(position.map)=="object"){
+          mapObj = position.map;
+        }
+      }else{
+        position = this.formatCoords(position);
+        settingDefault.position = position;
+      }
+
       var opt = Object.assign({},settingDefault,setting)
       if(!opt.icon){
         switch (opt.color) {
@@ -82,7 +113,7 @@ var cAmap = {
         }
       }
       if(opt.autoCenter){
-        mapObj.setZoomAndCenter(14, position);
+        mapObj.setZoomAndCenter(14, opt.position);
       }
       var marker = new AMap.Marker(opt);
       marker.setMap(mapObj);
