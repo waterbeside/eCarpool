@@ -18,14 +18,14 @@
                       <h3>{{user.name}}</h3>
                     </div>
                     <h6>{{typeLabel}}</h6>
-                    <h4 class="department">{{user.Department}}</h4>
+                    <!-- <h4 class="department">{{user.department}}</h4> -->
                 </div>
                 <div class="cp-heading-bg" ></div>
               </div>
-              <cp-trip-box v-if="detailData" :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname" :labelStart="$t('message[\'label.from\']')"  :labelEnd="$t('message[\'label.to\']')"></cp-trip-box>
+              <cp-trip-box v-if="detailData" :start_name="detailData.start_addressname" :end_name="detailData.end_addressname" :labelStart="$t('message[\'label.from\']')"  :labelEnd="$t('message[\'label.to\']')"></cp-trip-box>
               <div class="cp-cell cp-cell-time">
                   <div class="la"><i class="fa fa-clock-o"></i></div>
-                  <span class="cp-time">{{detailData.time_format}}</span>
+                  <span class="cp-time">{{detailData.format_time}}</span>
                   <small class="cp-label">{{$t("message['label.startTime']")}}</small>
               </div>
               <div class="cp-cell ">
@@ -78,11 +78,11 @@
 
 <script>
 import { querystring } from 'vux'
-import cFuns from '../../utils/cFuns'
+import cFuns from '@/utils/cFuns'
 import config from './config'
-import CpAvatar from '../../components/CpAvatar'
+import CpAvatar from '@/components/CpAvatar'
 import CpTripBox from '../index/components/CpTripBox'
-import CpViewBox from '../../components/CpViewBox'
+import CpViewBox from '@/components/CpViewBox'
 
 export default {
   name: 'app',
@@ -95,10 +95,11 @@ export default {
       isShowDownBtn: true,
       isLoading: true,
       isMobile: false,
-      loadingText: "启动APP",
+      loadingText: this.$t("message['launchApp']"),
       h5Url:"/",
       r: "",
       id:"",
+      detailApi:'',
       sharer:"",
       detailData:null,
       clientType:null,
@@ -174,15 +175,27 @@ export default {
 
     //取得行程信息
     loadDetail(){
-      let url =   config.urls.getTripDetail;
-      this.$http.get(url,{params:{type:this.r,id:this.id}}).then(res => {
+      let url =   this.detailApi;
+      this.$http.get(url,{params:{type:this.r,id:this.id,pb:1}}).then(res => {
+        console.log(res)
         if(res.data.code===0){
           var data = res.data.data;
+          data.format_time = cFuns.formatDate((new Date(data.time*1000)),"yyyy-mm-dd hh:ii")
           this.detailData = data;
           if( this.r == "info"){
-            this.user                 = data.passenger_info
+            this.user                 = {
+              // department: data.p_department,
+              name: data.p_name,
+              avatar: config.avatarBasePath + data.p_imgpath,
+              loginname: data.p_loginname,
+            }
           }else{
-            this.user                 = data.owner_info;
+            this.user                 = {
+              // department: data.d_department,
+              name: data.d_name,
+              avatar: config.avatarBasePath + data.d_imgpath,
+              loginname: data.d_loginname,
+            }
           }
         }
         setTimeout(()=>{
@@ -250,10 +263,12 @@ export default {
     this.sharer = cFuns.getRequest('sharer');
     switch (this.r) {
       case "info":
-        this.h5Url = this.h5Url+"#/carpool/requests/detail/"+this.id;
+        this.h5Url = this.h5Url+"#/carpool/requests/"+this.id;
+        this.detailApi = config.urls.trips+'/info/'+this.id;
         break;
       case "lovewall":
-        this.h5Url = this.h5Url+"#/carpool/rides/detail/"+this.id;
+        this.h5Url = this.h5Url+"#/carpool/rides/"+this.id;
+        this.detailApi = config.urls.trips+'/wall/'+this.id;
         break;
       default:
     }
