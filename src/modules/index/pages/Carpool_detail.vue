@@ -518,12 +518,11 @@ export default {
       * 取得评论总数
       */
      getCommentsCount (){
-       let params = {wid:this.id,getcount:1}
-       this.$http.get(config.urls.wallComments,{params:params}).then(res => {
+       let params = {getcount:1}
+       this.$http.get(config.urls.trips+"/wall/"+this.id+"/comments",{params:params}).then(res => {
          if(res.data.code == 0){
            var data = res.data.data;
            this.comments_total = data.total;
-
            // console.log(this.comments_total)
          }
        });
@@ -539,7 +538,7 @@ export default {
        }
        this.isLoading_comments = true;
 
-       let params = {wid:this.id,num:3}
+       let params = {num:3}
        this.$http.get(config.urls.trips+"/wall/"+this.id+"/comments",{params:params}).then(res => {
          // console.log(res);
          this.isLoading_comments = false;
