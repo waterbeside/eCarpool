@@ -87,7 +87,8 @@ export default {
      * 改变状态后界面所做的变化
      */
     changeStatus(status){
-      console.log('status:'+status)
+      status = status || 0;
+
       this.isShowBtn_phone   = false;
       this.isShowBtn_goback  = true;
       this.isShowBtn_pickup  = false;
@@ -210,7 +211,7 @@ export default {
           }
           break;
       }
-    
+
 
       // event.stopPropagation();
       this.$vux.confirm.show({
