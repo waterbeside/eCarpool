@@ -637,7 +637,7 @@ export default {
       })
 
       if(this.type=="wall"){
-        this.getCommentsCount();
+        // this.getCommentsCount();
         this.getCommentLists();
         this.showPassengers();
       }
