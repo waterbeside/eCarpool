@@ -524,8 +524,8 @@ export default {
       * 取得评论总数
       */
      getCommentsCount (){
-       let params = {wid:this.id,getcount:1}
-       this.$http.get(config.urls.wallComments,{params:params}).then(res => {
+       let params = { getcount:1}
+       this.$http.get(config.urls.trips+"/wall/"+this.id+"/comments",{params:params}).then(res => {
          if(res.data.code == 0){
            var data = res.data.data;
            this.comments_total = data.total;
@@ -637,14 +637,13 @@ export default {
 
 
       this.getDetail().then(res=>{
-        console.log(res)
         this.mapInit().then(map=>{
           this.drawTripLine(res);
         });
       })
 
       if(this.type=="wall"){
-        this.getCommentsCount();
+        // this.getCommentsCount();
         this.getCommentLists();
         this.showPassengers();
       }
