@@ -5,33 +5,25 @@ let baseUrl = ""
 let baseUrl_8080 = baseDomain+':8080'
 let baseUrl_8082 = baseDomain
 
-let isOverSeas = false; //是否启用海外地图
-let aMapKey    =  isOverSeas ?  '' : '';//高德地图API之KEY。
-
+let isGridMapForeign = false; //是否启用海外地图
+let aMapKey    =  isGridMapForeign ?  '' : '';//高德地图API之KEY。
+let gMapKey   =  "";
 let config = {
-  appScheme       : "", //用于启动app的scheme
-  baseDomain      : baseDomain ,
-  isOverSeas      : isOverSeas,
-  aMapKey         : aMapKey,
-  avatarBasePath  : baseDomain+'/carpool/images/users/', //头像公共路徑
-  defaultAvatar   :  avatarPic, //默认头像
+  appScheme           : "io.ultrarich.carpool", //用于启动app的scheme
+  baseDomain          : baseDomain ,
+  isGridMapForeign    : isGridMapForeign,
+  aMapKey             : aMapKey,
+  gMapKey             : gMapKey,
+  avatarBasePath      : baseDomain+'/carpool/images/users/', //头像公共路徑
+  defaultAvatar       :  avatarPic, //默认头像
   urls         : {
-    // aMapScript        : 'https://webapi.amap.com/maps?v=1.4.8&key='+aMapKey, //高德地图api
     uploadAvatar      : baseUrl_8080+'/uploadfile/image',   // 传头像API
     getUserStatis     : baseUrl + '/carpool/user/get_user_statis', //取得用户拼车统计数据
-    getMyAddress      : baseUrl + '/carpool/address/get_myaddress', //取得我的地址
     likeTrip          : baseUrl + '/carpool/wall/like', //点赞行程
     editProfileAdress : baseUrl + '/carpool/user/change_address', // 修改个人资料的公司和家地址
-    wallComments      : baseUrl + '/carpool/comment/wall', //取得空座位评论列表
     getCompanys       : baseUrl + '/carpool/assist/get_companys', //取得公司列表
     getDepartments    : baseUrl + '/carpool/assist/get_departments', //取得部门列表
-    // getDisclaimer     : baseUrl + '/carpool/assist/get_disclaimer', //免责声明
-
-    sendSms           : baseUrl + '/carpool/service/send_code', //发送短信
-    checkSmsCode      : baseUrl + '/carpool/service/check_code', //发送短信
-
     getTripDetail     : baseUrl + '/carpool/assist/get_trip_detail',  //取得行呈现详情（免token）
-
     /** rest 接口 **/
     passport          : baseUrl_8082 + '/api/v1/passport', // 通行证，post登入，delete登出, get验证。
     sms               : baseUrl_8082 + '/api/v1/sms', // 发送短信接口
@@ -41,7 +33,6 @@ let config = {
     user              : baseUrl_8082 + '/api/v1/user', //用户相关
   }
 }
-
 config = Object.assign({}, config)
 
 export default config
