@@ -319,7 +319,7 @@ export default {
     },
     //按钮提交成功后
     btnSubmitSuccess (action,res){
-      console.log(action)
+      // console.log(action)
       switch (action) {
         case 'finish':
           if( this.uid == this.user.uid){
