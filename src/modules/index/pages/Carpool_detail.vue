@@ -24,7 +24,7 @@
                     <h3>{{user.name}}</h3>
                   </div>
                   <div class="btns-bar">
-                    <button @click="goPosition"><i class="fa fa-map-marker"></i></button>
+                    <a class="btn" @click="goPosition" href="javascript:void(0);"><i class="fa fa-map-marker"></i></a>
                   </div>
               </div>
 
