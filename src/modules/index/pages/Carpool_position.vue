@@ -13,7 +13,7 @@
 
           <name-card   :name='user.name' :department='user.department_format' >
             <div slot="after" class="cp-name-card-btns">
-              <button class="btn-refreshPosition" @click="getData"><i class="fa  fa-refresh" :class="{'fa-spin':isLoading}"></i></button>
+              <a class="btn-refreshPosition" href="javascript:void(0);" @click="getData"><i class="fa  fa-refresh" :class="{'fa-spin':isLoading}"></i></a>
             </div>
           </name-card>
 
@@ -114,14 +114,23 @@ export default {
           var result = res.data;
 
           if(res.data.code === 0){
+            if(!result.data.position){
+              setTimeout(()=>{
+                this.is_showMsg = true;
+                this.msg = result.desc;
+              },500)
+
+            }
             this.user = result.data.userData;
             this.user.department = this.user.department ? this.user.department : '-' ;
             this.user.department_format = this.user.full_department ? cFuns.formatDepartment(this.user.full_department) : this.user.department;
             this.userCoord = result.data.position;
             this.tripData = result.data.tripData;
           }else{
-            this.is_showMsg = true;
-            this.msg = result.desc;
+            setTimeout(()=>{
+              this.is_showMsg = true;
+              this.msg = result.desc;
+            },500)
           }
           setTimeout(()=>{
             this.isLoading = false;
