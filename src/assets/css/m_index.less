@@ -1048,6 +1048,7 @@
 
   .cp-heading-wrapper {
     @avatar-width : 40px;
+    @avatar-border : 1px;
     @name-size:20px;
     background: url(../images/carpool_bg.jpg); background-size: cover;
     .cp-department-bar {
@@ -1059,7 +1060,11 @@
       //用户信息栏
     .cp-heading  {
       display: flex; width: 100%; padding: 10px; z-index: 2; color:#FFF; box-shadow: 0 2px 8px rgba(0,0,0,.2);
-      .cp-avatar { border: 2px solid rgba(255,255,255,.8); min-width:@avatar-width; width: @avatar-width; height: @avatar-width; transition: all .5s;}
+      .cp-avatar-wrapper { border: @avatar-border solid rgba(255,255,255,.4);
+          width: @avatar-width + @avatar-border*2; height: @avatar-width + @avatar-border*2; transition: all .5s; border-radius: 50%}
+      .cp-avatar {
+         width: @avatar-width; height: @avatar-width;
+      }
       .cp-name { display: flex; align-items:center; width: 100%; margin-left: 8px;  transition: all .5s;.ellipsis();
         h3 { margin: 0 ;font-size:@name-size ; .ellipsis(); }
       }

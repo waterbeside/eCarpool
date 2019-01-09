@@ -19,7 +19,9 @@
                 <h6>{{typeLabel}}</h6>
               </div>
               <div class="cp-heading " >
-                  <cp-avatar :src="user.avatar"></cp-avatar>
+                  <div class="cp-avatar-wrapper">
+                    <cp-avatar :src="user.avatar"></cp-avatar>
+                  </div>
                   <div class="cp-name">
                     <h3>{{user.name}}</h3>
                   </div>
