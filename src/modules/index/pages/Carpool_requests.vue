@@ -1,25 +1,25 @@
 <template>
   <div class="page-view cp-overhide">
     <title-bar  :left-options="{showBack: true, preventGoBack:true}" @onClickBack="goHome">
-      <span v-show="!isShowSearchBox">{{$t("message['discover.request']")}}</span>
+      <span v-show="!isShowSearchBox">{{$t("message['carpool.title.requests']")}}</span>
       <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)"
       @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch"
       :placeholder="$t('message[\'placeholder.keyword\']')"></cp-search-box>
     </title-bar>
     <div class="page-view-main"   >
-      <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
+      <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite"  @on-scroll="onScroll"   ref="scroller">
          <cp-trip-card
           v-if="listDatas"
           v-for="(item,index) in listDatas"
            :key="item.id"
            :id="item.id"
-           :name="item.passenger_info.name"
-           :avatar="item.passenger_info.imgpath"
-           :phone="item.passenger_info.phone"
-           :department="item.passenger_info.Department"
-           :carnumber="item.passenger_info.carnumber"
-           :start_name="item.start_info.addressname"
-           :end_name="item.end_info.addressname"
+           :name="item.p_name"
+           :avatar="item.p_imgpath"
+           :phone="item.p_phone"
+           :department="item.p_department_format"
+
+           :start_name="item.start_addressname"
+           :end_name="item.end_addressname"
            :date = "item.time.split(' ')[0]"
            :time = "item.time.split(' ')[1]"
            :class="[{'cancel':item.status > 0},('item-'+item.id)]"
@@ -52,10 +52,12 @@
 </template>
 
 <script>
+
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 import CpSearchBox from '@/components/CpSearchBox'
 import CpTripCard from '../components/CpTripCard'
+import cCoord from '@/utils/cCoord'
 
 export default {
   components: {
@@ -74,9 +76,15 @@ export default {
       scrollData: {
           noFlag: false //暂无更多数据显示
       },
-      enableInfinite:false,
+      enableInfinite:true,
       // msg      : 'Welcome to Your Vue.js App'
     }
+  },
+  watch :{
+    "scrollData.noFlag"(val,oldval){
+
+    }
+
   },
   methods :{
     init (){
@@ -167,14 +175,20 @@ export default {
 
       this.isLoading = 1;
       this.noData = 0;
-      this.$http.get(config.urls.getInfoLists,{params:params}).then(res => {
+      this.$http.get(config.urls.trips+"/info",{params:params}).then(res => {
 
         let data = res.data.data;
         this.isLoading = 0;
         if(res.data.code === 0) {
-
-          this.page = data.page.currentPage + 1;
+          // this.page = data.page.currentPage + 1;
+          this.page = data.page.currentPage ;
           this.pageCount = data.page.pageCount;
+          data.lists.forEach((value,index,arr)=>{
+            value.time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
+            value.p_department_format = value.p_full_department ? cFuns.formatDepartment(value.p_full_department) : value.p_department;
+
+            // console.log(time);
+          })
 
           if(this.page > 1 ){
             var list = this.listDatas;
@@ -188,7 +202,7 @@ export default {
             this.listDatas = data.lists;
           }
 
-          this.enableInfinite = this.listDatas.length < 4 || this.pageCount ==1  ? false : true;
+          // this.enableInfinite = this.listDatas.length < 4 || this.pageCount ==1  ? false : true;
         }else{
           if(res.data.code === 20002 && this.page < 2){
             this.noData = 1 ;
@@ -225,11 +239,19 @@ export default {
         this.$el.querySelector('.load-more').style.display = 'none';
       }
       done();
+    },
+    /**
+     * 滚动事件
+     */
+    onScroll(e){
+      let sTop = e.target.scrollTop;
+      this.$store.commit('setCarpoolListScrollTop',sTop);
     }
   },
   created () {
     this.init();
     this.getList(1);
+    cCoord().push(); // 上传用户坐标。
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
@@ -237,17 +259,21 @@ export default {
   mounted () {
   },
   activated (){
+    this.$refs.scroller.$el.scrollTop = this.$store.state.carpoolListScrollTop - 50;
+    this.$el.querySelector('.load-more').style.display = 'none';
     /*if(this.$store.state.isRefreshCarpoolList){
       this.listDatas = [];
       this.$store.commit('setIsRefreshCarpoolList',false);
     }
-    this.$el.querySelector('.load-more').style.display = 'none';*/
+    */
+
   },
   beforeRouteLeave(to, from, next) {
     if (to.name == "carpool_requests_detail"  ) {
       to.meta.keepAlive = true;
     }else{
       to.meta.keepAlive = false;
+      this.$store.commit('setCarpoolListScrollTop',0);
     }
     next();
   }

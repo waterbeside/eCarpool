@@ -13,6 +13,8 @@ export default {
 
   //是否刷新拼车页面
   isRefreshCarpoolList: true,
+  //是否刷新拼车详情
+  unRefreshCarpoolDetail: false,
 
   //当前城市
   localCity : null,
@@ -33,5 +35,17 @@ export default {
   userAvatar:'',
   //发布行程时填写的表单内容
   tripFormData:{},
+
+  //预存地址
+  addressDefaultList:null,
+
+  //行程详情scrollTop
+  carpoolDetailScrollTop:0,
+  //行程列表scrollTop
+  carpoolListScrollTop:0,
+
+  //行程详情临时数据
+  carpoolInfoDetail:null,
+  carpoolWallDetail:null,
 
 }

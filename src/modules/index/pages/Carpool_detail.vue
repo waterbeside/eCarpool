@@ -7,79 +7,101 @@
       </title-bar>
       <cp-goback-btn v-show="!isSticky" :class="{'cp-sticky':isSticky}"></cp-goback-btn>
 
-      <cp-scroller :enableInfinite="false" :enableRefresh="false" id="cp-scroll-wrapper" @on-scroll="onScroll" :innerStyle="{marginTop:(mapHeight-40)+'px'}">
-        <div  slot="before-inner" id="amapContainer" class="cp-map-content map-box" :style="{height:mapHeight+'px'}"></div>
+      <cp-scroller :enableInfinite="false" :enableRefresh="false" id="cp-scroll-wrapper" :innerStyle="{marginTop:(mapDefaultHeight-20)+'px'}" @on-scroll="onScroll"  ref="scroller" >
+        <div  slot="before-inner" id="mapContainer-detail" class="cp-map-content map-box" :style="{height:mapHeight+'px',marginTop:mapTop+'px'}"></div>
 
         <!-- <el-amap slot="before-inner" class="cp-map-content map-box" :vid="'amap-vue'" :events="mapEvents" :plugin="mapPlugin">  </el-amap> -->
 
         <div class="cp-main" ref="mainbox">
-          <div scroll-box="cp-scroll-wrapper" ref="sticky" :offset="0" >
-            <div class="cp-heading-wrapper" :class="{'cp-sticky':isSticky}" >
+            <div class="cp-heading-wrapper"  >
+              <div class="cp-department-bar">
+                <h4 class="department">{{user.department_format}}</h4>
+                <h6>{{typeLabel}}</h6>
+              </div>
               <div class="cp-heading " >
                   <cp-avatar :src="user.avatar"></cp-avatar>
-                  <div class="cp-txt">
+                  <div class="cp-name">
                     <h3>{{user.name}}</h3>
                   </div>
-                  <h6>{{typeLabel}}</h6>
-                  <h4 class="department">{{user.Department}}</h4>
+                  <div class="btns-bar">
+                    <a class="btn" @click="goPosition" href="javascript:void(0);"><i class="fa fa-map-marker"></i></a>
+                  </div>
               </div>
-              <div class="cp-heading-bg" ></div>
-              <!-- / heading -->
-              <tab class="cp-tab-wrapper" :line-width="2" active-color='#8877ba' v-model="tabIndex" v-if="type=='wall'" >
-                <tab-item class="cp-tab-item"  :key="0"><div class="cp-inner">{{$t("message.detail")}}</div></tab-item>
-                <tab-item class="cp-tab-item"  :key="1" @on-item-click="getCommentLists"><div class="cp-inner">{{$t("message['carpool.leaveMessage']")}}<b class="bage" v-show="comments_total>0">{{comments_total}}</b></div></tab-item>
-                <tab-item class="cp-tab-item"  :key="2" @on-item-click="onShowPassengers" ><div class="cp-inner">{{$t("message['carpool.passengers']")}}<b class="bage" v-show="detailData.took_count_all>0">{{detailData.took_count_all}}</b></div></tab-item>
-              </tab>
+
             </div>
 
-          </div>
-          <div class="cp-content-item" :key="0" v-show="tabIndex == 0">
+          <group class="cp-group" >
+            <group-title class="cp-group-title" slot="title">{{$t("message['detail']")}}</group-title>
+            <div class="alert " :class="alertClass" v-show="isShowAlert" ><span v-html="alertText"></span>
+              <a v-show="isShowBtn_cancel_alert" @click="btnAction('cancel')" style='margin-left:4px' class='btn btn-sm btn-info'>{{$t("message.cancel")}}</a>
+              <a v-show="isShowBtn_finish_alert" @click="btnAction('finish')" style='margin-left:4px' class='btn btn-sm btn-info'>{{$t("message.finish")}}</a>
+            </div>
+            <div class="cp-cell cp-cell-time">
+                <div class="la"><i class="fa fa-clock-o"></i></div>
+                <span class="cp-time">{{detailData.time_format}}</span>
+            </div>
+            <cp-trip-box :start_name="detailData.start_addressname" :end_name="detailData.end_addressname" :labelStart="$t('message[\'label.from\']')"  :labelEnd="$t('message[\'label.to\']')"></cp-trip-box>
+            <div class="cp-statis-list">
+              <statis-item class="cp-statis-item col-xs-4 cp-time" :title="$t('message[\'label.startTime\']')"   icon="fa fa-clock-o" :duration="1"><b slot="num"  class="num" ><p class="date">{{detailData.time_format.split(' ')[0]}}</p>{{detailData.time_format.split(' ')[1]}}</b></statis-item>
+              <statis-item class="cp-statis-item col-xs-4 cp-distance" :title="$t('message[\'carpool.detail.EstimatedDistance\']')"   :num="statis.distance" :unit="statis.distance_unit" icon="fa fa-map-signs" :duration="1"></statis-item>
+              <statis-item class="cp-statis-item col-xs-4" v-if="type=='wall'"  :title="$t('message[\'carpool.detail.seatsLeft\']')"   :num="statis.surplus_count" icon="fa fa-car" :duration="1"></statis-item>
+              <statis-item class="cp-statis-item col-xs-4 cp-status" v-if="type=='info'" :title="$t('message[\'carpool.detail.status\']')"     :icon="statusIcon" ><b slot="num"  class="num">{{statusText}}</b></b></statis-item>
+            </div>
 
-              <div class="alert " :class="alertClass" v-show="isShowAlert" ><span v-html="alertText"></span>
-                <a v-show="isShowBtn_cancel_alert" @click="btnAction('cancel')" style='margin-left:4px' class='btn btn-sm btn-info'>{{$t("message.cancel")}}</a>
-                <a v-show="isShowBtn_finish_alert" @click="btnAction('finish')" style='margin-left:4px' class='btn btn-sm btn-info'>{{$t("message.finish")}}</a>
-              </div>
-              <div class="cp-cell cp-cell-time">
-                  <div class="la"><i class="fa fa-clock-o"></i></div>
-                  <span class="cp-time">{{detailData.time_format}}</span>
-              </div>
-              <cp-trip-box :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname" :labelStart="$t('message[\'label.from\']')"  :labelEnd="$t('message[\'label.to\']')"></cp-trip-box>
-              <div class="cp-statis-list">
-                <statis-item class="cp-statis-item col-xs-4 cp-time" :title="$t('message[\'label.startTime\']')"   icon="fa fa-clock-o" :duration="1"><b slot="num"  class="num"><p class="date">{{detailData.time_format.split(' ')[0]}}</p>{{detailData.time_format.split(' ')[1]}}</b></statis-item>
-                <statis-item class="cp-statis-item col-xs-4 cp-distance" :title="$t('message[\'carpool.detail.EstimatedDistance\']')"   :num="statis.distance" :unit="statis.distance_unit" icon="fa fa-map-signs" :duration="1"></statis-item>
-                <statis-item class="cp-statis-item col-xs-4" v-if="type=='wall'"  :title="$t('message[\'carpool.detail.seatsLeft\']')"   :num="statis.surplus_count" icon="fa fa-car" :duration="1"></statis-item>
-                <statis-item class="cp-statis-item col-xs-4 cp-status" v-if="type=='info'" :title="$t('message[\'carpool.detail.status\']')"     :icon="statusIcon" ><b slot="num"  class="num">{{statusText}}</b></b></statis-item>
-              </div>
-            <!--  <div class="cp-btns-wrap">
-                <a v-show="isShowBtn_phone"  class="cp-btn cp-btn-phone " :href="'tel:'+user.phone"><i class="cp-icon fa fa-phone"></i>电 话</a>
-                <a v-show="isShowBtn_goback" class="cp-btn cp-btn-back "  @click="goBack"><i class="cp-icon fa fa-arrow-left"></i>返 回</a>
-                <a v-show="isShowBtn_pickup" class="cp-btn cp-btn-pickup " @click="btnAction('pickup')"><i class="cp-icon fa fa-car"></i>接受请求</a>
-                <a v-show="isShowBtn_riding" class="cp-btn cp-btn-riding " @click="btnAction('riding')"><i class="cp-icon fa fa-car"></i>搭 车</a>
-                <a v-show="isShowBtn_cancel" class="cp-btn cp-btn-cancel "  @click="btnAction('cancel')"><i class="cp-icon fa fa-times"></i>取消行程</a>
-                <a v-show="isShowBtn_finish" class="cp-btn cp-btn-ok "  @click="btnAction('finish')"><i class="cp-icon fa fa-check"></i>结束行程</a>
-              </div>-->
-
-          </div>
-
+          </group>
           <!-- /详情 -->
-          <div class="cp-content-item" :key="1" v-show="tabIndex == 1" >
+
+          <group class="cp-group" v-if="type=='wall'">
+            <group-title class="cp-group-title" slot="title">
+              {{$t("message['carpool.passengers']")}}
+               <badge :text="statis.took_count" v-show="statis.took_count > 0"></badge>
+               <div class="cp-refresh pull-right" @click="loadPassengers"><i class="fa fa-refresh " :class="{'fa-spin':isLoading_pss}"></i></div>
+            </group-title>
+            <div class="text-center"  v-show="isLoading_pss">
+              <spinner type="dots" size="60px"></spinner>
+            </div>
+            <div class="cp-wallView-passenger" v-if="passengers.length > 0">
+              <passenger-item class="cp-item"
+              :class="{'cp-finish':item.status==3}"
+              v-for="(item,index) in passengers "
+              :key = "index"
+              :avatar = "item.avatar"
+              :id = "item.id"
+              :uid = "item.p_uid"
+              :name = "item.p_name"
+              :department = "item.p_department_format"
+              :phone = "item.p_mobile"
+              :start_name = "item.start_addressname"
+              :end_name = "item.end_addressname"
+              :time = "item.format_time"
+              :data = "item"
+              >
+              </passenger-item>
+           </div>
+            <p class="cp-nodata-tips" v-else v-show="!isLoading_pss">{{$t("message['carpool.detail.noPassenger']")}}</p>
+            <div class="blank10"> </div>
+          </group>
+          <!-- /乘客 -->
+
+          <group class="cp-group" v-if="type=='wall'">
+            <group-title class="cp-group-title" slot="title">
+              {{$t("message['carpool.leaveMessage']")}}
+              <badge :text="comments_total" v-show="comments_total > 0"></badge>
+            </group-title>
             <div class="text-center"  v-show="isLoading_comments">
               <spinner type="dots" size="60px"></spinner>
             </div>
             <template v-if="comments.length">
               <ul class="cp-comment-list">
-                <li v-for="(item,index) in comments" class="cp-comment-item">
-                  <div class="cp-avatarbox">
-                    <cp-avatar :src="item.avatar"></cp-avatar>
-                  </div>
-                  <div class="cp-mainbox">
-                    <div class="cp-title">
-                      <b class="name">{{item.name}}</b>
-                      <span class="time">{{item.time}}</span>
-                    </div>
-                    <div class="cp-content">{{item.content}}</div>
-                  </div>
-                </li>
+                <comment-item
+                  v-for="(item,index) in comments "
+                  :key = "index"
+                  :avatar = "item.avatar"
+                  :name = "item.name"
+                  :time = "item.format_time"
+                  :content = "item.content"
+                ></comment-item>
+
                 <li class="cp-commentLists-tips" ><router-link   :to="{ name:'carpool_rides_comments', params: {id: id} }">{{$t("message['carpool.detail.seeAllComments']",{"num":comments_total})}}</router-link></li>
               </ul>
 
@@ -87,43 +109,21 @@
 
             <p class="cp-nodata-tips" v-else v-show="!isLoading_comments">{{$t("message['carpool.detail.noComment']")}}   (´°̥̥̥̥̥̥̥̥ω°̥̥̥̥̥̥̥̥｀)</p>
             <div class="text-center"><router-link class="btn btn-default"  :to="{ name:'carpool_rides_comments', params: {id: id} }"><i class="fa fa-edit"></i> {{$t("message['carpool.detail.addComment']")}}</router-link></div>
-          </div>
+            <div class="blank20"> </div>
+
+          </group>
           <!-- /留言 -->
-
-          <div class="cp-content-item" :key="2" v-show="tabIndex == 2">
-            <div class="text-center"  v-show="isLoading_pss">
-              <spinner type="dots" size="60px"></spinner>
-            </div>
-            <ul class="cp-wallView-passenger" v-if="passengers.length > 0">
-              <li class="cp-item " :class="{'cp-finish':item.status==3}" v-for="(item,index) in passengers ">
-                <cp-avatar :src="item.avatar" ></cp-avatar>
-                <div class="cp-txt">
-                  <h4 class="media-heading">{{item.name}}</h4>
-                  <p>{{item.Department}}</p>
-                </div>
-                <div class="cp-btns-wrap">
-                  <a :href="'tel:'+item.phone" class="btn  btn-fab btn-fab-mini"><i class="fa fa-phone"></i></a>
-                </div>
-             </li>
-            </ul>
-            <p class="cp-nodata-tips" v-else v-show="!isLoading_pss">{{$t("message['carpool.detail.noPassenger']")}}</p>
-          </div>
-          <!-- /乘客 -->
-
-          <!-- /tab -->
-
 
         </div>
       </cp-scroller>
-      <div  class="cp-btns-wrapper">
-        <a v-show="isShowBtn_goback" class="cp-btn-i cp-btn-back "  @click="goBack"><i class="cp-icon fa fa-chevron-left"></i><span>{{$t("message['carpool.detail.btn.goback']")}}</span></a>
-        <a v-show="isShowBtn_phone"  class="cp-btn-i cp-btn-phone " :href="'tel:'+user.phone"><i class="cp-icon fa fa-phone"></i><span>{{$t("message['carpool.detail.btn.phone']")}}</span></a>
-        <a v-show="isShowBtn_pickup" class="cp-btn-p cp-btn-pickup " @click="btnAction('pickup')"><i class="cp-icon fa fa-car"></i><span>{{$t("message['carpool.detail.btn.pickup']")}}</span></a>
-        <a v-show="isShowBtn_riding" class="cp-btn-p cp-btn-riding " @click="btnAction('riding')"><i class="cp-icon fa fa-car"></i><span>{{$t("message['carpool.detail.btn.riding']")}}</span></a>
-        <a v-show="isShowBtn_cancel" class="cp-btn-p cp-btn-cancel "  @click="btnAction('cancel')"><i class="cp-icon fa fa-times"></i><span>{{$t("message['carpool.detail.btn.cancel']")}}</span></a>
-        <a v-show="isShowBtn_finish" class="cp-btn-p cp-btn-ok "  @click="btnAction('finish')"><i class="cp-icon fa fa-check"></i><span>{{$t("message['carpool.detail.btn.finish']")}}</span></a>
-        <b v-show="isShowBtn_status" class="cp-btn-p cp-btn-disable "  @click="false"><i class="cp-icon fa fa-check"></i><span>{{alertText}}</span></b>
-      </div>
+      <detail-btns-bar
+      :user = "user"
+      :uid = "uid"
+      :detailData="detailData"
+      :type = "type"
+      v-if="detailData.time"
+      @on-submit-success = "btnSubmitSuccess"
+      > </detail-btns-bar>
     </div>
   </div>
 </template>
@@ -131,19 +131,26 @@
 <script>
 import config from '../config'
 import cFuns from '@/utils/cFuns'
-import {Tab, TabItem} from 'vux'
+import cCoord from '@/utils/cCoord'
+import cAmap from '@/utils/cAmap'
+import {GroupTitle,Badge } from 'vux'
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
 
 
 import CpAvatar from '@/components/CpAvatar'
 import CpTripBox from '../components/CpTripBox'
+import PassengerItem from '../components/CpTripPassengerItem'
+import DetailBtnsBar from '../components/CpTripDetailBtns'
+import CommentItem from '../components/CpTripComment'
 
 import StatisItem from '@/components/StatisItem'
 
 
+
 export default {
   components: {
-    CpAvatar,CpTripBox,StatisItem,Tab,TabItem
+    GroupTitle,  Badge,
+    PassengerItem,CommentItem,CpAvatar,CpTripBox,StatisItem,DetailBtnsBar
   },
   data () {
     return {
@@ -155,17 +162,17 @@ export default {
       isSticky          : false,
       type              : "",
 
-      mapHeight         : 220,
+      mapDefaultHeight  : 400,
+      mapHeight         : 400,
+      mapTop            : 0,
 
       detailData        : {
-        time_format    : "0000-00-00 00:00",
-        start_info      : {addressname:'-'},
-        end_info        :{addressname:'-'},
+        time_format     : "0000-00-00 00:00",
         status          : 0,
         hasTake         : 0,
         hasTake_finish  : 0,
-
       },
+
 
       //alert框相关
       isShowAlert       :false,
@@ -173,13 +180,13 @@ export default {
       alertClass         :"alert-info",
 
       //留言相关
-      isLoading_comments:true,
+      isLoading_comments:false,
       comments          : [],
       comments_time     : 0,
       comments_total    : 0,
 
       //乘客相关
-      isLoading_pss     :true,
+      isLoading_pss     :false,
       passengers        :[],
       passengers_time   : 0,
 
@@ -189,26 +196,21 @@ export default {
       typeLabel         : '',
 
       //按钮相关
-      isShowBtn_phone   :false,
-      isShowBtn_goback  :false,
-      isShowBtn_pickup  :false,
-      isShowBtn_riding  :false,
-      isShowBtn_cancel  :false,
-      isShowBtn_finish :false,
       isShowBtn_cancel_alert:false,
       isShowBtn_finish_alert: false,
-      isShowBtn_status : false,
 
       //statis-item组件相关
       statis            :{
         surplus_count:0,
-        distance:0
+        distance:0,
       },
       statusText        :"-",
       statusIcon        :"fa fa-car",
 
       //地图相关
       mapObj            :null,
+      directionsDisplay : null,
+
 
 
     }
@@ -233,9 +235,9 @@ export default {
     setMapHeight(){
       let h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
       let mainHeight = this.$refs.mainbox.offsetHeight;
-      let surHeight = h - mainHeight  ;
-
-      this.mapHeight = surHeight > 220 ? surHeight : 220;
+      let surHeight = h - mainHeight + 100  ;
+      this.mapHeight =   surHeight > 150 ? surHeight : 200;
+      this.$refs.scroller.$el.scrollTop = 100;
 
     },
     /**
@@ -245,11 +247,12 @@ export default {
       return new Promise ((resolve, reject) => {
         if(!this.mapObj){
           lazyAMapApiLoaderInstance.load().then(() => {
-            this.mapObj = cFuns.amap.showMap('amapContainer', {
-              resizeEnable: true,zoom: 10,enableHighAccuracy:true, zoomToAccuracy:false,
-            },res=>{
+            cAmap.showMap('mapContainer-detail', {
+              resizeEnable: true,zoom: 10,enableHighAccuracy:false, zoomToAccuracy:false,
+            }).then(map=>{
+              this.mapObj = map;
               if(!this.$store.state.localCity){
-                cFuns.amap.getCity(this.mapObj).then((data)=> {
+                cAmap.getCity(this.mapObj).then((data)=> {
                   if (data['province'] && typeof data['province'] === 'string') {
                     this.$store.commit('setLocalCity',data);
                     this.city = data.city
@@ -279,134 +282,157 @@ export default {
      * 改变状态后界面所做的变化
      */
     changeStatus(status){
-      this.isShowBtn_phone   = false;
-      this.isShowBtn_goback  = true;
-      this.isShowBtn_pickup  = false;
-      this.isShowBtn_riding  = false;
-      this.isShowBtn_cancel  = false;
-      this.isShowBtn_finish= false;
+
+
       this.isShowBtn_cancel_alert = false;
       this.isShowBtn_finish_alert = false;
-      this.isShowBtn_status = false;
-
-      this.isShowBtn_phone = this.uid == this.user.uid ? false : true;
       this.isShowAlert = this.type=="info" ? true : false
       // console.log(this.type);
       switch (parseInt(status)) {
         case 0:
             this.alertText = this.$t("message['carpool.status.alert.waitingCar']");
-            this.isShowBtn_cancel = this.uid == this.user.uid ? true : false;
             if(this.type=="wall"){
-              this.isShowBtn_finish = this.uid == this.user.uid ? true : false;
               if(this.detailData.hasTake > 0){
                   // this.isShowAlert = true;
                   this.alertClass  = "alert-info"
                   this.alertText = this.$t("message['carpool.status.alert.youAlreadyTake']");
-
                   this.isShowBtn_cancel_alert = true;
-                  this.isShowBtn_cancel = true;
                   this.isShowBtn_finish_alert = true;
-                  this.isShowBtn_finish = true;
-                  this.isShowBtn_goback =  true;
-              }else if(this.detailData.hasTake_finish > 0){
-                this.isShowBtn_goback = true;
-              }else{
-                this.isShowBtn_riding = this.uid == this.user.uid ? false : true;
               }
             }
-            if(this.type=="info"){
-              this.isShowBtn_pickup = this.uid == this.user.uid ? false : true;
-            }
-            this.statusText  = this.$t("message['carpool.status.waitingDriver']");;
+            this.statusText  = this.$t("message['carpool.status.waitingDriver']");
             this.statusIcon  = "fa fa-user";
           break;
         case 1:
             if(this.type=="wall"){
-              this.isShowBtn_cancel = this.uid == this.user.uid ? true : false;
-              this.isShowBtn_finish = this.uid == this.user.uid ? true : false;
               if(this.detailData.hasTake > 0){
                   // this.isShowAlert = true;
                   this.alertClass  = "alert-info"
                   this.alertText = this.$t("message['carpool.status.alert.youAlreadyTake']");
                   this.isShowBtn_cancel_alert = true;
-                  this.isShowBtn_cancel = true;
                   this.isShowBtn_finish_alert = true;
-                  this.isShowBtn_finish = true;
-                  this.isShowBtn_goback =  true;
-              }else if(this.detailData.hasTake_finish > 0){
-                this.isShowBtn_goback = true;
-              }else{
-                this.isShowBtn_riding = this.uid == this.user.uid ? false : true;
               }
-
-
             }
             if(this.type=="info"){
-              this.alertText = this.$t("message['carpool.status.alert.hasTakenBy']",{"user":"<img class='cp-avatar' src='"+this.detailData.owner_info.avatar+"' /> "+this.detailData.owner_info.name+""});
-              this.isShowBtn_cancel = this.uid == this.user.uid || this.detailData.owner_info.uid == this.uid ? true : false;
-              this.isShowBtn_finish = this.uid == this.user.uid || this.detailData.owner_info.uid == this.uid ? true : false;
+              this.alertText = this.$t("message['carpool.status.alert.hasTakenBy']",{"user":"<img class='cp-avatar' src='"+this.detailData.d_avatar+"' /> "+this.detailData.d_name+""});
             }
-
             this.statusText  = this.$t("message['carpool.status.hasTaken']");
             this.statusIcon  = "fa fa-car";
           break;
         case 2:
             this.alertText = this.$t("message['carpool.status.alert.hasCanceled']");
-            this.isShowBtn_goback =  true;
             this.statusText  = this.$t("message['carpool.status.hasCanceled']");
             this.statusIcon  = "fa fa-times";
-            this.isShowBtn_status = true;
           break;
         case 3:
             this.alertText = this.$t("message['carpool.status.alert.hasFinished']");
-            this.isShowBtn_goback = true;
             this.statusText  = this.$t("message['carpool.status.hasFinished']");
             this.statusIcon  = "fa fa-check";
-            this.isShowBtn_status = true;
-
           break;
         default:
       }
 
     },
+    //按钮提交成功后
+    btnSubmitSuccess (action,res){
+      console.log(action)
+      switch (action) {
+        case 'finish':
+          if( this.uid == this.user.uid){
+            this.detailData.status = 3;
+            this.changeStatus(3);
+          }else{
+            this.loadPassengers();
+            this.detailData.hasTake = 0;
+            this.passengers_time = 0;
+            this.isShowBtn_finish_alert = false;
+            this.changeStatus(this.detailData.status);
+          }
+          break;
+        case 'cancel':
+          if( this.uid == this.user.uid){
+            this.detailData.status = 2;
+            this.changeStatus(2);
+          }else{
+            this.loadPassengers();
+            this.statis.took_count          = this.statis.took_count - 1;
+            this.statis.surplus_count       = this.statis.surplus_count + 1;
+            this.detailData.took_count      = this.detailData.took_count - 1;
+            this.detailData.took_count_all  = this.detailData.took_count_all - 1;
+            this.detailData.hasTake = 0;
+            // this.passengers  = this.passengers.filter(t => t.uid != this.user.uid);
+            this.passengers_time = 0;
+            this.isShowBtn_cancel_alert = false;
+            this.changeStatus(this.detailData.status);
+          }
+          break;
+        default:
+      }
+    },
     /**
      * 取得明细
      */
     getDetail (){
+      // console.log(this.$store.state.userData.uid)
       return new Promise ((resolve, reject) => {
 
-        let url = this.type == "wall" ? config.urls.getRideDetail : config.urls.getRequestDetail;
+        // let url = this.type == "wall" ? config.urls.getRideDetail : config.urls.getRequestDetail;
+        let url = config.urls.trips+"/"+this.type+"/"+this.id;
         this.$store.commit('setLoading',{isShow:true,text:null});
 
-        this.$http.get(url,{params:{id:this.id}}).then(res => {
+        // this.$http.get(url,{params:{id:this.id}}).then(res => {
+        this.$http.get(url).then(res => {
           // console.log(res);
           if(res.data.code === 0) {
             let data = res.data.data;
+            data.time_format = cFuns.formatDate((new Date(data.time*1000)),"yyyy-mm-dd hh:ii");
             this.detailData      = data;
             this.uid             = data.uid;
-            this.detailData.owner_info.avatar = data.owner_info.imgpath ? config.avatarBasePath + data.owner_info.imgpath : this.defaultAvatar;
+            this.detailData.d_avatar = data.d_imgpath ? config.avatarBasePath + data.d_imgpath : this.defaultAvatar;
             if( this.type == "info"){
+              this.$store.commit('setCarpoolInfoDetail',this.detailData);
+              this.$store.commit('setCarpoolWallDetail',null);
+
               this.typeLabel           = this.$t("message.passenger")
-              this.passengers[0]       = data.passenger_info;
-              this.passengers[0].avatar = data.passenger_info.imgpath ? config.avatarBasePath + this.passengers[0].imgpath :this.defaultAvatar ;
+              this.passengers[0]       =  {
+                                            name:data.p_name,
+                                            avatar:data.p_imgpath ? config.avatarBasePath + data.p_imgpath :this.defaultAvatar ,
+                                            department:data.p_department,
+                                            department_format:data.p_full_department ? cFuns.formatDepartment(data.p_full_department) : data.p_department,
+                                            phone:data.p_phone,
+                                            mobile:data.p_mobile,
+                                            uid:data.p_uid
+                                            };
               this.isShowAlert          = true;
-              this.user                 = data.passenger_info
+              this.user                 = this.passengers[0]
 
             }else{
-              this.typeLabel            = data.owner_info.carnumber;
-              this.user                 = data.owner_info;
+              this.$store.commit('setCarpoolWallDetail',this.detailData);
+              this.$store.commit('setCarpoolInfoDetail',null);
+
+              this.typeLabel            = data.d_carnumber;
+              this.user                 = {
+                                            name:data.d_name,
+                                            avatar:this.detailData.d_avatar,
+                                            department:data.d_department,
+                                            department_format:data.d_full_department ? cFuns.formatDepartment(data.d_full_department) : data.d_department,
+                                            phone:data.d_phone,
+                                            mobile:data.d_mobile,
+                                            uid:data.d_uid
+                                            };
               this.statis.seat_count    = data.seat_count;
               this.statis.took_count    = data.took_count;
               this.statis.surplus_count = data.seat_count - data.took_count;
 
             }
+
             this.changeStatus(data.status)
             // this.status = data.status;
             // this.mapObj.clearMap()
 
 
             this.$store.commit('setLoading',{isShow:false});
-            this.drawTripLine(data);
+            // this.drawTripLine(data);
             resolve(data)
             // setTimeout(function(){
             //
@@ -428,16 +454,16 @@ export default {
     },
 
     drawTripLine (data){
-      let start = [data.start_info.longtitude,data.start_info.latitude]
-      let end = [data.end_info.longtitude,data.end_info.latitude]
-      cFuns.amap.drawTripLine(start, end,this.mapObj,(status,result)=>{
+      let start = [data.start_longitude,data.start_latitude]
+      let end = [data.end_longitude,data.end_latitude]
+      cAmap.drawTripLine(start, end,this.mapObj,(status,result)=>{
         if(status == 'complete'){
           this.isShowComputebox = true;
           var distance = result.routes[0].distance; //计出的距离
-          var distanceObj = cFuns.amap.formatDistance(distance,1);
+          var distanceObj = cAmap.formatDistance(distance,1);
           // var distanceStr = distanceObj.distance + distanceObj.unit;
           var dtTime = result.routes[0].time;
-          var dtTimeStr = cFuns.amap.formatTripTime(dtTime);
+          var dtTimeStr = cAmap.formatTripTime(dtTime);
 
           this.statis.distance = parseFloat(distanceObj.distance);
           this.statis.distance_unit = distanceObj.unit;
@@ -449,7 +475,7 @@ export default {
     /**
      * 当显示乘客列表的tab时。
      */
-    onShowPassengers (){
+    showPassengers (){
       var nowTimestamp = new Date().getTime();
       if( nowTimestamp - this.passengers_time < 20*1000 ||(this.passengers.length > 0 && (nowTimestamp - this.passengers_time < 60*1000))){
         return false
@@ -460,27 +486,37 @@ export default {
      * 读取空座位乘客列表
      */
     loadPassengers (){
+      if(this.isLoading_pss){
+        return false;
+      }
       this.isLoading_pss = true;
       let params = {wallid:this.id}
-      this.$http.get(config.urls.getRidePassengers,{params:params}).then(res => {
+      // this.$http.get(config.urls.getRidePassengers,{params:params}).then(res => {
+      this.$http.get(config.urls.trips+"/wall/"+this.id+"/passengers",{params:params}).then(res => {
 
         let data = res.data.data;
-        this.isLoading_pss = false;
+
         if(res.data.code === 0) {
           data.lists.forEach((value,index,arr)=>{
-            value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : this.defaultAvatar;
+            value.avatar = value.p_imgpath ? config.avatarBasePath + value.p_imgpath : this.defaultAvatar;
+            value.format_time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
+            value.p_department_format = value.p_full_department ? cFuns.formatDepartment(value.p_full_department) : value.p_department;
           })
           this.passengers = data.lists;
-          this.took_count = this.passengers.length;
+          this.statis.took_count = this.passengers.length;
           this.passengers_time = new Date().getTime();
         }else{
 
         }
+        setTimeout(()=>{
+          this.isLoading_pss = false;
+        },1000)
       })
       .catch(error => {
         console.log(error)
-        this.isLoading_pss = false;
-
+        setTimeout(()=>{
+          this.isLoading_pss = false;
+        },1000)
       })
     },
 
@@ -488,8 +524,8 @@ export default {
       * 取得评论总数
       */
      getCommentsCount (){
-       let params = {wid:this.id,getcount:1}
-       this.$http.get(config.urls.wallComments,{params:params}).then(res => {
+       let params = { getcount:1}
+       this.$http.get(config.urls.trips+"/wall/"+this.id+"/comments",{params:params}).then(res => {
          if(res.data.code == 0){
            var data = res.data.data;
            this.comments_total = data.total;
@@ -503,19 +539,20 @@ export default {
      */
      getCommentLists (){
        var nowTimestamp = new Date().getTime();
-       if(this.comments.length > 5  || nowTimestamp - this.comments_time < 60*1000){
+       if(this.comments.length > 3  || nowTimestamp - this.comments_time < 60*1000){
          return false;
        }
        this.isLoading_comments = true;
 
-       let params = {wid:this.id,num:5}
-       this.$http.get(config.urls.wallComments,{params:params}).then(res => {
+       let params = {wid:this.id,num:3}
+       this.$http.get(config.urls.trips+"/wall/"+this.id+"/comments",{params:params}).then(res => {
          // console.log(res);
          this.isLoading_comments = false;
          if(res.data.code == 0){
            var data = res.data.data;
            data.lists.forEach((value,index,arr)=>{
              value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : this.defaultAvatar;
+             value.format_time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
            })
            this.comments_total = data.total ? data.total : 0;
            this.comments = data.lists;
@@ -526,115 +563,29 @@ export default {
          console.log(error)
        });
      },
-     /******* 按钮相关方法 *******/
-     /**
-      * 按钮动作
-      */
-     btnAction (action){
-       var url,postData,confirmText;
-       var successText = this.$t("message.success");
-       var confirmTitle = this.$t("message.AreYouSure");
-       var isJumpToMytrip = false;
-       switch (action) {
-         case 'pickup':
-           url = config.urls.acceptRequest;
-           postData = {id:this.id};
-           confirmText = this.$t("message['carpool.confirm.accept']",{"username":this.user.name});
-           successText = this.$t("message['carpool.acceptSuccess']") ;
-           isJumpToMytrip = true;
-           break;
-         case 'riding':
-           url = config.urls.riding;
-           postData = {wid:this.id};
-           confirmText = this.$t("message['carpool.confirm.riding']",{"username":this.user.name});
-           successText = this.$t("message['carpool.ridingSuccess']") ;
-           isJumpToMytrip = true;
-           break;
-         case 'finish':
-           url = config.urls.finishTrip;
-           postData = {id:this.id,from:this.type};
-           confirmText = this.$t("message['carpool.confirm.finish']");
-           successText = this.$t("message['carpool.finishSuccess']") ;
-           isJumpToMytrip = false;
-           var success = (rs)=>{
-             if( this.uid == this.user.uid){
-               this.detailData.status = 3;
-               this.changeStatus(3);
-             }else{
-               this.statis.took_count      = this.statis.took_count - 1;
-               this.detailData.took_count  = this.detailData.took_count - 1;
-               this.detailData.hasTake = 0;
-               this.passengers_time = 0;
-               this.isShowBtn_finish_alert = false;
 
-               this.changeStatus(this.detailData.status);
-             }
-           }
-           break;
-         case 'cancel':
-           url = config.urls.cancelTrip;
-           postData = {id:this.id,from:this.type};
-           confirmText = this.$t("message['carpool.confirm.cancel']");
-           successText = this.$t("message['carpool.cancelSuccess']") ;
-           isJumpToMytrip = false;
-           var success =  (rs)=>{
-             if( this.uid == this.user.uid){
-               this.detailData.status = 2;
-               this.changeStatus(2);
-             }else{
-               this.statis.took_count          = this.statis.took_count - 1;
-               this.detailData.took_count      = this.detailData.took_count - 1;
-               this.detailData.took_count_all  = this.detailData.took_count_all - 1;
-               this.detailData.hasTake = 0;
-               // this.passengers  = this.passengers.filter(t => t.uid != this.uid);
-               this.passengers_time = 0;
-               this.isShowBtn_cancel_alert = false;
 
-               this.changeStatus(this.detailData.status);
-             }
-           }
-           break;
-       }
-       // event.stopPropagation();
-       this.$vux.confirm.show({
-         title  : confirmTitle,
-         content: confirmText,
-         onConfirm : ()=>{
-           this.$store.commit('setLoading',{isShow:true,text:this.$t("message.submitting")});
-           // return false;
-           this.$http.post(url,postData).then(res => {
-             this.$store.commit('setLoading',{isShow:false});
-             if(res.data.code === 0) {
-               this.$vux.toast.text(successText);
-               if(typeof(success)==="function"){
-                 success(res.data);
-               }
-               if(isJumpToMytrip){
-                 this.$store.commit('setJumpTo',{name:"carpool_mytrip"});
-                 this.$router.push({name:'carpool'});
-               }
-             }else{
-               this.$vux.toast.text(res.data.desc,'middle');
-             }
-           })
-           .catch(error => {
-             this.$store.commit('setLoading',{isShow:false});
-             this.$vux.toast.text(t.message['networkFail']);
-             console.log(error)
-           })
-         }
-       })
-     },
      /**
       * 滚动事件
       */
      onScroll(e){
        let sTop = e.target.scrollTop;
+       this.mapTop    =  sTop;
+       this.mapHeight =  this.mapDefaultHeight -  sTop ;
        if(sTop > this.mapHeight){
          this.isSticky = true;
        }else{
          this.isSticky = false;
        }
+       this.$store.commit('setCarpoolDetailScrollTop',sTop);
+     },
+
+     /**
+      * 路到位置页
+      */
+     goPosition(){
+       this.$router.push({name:'carpool_position',params:{from:this.type,id:this.id,uid:this.user.uid}})
+
      }
 
 
@@ -654,45 +605,57 @@ export default {
   //   });
   },
   activated (){
-    this.tabIndex   = 0;
-    this.isSticky   = false;
-    this.passengers = [];
-    this.passengers_time = 0 ;
-    this.comments          = [];
-    this.comments_time     = 0;
-    this.comments_total    = 0;
-    this.detailData =  {
-      time_format    : "0000-00-00 00:00",
-      start_info      : {addressname:'-'},
-      end_info        :{addressname:'-'},
-      status          : 0,
-      hasTake         : 0,
-      hasTake_finish  : 0,
-
-    }
     let path = this.$route.path;
-
-
     if(path.indexOf('requests')>1){
       this.type =  'info';
     }
     if(path.indexOf('rides')>1){
       this.type =  'wall';
     }
-
     //
     this.id = this.$route.params.id;
-    Promise.all([this.mapInit(),this.getDetail()]).then(res=>{
-      this.drawTripLine(res[1]);
-    })
+    cCoord().push().catch(err=>{console.log(err)}); // 上传用户坐标。
+    if(!this.$store.state.unRefreshCarpoolDetail){
+
+      this.tabIndex   = 0;
+      this.isSticky   = false;
+      this.passengers = [];
+      this.passengers_time = 0 ;
+      this.comments          = [];
+      this.comments_time     = 0;
+      this.comments_total    = 0;
+
+      this.detailData =  {
+        time_format     : "0000-00-00 00:00",
+        start_info      : {addressname:'-'},
+        end_info        : {addressname:'-'},
+        status          : 0,
+        hasTake         : 0,
+        hasTake_finish  : 0,
+
+      }
 
 
-    if(this.type=="wall"){
-      this.getCommentsCount();
+      this.getDetail().then(res=>{
+        this.mapInit().then(map=>{
+          this.drawTripLine(res);
+        });
+      })
+
+      if(this.type=="wall"){
+        // this.getCommentsCount();
+        this.getCommentLists();
+        this.showPassengers();
+      }
+
+
+      setTimeout(()=>{
+        this.setMapHeight();
+      },800)
+    }else{
+      this.$refs.scroller.$el.scrollTop = this.$store.state.carpoolDetailScrollTop;
     }
-    setTimeout(()=>{
-      this.setMapHeight();
-    },400)
+
 
   },
   deactivated () {
@@ -701,6 +664,10 @@ export default {
   beforeRouteLeave(to, from, next) {
     if (to.name == "carpool_rides"  || to.name == "carpool_requests") {
         to.meta.keepAlive = true;
+        this.$store.commit('setUnRefreshCarpoolDetail',false);
+    }
+    if (to.name == "carpool_position_info" || to.name == "carpool_position" ){
+      this.$store.commit('setUnRefreshCarpoolDetail',true);
     }
     next();
   }

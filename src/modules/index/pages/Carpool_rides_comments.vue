@@ -4,21 +4,16 @@
     <div class="page-view-main"   >
       <cp-scroller :position="{top:'46px'}"  :on-refresh="onRefresh"  :dataList="scrollData" :enableInfinite="enableInfinite" id="cp-scroll-wrapper" innerID="cp-scroll-inner">
         <ul v-if="comments.length" class="cp-comment-list">
-          <li v-for="(item,index) in comments" class="cp-comment-item">
-            <div class="cp-avatarbox">
-              <cp-avatar :src="item.avatar"></cp-avatar>
-            </div>
-            <div class="cp-mainbox">
-              <div class="cp-title">
-                <b class="name">{{item.name}}</b>
-                <span class="time">{{item.time}}</span>
-              </div>
-              <div class="cp-content">
-                {{item.content}} <i v-show="item.isSubmiting" class="cp-loadingIcon fa fa-circle-o-notch fa-spin "></i>
-                <span v-show="item.isError" class="cp-error">{{$t("message['carpool.comments.sendFail']" )}} </span>
-              </div>
-            </div>
-          </li>
+          <comment-item
+            v-for="(item,index) in comments "
+            :key = "index"
+            :avatar = "item.avatar"
+            :name = "item.name"
+            :time = "item.time"
+            :content = "item.content"
+            :isSubmiting = "item.isSubmiting"
+            :isError = "item.isError"
+          ></comment-item>
         </ul>
 
 
@@ -46,16 +41,18 @@
 </template>
 
 <script>
+
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 
 import CpAvatar from '@/components/CpAvatar'
+import CommentItem from '../components/CpTripComment'
 
 
 
 export default {
   components: {
-    CpAvatar
+    CpAvatar,CommentItem
   },
   data () {
     return {
@@ -100,8 +97,10 @@ export default {
       }
       this.isLoading = true;
 
-      let params = {wid:this.id};
-      this.$http.get(config.urls.wallComments,{params:params}).then(res => {
+      let params = {
+        // pagesize:20
+      };
+      this.$http.get(config.urls.trips+'/wall/'+this.id+'/comments',{params:params}).then(res => {
 
         this.isLoading = false;
         if(res.data.code == 0){
@@ -112,6 +111,7 @@ export default {
           data.lists.forEach((value,index,arr)=>{
             value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : this.defaultAvatar;
             value.isSubmiting = false;
+            value.time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
           })
           this.comments_total = data.total ? data.total : 0;
           this.comments = data.lists;
@@ -157,9 +157,9 @@ export default {
 
 
 
-      let postDatas = {wid:this.id,content:this.content}
+      let postDatas = {content:this.content}
 
-      this.$http.post(config.urls.wallComments,postDatas).then(res => {
+      this.$http.post(config.urls.trips+'/wall/'+this.id+'/comments',postDatas).then(res => {
         if(res.data.code === 0){
           this.content = "";
         }else{

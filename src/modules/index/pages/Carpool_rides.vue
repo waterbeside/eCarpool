@@ -1,7 +1,7 @@
 <template>
   <div class="page-view  ">
     <title-bar  :left-options="{showBack: true, preventGoBack:true}" @onClickBack="goHome">
-      <span v-show="isShowSearchBox==0">{{$t("message['discover.ridesharewall']")}}</span>
+      <span v-show="isShowSearchBox==0">{{$t("message['carpool.title.rides']")}}</span>
       <cp-search-box slot="rightContent" @on-show-input="showSearchBox(1)"
       @on-hide-input="showSearchBox(0)" v-model="keyword" @on-keyup="doSearch"
       :placeholder="$t('message[\'placeholder.keyword\']')"></cp-search-box>
@@ -15,20 +15,20 @@
       </div>-->
     </title-bar>
     <div class="page-view-main"   >
-      <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite">
+      <cp-scroller :position="{top:'46px'}" :on-refresh="onRefresh" :on-infinite="onInfinite" :dataList="scrollData" :enableInfinite="enableInfinite" @on-scroll="onScroll"   ref="scroller">
 
          <cp-trip-card
             v-if="listDatas"
             v-for="(item,index) in listDatas"
            :key="item.id"
            :id="item.id"
-           :name="item.owner_info.name"
-           :avatar="item.owner_info.imgpath"
-           :phone="item.owner_info.phone"
-           :department="item.owner_info.Department"
-           :carnumber="item.owner_info.carnumber"
-           :start_name="item.start_info.addressname"
-           :end_name="item.end_info.addressname"
+           :name="item.d_name"
+           :avatar="item.d_imgpath"
+           :phone="item.d_phone"
+           :department="item.d_department_format"
+           :carnumber="item.d_carnumber"
+           :start_name="item.start_addressname"
+           :end_name="item.end_addressname"
            :date = "item.time.split(' ')[0]"
            :time = "item.time.split(' ')[1]"
            :class="[{'cancel':item.status > 1},('item-'+item.id)]"
@@ -37,20 +37,23 @@
            data-from="wall"
            @click.native="goDetail(index)"
          >
+
            <div slot="btnbar" class="cp-btns-wrapper">
-              <div class="cp-fabBtn-wrap " :class="[{'hasLike':item.hasLike===1,'doLike':item.id === doLikeId}]">
+              <!-- <div class="cp-fabBtn-wrap " :class="[{'hasLike':item.hasLike===1,'doLike':item.id === doLikeId}]">
                 <b class="t">{{$t("message['carpool.detail.clickLike']")}}</b>
                 <a href="javascript:void(0);" class="btn  btn-fab" :class="item.hasLike===1 ? 'btn-danger' : 'btn-primary' " @click="likeTrip(item.id,index)">
                   <i class="fa fa-heart" ></i>
                 </a>
                 <b class="num">{{item.like_count}}</b>
-              </div>
+              </div> -->
               <div class="cp-fabBtn-wrap"><b class="t">{{$t("message['carpool.emptySeat']")}}</b><a href="javascript:void(0);" class="btn btn-primary btn-fab "><i class="fa fa-car"></i></a><b class="num">{{item.seat_count - item.took_count}}</b></div>
               <div class="cp-fabBtn-wrap" :class="[{'hasLike':item.hasTake===1}]">
                 <b class="t">{{$t("message['carpool.takenSeat']")}}</b>
 
                 <a href="javascript:void(0);" class="btn btn-fab" :class="item.hasTake===1 ? 'btn-danger' : 'btn-primary' "><i class="fa fa-user"></i></a>
                 <b class="num">{{item.took_count}}</b></div>
+              <span class="pull-right">{{$t("message.detail")}}  <i class="fa fa-arrow-circle-right"></i></span>
+
            </div>
          </cp-trip-card>
 
@@ -72,6 +75,7 @@ import cFuns from '@/utils/cFuns'
 
 import CpSearchBox from '@/components/CpSearchBox'
 import CpTripCard from '../components/CpTripCard'
+import cCoord from '@/utils/cCoord'
 
 export default {
   components: {
@@ -91,7 +95,7 @@ export default {
       scrollData: {
           noFlag: false //暂无更多数据显示
       },
-      enableInfinite:false,
+      enableInfinite:true,
 
     }
   },
@@ -173,13 +177,19 @@ export default {
 
       this.isLoading = 1;
       this.noData = 0;
-      this.$http.get(config.urls.getWallLists,{params:params}).then(res => {
+      this.$http.get(config.urls.trips+"/wall",{params:params}).then(res => {
         let data = res.data.data;
         this.isLoading = 0;
         if(res.data.code === 0) {
-          this.page = data.page.currentPage + 1;
-          this.pageCount = data.page.pageCount;
+          // this.page = data.page.currentPage + 1;
+          this.page = data.page.currentPage ;
+          this.pageCount = data.page.lastPage;
+          data.lists.forEach((value,index,arr)=>{
+            value.time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
+            value.d_department_format = value.d_full_department ? cFuns.formatDepartment(value.d_full_department) : value.d_department;
 
+            // console.log(time);
+          })
           if(this.page > 1 ){
             var list = this.listDatas;
             list = list.concat(data.lists);
@@ -192,7 +202,7 @@ export default {
             this.listDatas = data.lists;
           }
 
-          this.enableInfinite = this.listDatas.length < 4 || this.pageCount ==1  ? false : true;
+          // this.enableInfinite = this.listDatas.length < 4 || this.pageCount ==1  ? false : true;
         }else{
           if(res.data.code === 20002 && this.page < 2){
             this.noData = 1 ;
@@ -222,7 +232,7 @@ export default {
      */
     onInfinite(done) {
       if(this.page < this.pageCount){
-        this.getList(this.page+1,(res)=>{
+        this.getList(parseInt(this.page)+1,(res)=>{
           this.$el.querySelector('.load-more').style.display = 'none';
         });
       }else{
@@ -230,11 +240,20 @@ export default {
         this.$el.querySelector('.load-more').style.display = 'none';
       }
       done();
+    },
+    /**
+     * 滚动事件
+     */
+    onScroll(e){
+      let sTop = e.target.scrollTop;
+      this.$store.commit('setCarpoolListScrollTop',sTop);
     }
   },
   created () {
     this.init();
     this.getList(1);
+    cCoord().push(); // 上传用户坐标。
+
     // this.$nextTick(function () {
     //  this.$refs['j-herblist-scrollBox'].addEventListener('scroll', this.listScroll); //监听滚动加载更多
     // })
@@ -244,18 +263,23 @@ export default {
   },
 
   activated (){
+    this.$refs.scroller.$el.scrollTop = this.$store.state.carpoolListScrollTop ;
+    this.$el.querySelector('.load-more').style.display = 'none';
+
     /*if(this.$store.state.isRefreshCarpoolList){
       this.listDatas = [];
       this.getList(1);
       this.$store.commit('setIsRefreshCarpoolList',false);
     }
-    this.$el.querySelector('.load-more').style.display = 'none';*/
+    */
+    console.log(this.isLoading);
   },
   beforeRouteLeave(to, from, next) {
     if (to.name == "carpool_rides_detail"  ) {
       to.meta.keepAlive = true;
     }else{
       to.meta.keepAlive = false;
+      this.$store.commit('setCarpoolListScrollTop',0);
     }
     next();
   }

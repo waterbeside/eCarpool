@@ -152,6 +152,13 @@ export default  {
     "agreeToSuccess" : "Agree Successful",
     "reject" : "Rejected",
     "overdue" : "Expired",
+    "launchApp" : "Launch App",
+    "launchH5" : "H5",
+
+    "contact" : "Contact",
+    "position" : "Position",
+    "goBack": "Return",
+
 
     //app
 
@@ -250,16 +257,12 @@ export default  {
     "main.me" : "Me",
 
     //Discover
-
     "discover.trips" :"Trips",
-    "discover.currenttrip" : "Current Trip",
     "discover.share" : "Shuttle",
-    "discover.request" : "Passenger Requests",
     "discover.join" : "Join",
     "discover.carryPassengers" : "Carry Passengers",
     "discover.onlineMap" : "Map",
     "discover.realTimeLocation" : "Real Location",
-    "discover.ridesharewall" : "Available Car",
     "discover.busTimetable" : "Bus Timetable",
     "discover.timetable" : "Bus Timetable",
     "discover.MarketShop" : "Second Hand Market",
@@ -268,8 +271,9 @@ export default  {
     "discover.inputNeedBus" : "Please enter to find the bus",
     "discover.notFindBus" : "Can't find the car you are looking for",
     "discover.notFindBus.locationCheck" : "Can't find the car you are looking for, please check the search information is correct",
-
-
+    // "discover.currenttrip" : "Current Trip",
+    // "discover.ridesharewall" : "Available Car",
+    // "discover.request" : "Passenger Requests",
 
 
 
@@ -335,6 +339,7 @@ export default  {
     "placeholder.username" :"Username",
     "placeholder.password" :"Password",
     "placeholder.selectAddress" :"Please Select Address",
+    "placeholder.addressname" :"Please enter the address name",
     "placeholder.mobile" :"Please enter  phone number",
 
 
@@ -375,11 +380,19 @@ export default  {
     "scroller.noData" : "There is no data...",
     "btn.passengerpublish":  "Request",
     "btn.driverpublish": "Post seats",
+
+    "carpool.title.requests":"Passenger Requests",
+    "carpool.title.rides":"Available Car",
+    "carpool.title.myTrip":"Current Trip",
+
     "carpool.addtrip.tooLong":"The route is too long to predict the journey time",
     "carpool.addtrip.estimate":"Estimate",
     "carpool.addtrip.shareemptyseat" :  "Share Your Seats",
     "carpool.addtrip.addRequest" : "Hailing a car",
     "carpool.addtrip.commonroute" : "Common Routes",
+    "carpool.addtrip.hour" : ":",
+    "carpool.addtrip.minute" : "",
+
     "carpool.whetherAccept":"Whether to accept the request or not",
     "carpool.emptySeat":"Empty",
     "carpool.takenSeat":"Taken",
@@ -395,10 +408,15 @@ export default  {
     "carpool.detail.EstimatedDistance" : "Estimated distance",
     "carpool.detail.status" : "Status",
     "carpool.detail.seatsLeft" : "Seats left",
+    "carpool.detail.seatsLeftNum" : "{num} empty seats left",
     "carpool.detail.seeAllComments" : "A total of {num} comments, see all",
     "carpool.detail.noComment" : "No comment yet",
     "carpool.detail.noPassenger" : "No passengers",
     "carpool.detail.clickLike" : "Click Like",
+
+    "carpool.detail.openInBrowser" : "If you can't start or download the app, please select [Open in Browser] in the upper right corner of the button.",
+    "carpool.detail.autoStartTips" : "You have opened the sharing page and the app will start automatically. If you don't have [Filling Carpooling] installed, you can click the download button at the bottom to install it. You can also use H5 to experience it.",
+    "carpool.detail.noPhone" : "The user has not set a contact number",
 
 
     "carpool.comments.title" : "Comments",
@@ -414,6 +432,7 @@ export default  {
     "carpool.finishSuccess" : "Success",
     "carpool.confirm.cancel" : "Are you sure to cancel this trip?",
     "carpool.cancelSuccess" : "Success",
+    "carpool.confirm.cancelPassenger" : "Are you sure you want to cancel this passenger?",
 
 
     "carpool.status.waitingCar": "Waiting car",

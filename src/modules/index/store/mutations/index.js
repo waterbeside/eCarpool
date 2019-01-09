@@ -2,9 +2,9 @@
 // this.$store.commit(method, params)
 
 import store from '../'
-import cookie from '../../../../utils/cookie'
+import cookie from '@/utils/cookie'
 
-import config from '../../../../config'
+import config from '@/config'
 
 export default {
   //设置用户详细数据
@@ -15,6 +15,11 @@ export default {
   //设置是否刷新拼车页面
   setIsRefreshCarpoolList(state,datas){
     state.isRefreshCarpoolList = datas;
+  },
+
+  //设置是否刷新拼车页面
+  setUnRefreshCarpoolDetail(state,datas){
+    state.unRefreshCarpoolDetail = datas;
   },
   //设置用户基础数据
 /*  setUserBaseData(state,datas){
@@ -47,5 +52,30 @@ export default {
   setTripFormData(state,datas){
     state.tripFormData = datas ? datas : {}
   },
+
+  //设置预存地址
+  setAddressDefaultList(state,datas){
+    state.addressDefaultList = datas ? datas : null
+  },
+
+
+  setCarpoolDetailScrollTop(state,datas){
+    state.carpoolDetailScrollTop = datas ? datas : 0
+  },
+
+  setCarpoolListScrollTop(state,datas){
+    state.carpoolListScrollTop = datas ? datas : 0
+  },
+
+  setCarpoolInfoDetail(state,datas){
+    state.carpoolInfoDetail = datas ? datas : null
+  },
+
+  setCarpoolWallDetail(state,datas){
+    state.carpoolWallDetail = datas ? datas : null
+  },
+
+
+
 
 }

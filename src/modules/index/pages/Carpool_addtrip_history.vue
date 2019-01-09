@@ -9,9 +9,9 @@
           <li v-for="(item,index) in listDatas" class="cp-item btn-ripple" @click="onSelect(index)">
             <i class="cp-icon fa fa-history"></i>
             <span class="cp-time">{{item.time.split(' ')[1]}}</span>
-            <span class="cp-point">{{item.start_info.addressname}}</span>
+            <span class="cp-point">{{item.start_addressname}}</span>
             <span class="cp-arrow"><i class="fa fa-long-arrow-right"></i></span>
-            <span class="cp-point">{{item.end_info.addressname}}</span>
+            <span class="cp-point">{{item.end_addressname}}</span>
             <!-- <cp-trip-box :start_name="item.start_info.addressname" :end_name="item.end_info.addressname">
             </cp-trip-box> -->
           </li>
@@ -70,17 +70,24 @@ export default {
     getList (success){
       // console.log(config.urls.checkLogin)
       // alert(1)
-      let params = {limit:20};
+      let params = {pagesize:20};
 
       this.isLoading = 1;
       this.noData = 0;
-      this.$http.get(config.urls.getMytrip,{params:params}).then(res => {
+      this.$http.get(config.urls.trips+"/history",{params:params}).then(res => {
 
         let data = res.data.data;
           this.isLoading = 0;
           if(res.data.code === 0) {
-              this.listDatas = data.lists;
+            data.lists.forEach((value,index,arr)=>{
+               value.time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
+            })
+            this.listDatas = data.lists;
           }else{
+            if(res.data.code === 20002 && this.page < 2){
+              this.noData = 1 ;
+              this.listDatas = data.lists;
+            }
 
           }
           if(typeof(success)==="function"){
@@ -106,8 +113,23 @@ export default {
       let formData = this.$store.state.tripFormData;
       let today = cFuns.formatDayItemData(new Date).value;
       let hm = data.time.split(' ')[1]
-      formData.start = data.start_info;
-      formData.end = data.end_info;
+      formData.start = {
+        addressname:data.start_addressname,
+        latitude:data.start_latitude,
+        longitude:data.start_longitude,
+        map_type:data.map_type,
+        addressid:data.startpid,
+        gid:data.start_gid,
+      };
+      formData.end = {
+        addressname:data.end_addressname,
+        latitude:data.end_latitude,
+        longitude:data.end_longitude,
+        map_type:data.map_type,
+        addressid:data.endpid,
+        gid:data.end_gid,
+
+      };
 
       formData.seat_count = parseInt(data.seat_count);
       formData.time = [  today ,hm.split(':')[0] ,hm.split(':')[1] ];

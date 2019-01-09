@@ -57,6 +57,7 @@ import config from '../config'
 import cFuns from '@/utils/cFuns'
 import CpSearchBox from '@/components/CpSearchBox'
 import cModel from '@/utils/cModel'
+import cAmap from '@/utils/cAmap'
 export default {
   components: {
     CpSearchBox
@@ -167,16 +168,15 @@ export default {
      * [getCity 通过高德地图定位到当前城市]
      */
     getCity(){
-        var mapObj = cFuns.amap.showMap('cp-map-hidden', {},(res)=>{
-          if(!this.$store.state.localCity){
-            cFuns.amap.getCity(mapObj).then((data)=> {
-              if (data['province'] && typeof data['province'] === 'string') {
-                this.$store.commit('setLocalCity',data);
-              }
-            });
-          }
-        })
-
+       cAmap.showMap('cp-map-hidden', {}).then(map=>{
+         if(!this.$store.state.localCity){
+           cAmap.getCity(mapObj).then((data)=> {
+             if (data['province'] && typeof data['province'] === 'string') {
+               this.$store.commit('setLocalCity',data);
+             }
+           });
+         }
+       })
     },
     /**
      * 通过接口取地址列表数据
@@ -189,7 +189,8 @@ export default {
       let params = {keyword:this.keyword,page:1};
       this.isLoading = 1;
       this.noData = 0;
-      this.$http.get(config.urls.getMyAddress,{params:params}).then(res => {
+      // this.$http.get(config.urls.getMyAddress,{params:params}).then(res => {
+      this.$http.get(config.urls.address+"/my",{params:params}).then(res => {
         // console.log(res)
           this.isLoading = 0;
           if(res.data.code === 0) {
@@ -210,7 +211,7 @@ export default {
               return value;
             })
             //通高德地图以地坐标取得地址信息，并写入本地数据库
-              cFuns.amap.getGeocoder({
+              cAmap.getGeocoder({
                    radius: 1000,
                    extensions: "all"
                }).then((geocoder)=>{
@@ -222,7 +223,7 @@ export default {
                        return ;
                      }
                    }
-                   geocoder.getAddress([value.longtitude,value.latitude], (status, result)=>{
+                   geocoder.getAddress([value.longitude,value.latitude], (status, result)=>{
                        if (status === 'complete' && result.info === 'OK') {
                          value.listorder = key;
                          value.address = result.regeocode.formattedAddress;
@@ -257,28 +258,29 @@ export default {
     searchMapAddress (){
       var keyword = this.keyword;
       // 檢查是存在本地城市信息
-      var local_city =  this.$store.state.localCity != null && typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.city : "";
-      cFuns.amap.autoComplete(keyword,{city:local_city}).then(res=>{
+      var local_city =  this.$store.state.localCity != null && typeof(this.$store.state.localCity) != "undefined" && typeof(this.$store.state.localCity.city) == 'string' ?  this.$store.state.localCity.city : "-";
+
+      cAmap.autoComplete(keyword,{city:local_city}).then(res=>{
         var result = res.result;
         var status = res.status;
         if(status == 'complete'){
           this.smListDatas = [];
           // console.log(result.tips);
            result.tips.forEach((value,index,arr)=>{
+
             if(value.location.lat && value.location.lng){
               let itemValue =  {
                 addressid:0,
                 addressname:value.name,
                 address:value.address,
                 district:value.district,
+                city:local_city,
                 latitude:value.location.lat,
-                longtitude:value.location.lng,
+                longitude:value.location.lng,
               }
               this.smListDatas.push(itemValue);
             }
           })
-          // console.log(this.smListDatas);
-          // console.log(result.tips);
         }
       })
     },
@@ -306,7 +308,7 @@ export default {
         //要提交的数据
         var  postData = {
           latitude:data.latitude,
-          longtitude:data.longtitude,
+          longitude:data.longitude,
           aid:data.addressid,
           name:data.addressname,
           from: to

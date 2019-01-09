@@ -4,7 +4,7 @@
       <!-- 如果是在微信里打开则显示 -->
       <div class="wx-tips-wrap" v-show="isShowWxTips" style="">
   		    <img class="arrow-pic" src="../../assets/images/arrow-topright-s.png" >
-  		    <h3>如果您无法启动或下载APP，请在右上角的按钮，选择【在浏览器中打开】”。</h3>
+  		    <h3>{{$t("message['carpool.detail.openInBrowser']")}}</h3>
       </div>
       <cp-view-box>
         <div class="container ">
@@ -18,15 +18,15 @@
                       <h3>{{user.name}}</h3>
                     </div>
                     <h6>{{typeLabel}}</h6>
-                    <h4 class="department">{{user.Department}}</h4>
+                    <!-- <h4 class="department">{{user.department}}</h4> -->
                 </div>
                 <div class="cp-heading-bg" ></div>
               </div>
-              <cp-trip-box v-if="detailData" :start_name="detailData.start_info.addressname" :end_name="detailData.end_info.addressname"></cp-trip-box>
+              <cp-trip-box v-if="detailData" :start_name="detailData.start_addressname" :end_name="detailData.end_addressname" :labelStart="$t('message[\'label.from\']')"  :labelEnd="$t('message[\'label.to\']')"></cp-trip-box>
               <div class="cp-cell cp-cell-time">
                   <div class="la"><i class="fa fa-clock-o"></i></div>
-                  <span class="cp-time">{{detailData.time_format}}</span>
-                  <small class="cp-label">出发时间</small>
+                  <span class="cp-time">{{detailData.format_time}}</span>
+                  <small class="cp-label">{{$t("message['label.startTime']")}}</small>
               </div>
               <div class="cp-cell ">
                   <div class="la"><i class="fa fa-info"></i></div>
@@ -35,7 +35,7 @@
             </div>
 
             <div class="alert alert-warning" style="box-shadow: 0 0 10px rgba(0,0,0,.1);">
-              您已打开分享页面，App将会自动启动，<br />如果没有安装【溢起拼车】，可点击底部的下载按钮安装使用，你亦可使用H5使进行体验。
+              {{$t("message['carpool.detail.autoStartTips']")}}
             </div>
 
           </div>
@@ -44,25 +44,25 @@
               <div class="router-link cp-bar-tab-item "  >
                 <a href="http://m.esquel.cn/apps/gek/Carpool/downloadandroid.php">
                   <i class="cp-iconfont fa fa-android"></i>
-                  <div class="cp-bar-tab-label">安卓下载</div>
+                  <div class="cp-bar-tab-label">{{ $t("message['downloadapp.android']" )}}</div>
                 </a>
               </div>
               <div   class="router-link cp-bar-tab-item">
                 <a href="http://m.esquel.cn/apps/gek/Carpool/downloadios.php">
                   <i class="cp-iconfont fa fa-apple"></i>
-                  <div class="cp-bar-tab-label">苹果下载</div>
+                  <div class="cp-bar-tab-label">{{ $t("message['downloadapp.ios']" )}}</div>
                 </a>
               </div>
               <div   class="router-link cp-bar-tab-item" >
                 <a :href="h5Url">
                   <i class="cp-iconfont fa fa-html5"></i>
-                  <div class="cp-bar-tab-label">进入H5版</div>
+                  <div class="cp-bar-tab-label">{{ $t("message['launchH5']" )}}</div>
                 </a>
               </div>
               <div   class="router-link cp-bar-tab-item cp-btn-go" >
                 <a @click="launchApp" >
                   <i class="cp-iconfont fa fa-caret-right"></i>
-                  <div class="cp-bar-tab-label">启动APP</div>
+                  <div class="cp-bar-tab-label">{{ $t("message['launchApp']" )}}</div>
                 </a>
               </div>
           </div>
@@ -78,11 +78,11 @@
 
 <script>
 import { querystring } from 'vux'
-import cFuns from '../../utils/cFuns'
+import cFuns from '@/utils/cFuns'
 import config from './config'
-import CpAvatar from '../../components/CpAvatar'
+import CpAvatar from '@/components/CpAvatar'
 import CpTripBox from '../index/components/CpTripBox'
-import CpViewBox from '../../components/CpViewBox'
+import CpViewBox from '@/components/CpViewBox'
 
 export default {
   name: 'app',
@@ -95,10 +95,11 @@ export default {
       isShowDownBtn: true,
       isLoading: true,
       isMobile: false,
-      loadingText: "启动APP",
+      loadingText: this.$t("message['launchApp']"),
       h5Url:"/",
       r: "",
       id:"",
+      detailApi:'',
       sharer:"",
       detailData:null,
       clientType:null,
@@ -108,7 +109,9 @@ export default {
   },
   computed: {
     typeLabel (){
-      return this.r=="info"?"乘客约车需求":"司机空座位";
+      return this.r=="info"? this.$t("message['carpool.title.requests']") : this.$t("message['carpool.title.rides']");
+
+      //
     },
     statusText (){
       let status = parseInt(this.detailData.status);
@@ -119,26 +122,26 @@ export default {
           case "info":
             switch (status) {
               case 0:
-                return "等待搭载"
+                return this.$t("message['carpool.status.waitingDriver']")
                 break;
               case 1:
-                return "已搭车成功"
+                return this.$t("message['carpool.status.hasTaken']");
                 break;
               case 2:
-                return "已取消"
+                return this.$t("message['carpool.status.hasCanceled']");
                 break;
               case 3:
-                return "已完成"
+                return this.$t("message['carpool.status.hasFinished']");
                 break;
             }
             break;
           case "lovewall":
             if(status<2){
-              return "剩余 <b>"+(this.detailData.seat_count-this.detailData.took_count)+"</b> 个空座位"
+              return this.$t("message['carpool.detail.seatsLeftNum']",{"num":(this.detailData.seat_count-this.detailData.took_count)});
             }else if(status==2){
-              return "空座位已取消"
+              return this.$t("message['carpool.status.hasCanceled']");
             }else if(status==3){
-              return "行程已完结"
+              return this.$t("message['carpool.status.hasFinished']");
             }
             break;
           default:
@@ -172,15 +175,27 @@ export default {
 
     //取得行程信息
     loadDetail(){
-      let url =   config.urls.getTripDetail;
-      this.$http.get(url,{params:{type:this.r,id:this.id}}).then(res => {
+      let url =   this.detailApi;
+      this.$http.get(url,{params:{type:this.r,id:this.id,pb:1}}).then(res => {
+        console.log(res)
         if(res.data.code===0){
           var data = res.data.data;
+          data.format_time = cFuns.formatDate((new Date(data.time*1000)),"yyyy-mm-dd hh:ii")
           this.detailData = data;
           if( this.r == "info"){
-            this.user                 = data.passenger_info
+            this.user                 = {
+              // department: data.p_department,
+              name: data.p_name,
+              avatar: config.avatarBasePath + data.p_imgpath,
+              loginname: data.p_loginname,
+            }
           }else{
-            this.user                 = data.owner_info;
+            this.user                 = {
+              // department: data.d_department,
+              name: data.d_name,
+              avatar: config.avatarBasePath + data.d_imgpath,
+              loginname: data.d_loginname,
+            }
           }
         }
         setTimeout(()=>{
@@ -248,10 +263,12 @@ export default {
     this.sharer = cFuns.getRequest('sharer');
     switch (this.r) {
       case "info":
-        this.h5Url = this.h5Url+"#/carpool/requests/detail/"+this.id;
+        this.h5Url = this.h5Url+"#/carpool/requests/"+this.id;
+        this.detailApi = config.urls.trips+'/info/'+this.id;
         break;
       case "lovewall":
-        this.h5Url = this.h5Url+"#/carpool/rides/detail/"+this.id;
+        this.h5Url = this.h5Url+"#/carpool/rides/"+this.id;
+        this.detailApi = config.urls.trips+'/wall/'+this.id;
         break;
       default:
     }

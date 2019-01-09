@@ -73,7 +73,7 @@ message: {
   "operationFailure" : "Thao tác thất bại",
   "searchPlaceholder" : "Nhập nội dung tìm kiếm",
   "login" : "Đăng nhập",
-  "logout" : "Thoát ra",
+  "logout" : "Đăng xuất",
   "password" : "Mật khẩu",
   "username" : "Tên đăng nhập",
   "personCard" : "Thẻ cá nhân",
@@ -107,6 +107,11 @@ message: {
   "choose" : "Chọn",
   "accept" : "Chấp nhận",
   "reject" : "Từ chối",
+
+  "contact" : "Tiếp xúc",
+  "position" : "Chức vụ",
+  "goBack": "Trở về",
+
 
 
   "wait" : "Vui lòng chờ...",
@@ -161,6 +166,8 @@ message: {
   "agreeToSuccess" : "Phê duyệt thành công",
   "reject" : "Từ chối",
   "overdue" : "Quá hạn",
+  "launchApp" : "Chạy ứng dụng",
+  "launchH5" : "H5",
 
   //app
 
@@ -252,14 +259,11 @@ message: {
   //Discover
 
   "discover.trips" :"Tuyến đường",
-  "discover.currenttrip" : "Tuyến đường của tôi",
   "discover.share" : "Xe đưa rước",
-  "discover.request" : "Đặt xe",
   "discover.join" : "Đón xe",
   "discover.carryPassengers" : "Hành khách",
   "discover.onlineMap" : "Bản đồ",
   "discover.realTimeLocation" : "Vị trí thực",
-  "discover.ridesharewall" : "Các xe trống hiện có",
   "discover.busTimetable" : "Thời gian đưa đón",
   "discover.timetable" : "Thời gian đưa đón",
   "discover.MarketShop" : "Second Hand Market",
@@ -268,6 +272,9 @@ message: {
   "discover.inputNeedBus" : "Vui lòng nhập thông tin xe đưa rước bạn cần tìm",
   "discover.notFindBus" : "Không tìm thấy xe",
   "discover.notFindBus.locationCheck" : "Không tìm thấy xe, vui lòng kiểm tra lại thông tin tìm kiếm đã nhập",
+  // "discover.currenttrip" : "Tuyến đường của tôi",
+  // "discover.ridesharewall" : "Các xe trống hiện có",
+  // "discover.request" : "Đặt xe",
 
 
 
@@ -301,12 +308,12 @@ message: {
   "networkFail":"Internet không hoạt động, hãy thử lại sau",
   "submitFail":"Thay đổi không thành công, vui lòng thử lại sau",
   "AreYouSure":"Bạn có chắc không?",
-  "isLogout":"để đăng xuất",
+  "isLogout":"Bạn có chắc muốn đăng xuất?",
   "today" : "Hôm nay",
   "tomorrow" : "Ngày mai",
-  "hours" : "hours",
+  "hours" : "giờ",
   "minutes" : "minutes",
-  "publish" : "Đăng bài",
+  "publish" : "Đăng",
   "publishSuccess" : "Thành công",
   "success" : "Success",
   "fail" : "Fail",
@@ -334,12 +341,13 @@ message: {
   "placeholder.username" :"Tên người dùng",
   "placeholder.password" :"Mật khẩu",
   "placeholder.selectAddress" :"Vui lòng chọn địa chỉ",
+  "placeholder.addressname" :"Vui lòng nhập tên địa chỉ",
   "placeholder.mobile" :"Vui lòng nhập số điện thoại",
 
 
 
   "label.from" : "từ",
-  "label.to" : "để",
+  "label.to" : "Đến",
   "label.needseats" : "Số chỗ ngồi",
   "label.startTime" : "Giờ khởi hành",
 
@@ -363,27 +371,37 @@ message: {
 
 
 
-  "scroller.pullToRefresh" : "Cuộn xuống để làm tươi dữ liệu",
+  "scroller.pullToRefresh" : "Cuộn xuống để làm mới dữ liệu",
   "scroller.refreshing" : "Làm mới...",
   "scroller.loosenToRefresh" : "Nới lỏng để làm mới",
   "scroller.pullUpGetMore" : "Tải trọng kéo thêm",
   "scroller.loadingMore" : "Đang nạp...",
-  "scroller.noData" : "There is no data...",
+  "scroller.noData" : "Không có dữ liệu…...",
   "btn.passengerpublish":  "Request",
   "btn.driverpublish": "Post seats",
+
+  "carpool.title.requests":"Đặt xe",
+  "carpool.title.rides":"Các xe trống hiện có",
+  "carpool.title.myTrip":"Tuyến đường của tôi",
+
   "carpool.addtrip.tooLong":"The route is too long to predict the journey time",
   "carpool.addtrip.estimate":"ước tính",
   "carpool.addtrip.shareemptyseat" :  "Chia sẻ chỗ ngồi trống",
   "carpool.addtrip.addRequest" : "Đăng yêu cầu đặt xe",
   "carpool.addtrip.commonroute" : "Tuyến đường thường đi",
+  "carpool.addtrip.hour" : ":",
+  "carpool.addtrip.minute" : "",
+
   "carpool.whetherAccept":"Dù chấp nhận yêu cầu",
-  "carpool.emptySeat":"Empty",
-  "carpool.takenSeat":"Taken",
+  "carpool.emptySeat":"Còn trống",
+  // "carpool.emptySeat":"Empty",
+  "carpool.takenSeat":"Đã được chọn",
+  // "carpool.takenSeat":"Taken",
   "carpool.leaveMessage":"Bình luận",
   "carpool.passengers":"Hành khách",
   "carpool.detail.btn.goback" : "Quay lại",
   "carpool.detail.btn.phone" : "Điện thoại",
-  "carpool.detail.btn.pickup" : "Chấp nhận nhu cầu",
+  "carpool.detail.btn.pickup" : "Chấp nhận yêu cầu",
   "carpool.detail.btn.riding" : "Tham gia",
   "carpool.detail.btn.cancel" : "hủy bỏ",
   "carpool.detail.btn.finish" : "Kết thúc",
@@ -391,10 +409,16 @@ message: {
   "carpool.detail.EstimatedDistance" : "Khoảng cách",
   "carpool.detail.status" : "Tình trạng",
   "carpool.detail.seatsLeft" : "Ghế còn lại",
+  "carpool.detail.seatsLeftNum" : "Còn {num} chỗ trống",
   "carpool.detail.seeAllComments" : "Tổng cộng có {num} ý kiến, tất cả đều thấy ",
   "carpool.detail.noComment" : "Chưa có bình luận nào",
   "carpool.detail.noPassenger" : "Không có hành khách",
-  "carpool.detail.clickLike" : "click Like",
+  "carpool.detail.clickLike" : "Like",
+
+  "carpool.detail.openInBrowser" : "Nếu bạn không thể bắt đầu hoặc tải xuống ứng dụng, vui lòng chọn [Mở trong trình duyệt] ở góc trên bên phải của nút.",
+  "carpool.detail.autoStartTips" : "Bạn đã mở trang chia sẻ và ứng dụng sẽ tự động khởi động.  Nếu bạn chưa cài đặt [Filling Carpooling], bạn có thể nhấp vào nút tải xuống ở phía dưới để cài đặt. Bạn cũng có thể sử dụng H5 để trải nghiệm nó.",
+
+  "carpool.detail.noPhone" : "Người dùng không thiết lập điện thoại",
 
 
   "carpool.comments.title" : "Nhận xét",
@@ -410,9 +434,11 @@ message: {
   "carpool.finishSuccess" : "sự thành công",
   "carpool.confirm.cancel" : "Bạn có chắc chắn hủy chuyến đi này không?",
   "carpool.cancelSuccess" : "Thành công",
+  "carpool.confirm.cancelPassenger" : "Bạn có chắc chắn muốn hủy hành khách này?",
+
   "carpool.status.waitingCar": "Đang chờ xe",
-  "carpool.status.waitingDriver": "chờ lái xe",
-  "carpool.status.alert.waitingCar": "Hành khách đang đợi để được mang",
+  "carpool.status.waitingDriver": "Chờ xe đến",
+  "carpool.status.alert.waitingCar": "Hành khách đang đợi",
   "carpool.status.alert.youAlreadyTake": "Bạn đã tham gia chuyến đi này.",
   "carpool.status.hasTaken": "Đã đi",
   "carpool.status.alert.hasTakenBy": "Hành khách đã được người lái xe chở【{user}】",

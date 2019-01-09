@@ -6,11 +6,8 @@
 
       <div class="page-view-main" >
 
-
           <div   class="cp-map-wapper cp-map-wapper-addtrip">
-            <div   id="amapContainer"  class="amap-box"  style="height:100%"></div>
-
-
+            <div   id="mapContainer-addtrip"  class="amap-box"  style="height:100%"></div>
 
             <div class="cp-tools-wrapper">
               <router-link    :to="'/carpool/addtrip/history/'+type">
@@ -84,14 +81,7 @@
                   <x-number :title="'<span class=\'cp-label\'><i class=\'fa fa-users\'></i><span class=\'cp-title\' style=\'vertical-align:middle;\'>'+$t('message[\'label.needseats\']')+'</span></span>'"    v-model="formData.seat_count" button-style="round" :min="1" :max="10" fillable ></x-number>
                 </div>
 
-                <!--<popup-picker class=""     v-model="formData.seat_count" :data="[[1,2,3,4,5,6,7,8,9,10]]"  >
-                  <template slot="title" slot-scope="props">
-                    <span :class="props.labelClass" :style="props.labelStyle"  >
-                      <i class="fa fa-car"></i>
-                      <span style="vertical-align:middle;">空位数</span>
-                    </span>
-                  </template>
-                </popup-picker>-->
+
               </div>
 
 
@@ -111,6 +101,7 @@
 import config from '../config'
 import cFuns from '@/utils/cFuns'
 import cModel from '@/utils/cModel'
+import cAmap from '@/utils/cAmap'
 import CpAvatar from '@/components/CpAvatar'
 import { lazyAMapApiLoaderInstance } from 'vue-amap';
 
@@ -163,7 +154,12 @@ export default {
       return this.formData.end.addressname ? false : true;
     },
     timeDataArray (){
-      return cFuns.returnNeedTimeDatas(0,0,[this.$t("message.today"),this.$t("message.tomorrow")])
+      return cFuns.returnNeedTimeDatas(0,0,{
+        today:this.$t("message.today"),
+        tomorrow:this.$t("message.tomorrow"),
+        hour:this.$t("message['carpool.addtrip.hour']"),
+        minute:this.$t("message['carpool.addtrip.minute']"),
+      })
     },
     userData (){
       let userData = this.$store.state.userData;
@@ -201,23 +197,15 @@ export default {
             if(typeof(formData_s.start)!='undefined' || typeof(formData_s.end)!="undefined"){
               opt = { resizeEnable: true,zoom: 10,enableHighAccuracy:false }
             }
-            this.mapObj = cFuns.amap.showMap('amapContainer', opt,(res)=>{
-              cFuns.amap.getCity(this.mapObj).then((data)=> {
+            cAmap.showMap('mapContainer-addtrip', opt).then(map=>{
+              this.mapObj = map;
+              cAmap.getCity(this.mapObj).then((data)=> {
                 if (data['province'] && typeof data['province'] === 'string') {
                   this.$store.commit('setLocalCity',data);
                   this.city = data.city
                 }
               });
-
             })
-            // if(!this.$store.state.localCity){
-            //   cFuns.amap.getCity(this.mapObj).then((data)=> {
-            //     if (data['province'] && typeof data['province'] === 'string') {
-            //       this.$store.commit('setLocalCity',data);
-            //       this.city = data.city
-            //     }
-            //   });
-            // }
             resolve(this.mapObj);
           }).catch((error) => {
               reject(error);
@@ -227,7 +215,6 @@ export default {
           this.mapObj.clearMap();
           resolve(this.mapObj);
         }
-
       })
     },
 
@@ -243,7 +230,6 @@ export default {
       let formData_s = this.$store.state.tripFormData;
 
       if(formData_s){
-        this.markerAndDraw(formData_s);
         if(formData_s.time){
           this.formData.time =  formData_s.time
         }
@@ -251,6 +237,7 @@ export default {
           this.formData.seat_count =  formData_s.seat_count
         }
       }
+      return formData_s;
       // console.log(formData_s);
     },
 
@@ -283,30 +270,30 @@ export default {
       if(formData_s.start && formData_s.start.latitude ){
         this.formData.start =  formData_s.start
         if(!this.formData.end.latitude){
-          cFuns.amap.setCenter([parseFloat(formData_s.start.longtitude),parseFloat(formData_s.start.latitude)],this.mapObj);
-          cFuns.amap.addMarker([parseFloat(formData_s.start.longtitude),parseFloat(formData_s.start.latitude)],this.mapObj);
+          cAmap.setCenter([parseFloat(formData_s.start.longitude),parseFloat(formData_s.start.latitude)],this.mapObj);
+          cAmap.addMarker([parseFloat(formData_s.start.longitude),parseFloat(formData_s.start.latitude)],this.mapObj);
         }
       }
       if(formData_s.end && formData_s.end.latitude){
         this.formData.end =  formData_s.end
         if(!this.formData.start.latitude){
-          cFuns.amap.setCenter([parseFloat(formData_s.end.longtitude),parseFloat(formData_s.end.latitude)],this.mapObj);
-          cFuns.amap.addMarker([parseFloat(formData_s.end.longtitude),parseFloat(formData_s.end.latitude)],this.mapObj);
+          cAmap.setCenter([parseFloat(formData_s.end.longitude),parseFloat(formData_s.end.latitude)],this.mapObj);
+          cAmap.addMarker([parseFloat(formData_s.end.longitude),parseFloat(formData_s.end.latitude)],this.mapObj);
         }
       }
       if(formData_s.start && formData_s.end && formData_s.start.latitude && formData_s.end.latitude){ //画线
         this.mapObj.clearMap()
-        var start = new AMap.LngLat(parseFloat(formData_s.start.longtitude), parseFloat(formData_s.start.latitude));
-        var end = new AMap.LngLat(parseFloat(formData_s.end.longtitude), parseFloat(formData_s.end.latitude));
+        var start = new AMap.LngLat(parseFloat(formData_s.start.longitude), parseFloat(formData_s.start.latitude));
+        var end = new AMap.LngLat(parseFloat(formData_s.end.longitude), parseFloat(formData_s.end.latitude));
 
-        cFuns.amap.drawTripLine(start, end,this.mapObj,(status,result)=>{
+        cAmap.drawTripLine(start, end,this.mapObj,(status,result)=>{
 
           if(status == 'complete'){
             this.isShowComputebox = true;
             var distance = result.routes[0].distance; //计出的距离
-            var distanceStr = cFuns.amap.formatDistance(distance);
+            var distanceStr = cAmap.formatDistance(distance);
             var dtTime = result.routes[0].time;
-            var dtTimeStr = cFuns.amap.formatTripTime(dtTime,[this.$t('message.hours'),this.$t('message.minutes')]);
+            var dtTimeStr = cAmap.formatTripTime(dtTime,[this.$t('message.hours'),this.$t('message.minutes')]);
             this.computeBoxData = {distance:distanceStr,time:dtTimeStr}
             this.formData.distance = distance;
           }else{
@@ -323,30 +310,31 @@ export default {
     doSubmit (){
       let startData = this.formData.start;
       let endData = this.formData.end;
+      var datetime = this.formData.time[0]+" "+this.formData.time[1]+":"+this.formData.time[2];
       let postData = {
-        datetime:this.formData.time[0]+" "+this.formData.time[1]+":"+this.formData.time[2],
-        startpid:this.formData.start.addressid,
-        endpid:this.formData.end.addressid ,
+        time: (new Date(datetime)).valueOf()/1000,
+        // startpid:this.formData.start.addressid,
+        // endpid:this.formData.end.addressid ,
         start:this.formData.start,
         end:this.formData.end,
         distance : this.formData.distance,
+        city : this.formData.city,
         from:this.type,
+        map_type:0,
       }
       postData.start['addressid'] = startData.addressid ? startData.addressid : 0
       if(this.type == "wall"){
         postData.seat_count = this.formData.seat_count
       }
 
-      this.$http.post(config.urls.addTrip,postData).then(res => {
-
+      this.$http.post(config.urls.trips+"/"+this.type,postData).then(res => {
+      // this.$http.post(config.urls.addTrip,postData).then(res => {
         var resData = res.data.data
         if(res.data.code === 0) {
           this.$vux.toast.text(this.$t("message.publishSuccess"));
           if(resData.createAddress.length>0){
-            // console.log(rs.data.createAddress)
             var newDatas = resData.createAddress;
-            for(i=0;i<newDatas.length;i++){
-              newDatas[i].addressname = newDatas[i].name;
+            for(let i=0;i<newDatas.length;i++){
               newDatas[i].listorder = 3;
               newDatas[i].address_type = 'new';
               newDatas[i].is_show = 1;
@@ -358,7 +346,6 @@ export default {
           this.$router.push({name:'carpool'});
         }else{
           this.$vux.toast.text(res.data.desc);
-
         }
       })
       .catch(error => {
@@ -375,18 +362,24 @@ export default {
     // this.loadUserInfo()
   },
   mounted () {
+    var formData_s = this.getDataFormStore()
+     this.formData = Object.assign(this.formData ,formData_s) ;
+     if(typeof(this.formData.time[0])=="undefined"){
+       let d = new Date();
+       this.formData.time = [cFuns.formatDayItemData(d).value, cFuns.fixZero(d.getHours())+"",cFuns.fixZero(d.getMinutes())+""];
+     }
+     if(!this.formData.seat_count){
+       this.formData.seat_count = 4;
+     }
+     if(this.formData.time && this.formData.start.longitude && this.formData.end.longitude &&  ( this.formData.seat_count || this.type == "info" ) ){
+      this.disableSubmitBtn = false ;
+    }
+
     this.mapInit().then((res)=>{
-      this.getDataFormStore()
-      if(typeof(this.formData.time[0])=="undefined"){
-        let d = new Date();
-        this.formData.time = [cFuns.formatDayItemData(d).value, cFuns.fixZero(d.getHours())+"",cFuns.fixZero(d.getMinutes())+""];
-      }
-      if(!this.formData.seat_count){
-        this.formData.seat_count = 4;
-      }
-      if(this.formData.time && this.formData.start.longtitude && this.formData.end.longtitude &&  ( this.formData.seat_count || this.type == "info" ) ){
-        this.disableSubmitBtn = false ;
-      }
+      if(formData_s){
+          this.markerAndDraw(formData_s);
+        }
+
     })
 
   },
