@@ -5,6 +5,7 @@
     <a v-show="isShowBtn_pickup" class="cp-btn-p cp-btn-pickup " @click="btnAction('pickup')"><i class="cp-icon fa fa-car"></i><span>{{$t("message['carpool.detail.btn.pickup']")}}</span></a>
     <a v-show="isShowBtn_riding" class="cp-btn-p cp-btn-riding " @click="btnAction('riding')"><i class="cp-icon fa fa-car"></i><span>{{$t("message['carpool.detail.btn.riding']")}}</span></a>
     <a v-show="isShowBtn_cancel" class="cp-btn-p cp-btn-cancel "  @click="btnAction('cancel')"><i class="cp-icon fa fa-times"></i><span>{{$t("message['carpool.detail.btn.cancel']")}}</span></a>
+    <a v-show="isShowBtn_getOn" class="cp-btn-p cp-btn-getOn "  @click="btnAction('getOn')"><i class="cp-icon fa fa-check"></i><span>{{$t("message['carpool.detail.btn.getOn']")}}</span></a>
     <a v-show="isShowBtn_finish" class="cp-btn-p cp-btn-ok "  @click="btnAction('finish')"><i class="cp-icon fa fa-check"></i><span>{{$t("message['carpool.detail.btn.finish']")}}</span></a>
     <b v-show="isShowBtn_status" class="cp-btn-p cp-btn-disable "  @click="false"><i class="cp-icon fa fa-check"></i><span>{{alertText}}</span></b>
   </div>
@@ -28,6 +29,7 @@ export default {
       isShowBtn_pickup  :false,
       isShowBtn_riding  :false,
       isShowBtn_cancel  :false,
+      isShowBtn_getOn :false,
       isShowBtn_finish :false,
       isShowBtn_status : false,
     }
@@ -46,24 +48,25 @@ export default {
   watch :{
     "detailData.status" :{
       handler (val, oldval) {
-        console.log("detailData.status");
-        console.log(val);
         this.changeStatus(val);
       },
      // deep: true,
      immediate:true,
-   },
-   "detailData.hasTake" :{
-     handler (val, oldval) {
-       console.log("detailData.hasTake");
-       console.log(val);
-       this.changeStatus(val);
-     },
-    // deep: true,
-    immediate:true,
-  },
-
-
+    },
+    "detailData.hasTake" :{
+       handler (val, oldval) {
+         this.changeStatus(this.detailData.status);
+       },
+      // deep: true,
+      immediate:true,
+    },
+    "detailData.take_status" :{
+      handler (val, oldval) {
+        this.changeStatus(this.detailData.status);
+      },
+      // deep: true,
+      immediate:true,
+    },
   },
   computed: {
 
@@ -95,6 +98,7 @@ export default {
       this.isShowBtn_riding  = false;
       this.isShowBtn_cancel  = false;
       this.isShowBtn_finish= false;
+      this.isShowBtn_getOn= false;
       // this.isShowBtn_cancel_alert = false;
       // this.isShowBtn_finish_alert = false;
       this.isShowBtn_status = false;
@@ -125,11 +129,17 @@ export default {
             if(this.type=="wall"){
               this.isShowBtn_cancel = this.uid == this.user.uid ? true : false;
               this.isShowBtn_finish = this.uid == this.user.uid ? true : false;
-              if(this.detailData.hasTake > 0){
+              if(this.detailData.hasTake && this.detailData.take_status == 1){
                   this.isShowBtn_cancel = true;
-                  this.isShowBtn_finish = true;
-              }else if(this.detailData.hasTake_finish > 0){
-
+                  this.isShowBtn_getOn = true;
+                  this.isShowBtn_finish = false;
+              }else if(this.detailData.take_status == 3){
+                this.alertText = this.$t("message['carpool.status.alert.yourTripHasFinished']");
+                this.isShowBtn_status = true;
+              }else if(this.detailData.hasTake &&  this.detailData.take_status == 4){
+                this.isShowBtn_cancel = true;
+                this.isShowBtn_getOn = false;
+                this.isShowBtn_finish = true;
               }else{
                 this.isShowBtn_riding = this.uid == this.user.uid ? false : true;
               }
@@ -137,7 +147,7 @@ export default {
             }
             if(this.type=="info"){
               this.isShowBtn_cancel = this.uid == this.user.uid || this.uid == this.detailData.d_uid ? true : false;
-              this.isShowBtn_finish = this.uid == this.user.uid || this.uid == this.detailData.d_uid ? true : false;
+              this.isShowBtn_getOn = this.uid == this.user.uid || this.uid == this.detailData.d_uid ? true : false;
             }
 
           break;
@@ -148,7 +158,9 @@ export default {
         case 3:
             this.alertText = this.$t("message['carpool.status.alert.hasFinished']");
             this.isShowBtn_status = true;
-
+          break;
+        case 4:
+            this.changeStatus(1);
           break;
         default:
       }
@@ -208,6 +220,15 @@ export default {
             }else{
               this.changeStatus(this.detailData.status);
             }
+          }
+          break;
+        case 'getOn':
+          url =  baseUrl+"/type/get_on";
+          confirmText = this.$t("message['carpool.confirm.getOn']");
+          successText = this.$t("message['carpool.getOnSuccess']") ;
+          isJumpToMytrip = false;
+          var success =  (rs)=>{
+            this.changeStatus(this.detailData.status);
           }
           break;
       }
