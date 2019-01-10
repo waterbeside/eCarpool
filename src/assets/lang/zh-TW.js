@@ -413,6 +413,7 @@ export default  {
     "carpool.detail.btn.riding" : "搭 车",
     "carpool.detail.btn.cancel" : "取消行程",
     "carpool.detail.btn.finish" : "结束行程",
+    "carpool.detail.btn.getOn"  : "确认上车",
     "carpool.detail.addComment" : "我要评论",
     "carpool.detail.EstimatedDistance" : "估算路程",
     "carpool.detail.status" : "状态",
@@ -444,7 +445,8 @@ export default  {
     "carpool.confirm.cancel" : "您确定要取消本次行程吗？",
     "carpool.cancelSuccess" : "取消成功",
     "carpool.confirm.cancelPassenger" : "您确定要取消该乘客吗？",
-
+    "carpool.getOnSuccess" : "确认成功",
+    "carpool.confirm.getOn" : "您确定已经上车吗？",
 
     "carpool.status.waitingCar": "等待车主接受",
     "carpool.status.waitingDriver": "等车中",
@@ -456,6 +458,7 @@ export default  {
     "carpool.status.alert.hasCanceled": "行程已取消",
     "carpool.status.hasFinished": "已结束",
     "carpool.status.alert.hasFinished": "行程已结束",
+    "carpool.status.alert.yourTripHasFinished": "你已完成了行程",
 
     "department.title":"选择部门",
     "department.noData":"无须选择部门，请返回。",
