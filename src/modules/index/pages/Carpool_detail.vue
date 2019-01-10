@@ -267,10 +267,8 @@ export default {
      * 改变状态后界面所做的变化
      */
     changeStatus(status){
-
       this.isShowBtn_cancel_alert = false;
       this.isShowBtn_finish_alert = false;
-
       this.isShowAlert = this.type=="info" ? true : false
       // console.log(this.type);
       switch (parseInt(status)) {
@@ -301,7 +299,6 @@ export default {
             if(this.type=="info"){
               this.alertText = this.$t("message['carpool.status.alert.hasTakenBy']",{"user":"<img class='cp-avatar' src='"+this.detailData.d_avatar+"' /> "+this.detailData.d_name+""});
             }
-
             this.statusText  = this.$t("message['carpool.status.hasTaken']");
             this.statusIcon  = "fa fa-car";
           break;
@@ -314,6 +311,9 @@ export default {
             this.alertText = this.$t("message['carpool.status.alert.hasFinished']");
             this.statusText  = this.$t("message['carpool.status.hasFinished']");
             this.statusIcon  = "fa fa-check";
+          break;
+        case 4:
+            this.changeStatus(1);
           break;
         default:
       }
@@ -329,7 +329,9 @@ export default {
             this.changeStatus(3);
           }else{
             this.loadPassengers();
-            this.detailData.hasTake = 0;
+            this.detailData.hasTake = 1;
+            this.detailData.hasTake_finish = 1;
+            this.detailData.take_status = 3;
             this.passengers_time = 0;
             this.isShowBtn_finish_alert = false;
             this.changeStatus(this.detailData.status);
@@ -346,14 +348,19 @@ export default {
             this.detailData.took_count      = this.detailData.took_count - 1;
             this.detailData.took_count_all  = this.detailData.took_count_all - 1;
             this.detailData.hasTake = 0;
+            this.detailData.take_status = 2;
             // this.passengers  = this.passengers.filter(t => t.uid != this.user.uid);
             this.passengers_time = 0;
             this.isShowBtn_cancel_alert = false;
             this.changeStatus(this.detailData.status);
           }
           break;
+        case 'getOn':
+            this.detailData.take_status = 4;
+            this.loadPassengers();
+            this.changeStatus(this.detailData.status);
+          break;
         default:
-
       }
     },
     /**
