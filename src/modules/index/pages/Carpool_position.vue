@@ -11,7 +11,7 @@
 
         <div class="cp-main-panel-wrapper">
 
-          <name-card   :name='user.name' :department='user.department_format' >
+          <name-card   :name='user.name' :department='user.department_format' :avatar='user.avatar'>
             <div slot="after" class="cp-name-card-btns">
               <a class="btn-refreshPosition" href="javascript:void(0);" @click="getData"><i class="fa  fa-refresh" :class="{'fa-spin':isLoading}"></i></a>
             </div>
@@ -112,6 +112,7 @@ export default {
             this.user = result.data.userData;
             this.user.department = this.user.department ? this.user.department : '-' ;
             this.user.department_format = this.user.full_department ? cFuns.formatDepartment(this.user.full_department) : this.user.department;
+            this.user.avatar = config.avatarBasePath + this.user.imgpath;
             this.userCoord = result.data.position;
             this.tripData = result.data.tripData;
           }else{
