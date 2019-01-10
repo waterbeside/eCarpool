@@ -404,6 +404,8 @@ export default  {
     "carpool.detail.btn.riding" : "Join",
     "carpool.detail.btn.cancel" : "Cancel",
     "carpool.detail.btn.finish" : "Finish",
+    "carpool.detail.btn.getOn"  : "Got on",
+
     "carpool.detail.addComment" : "Add a comment",
     "carpool.detail.EstimatedDistance" : "Estimated distance",
     "carpool.detail.status" : "Status",
@@ -433,7 +435,8 @@ export default  {
     "carpool.confirm.cancel" : "Are you sure to cancel this trip?",
     "carpool.cancelSuccess" : "Success",
     "carpool.confirm.cancelPassenger" : "Are you sure you want to cancel this passenger?",
-
+    "carpool.getOnSuccess" : "Success",
+    "carpool.confirm.getOn" : "Are you sure you are in the car?",
 
     "carpool.status.waitingCar": "Waiting car",
     "carpool.status.waitingDriver": "Waiting driver",
@@ -445,6 +448,7 @@ export default  {
     "carpool.status.alert.hasCanceled": "This trip has been cancelled",
     "carpool.status.hasFinished": "Finished",
     "carpool.status.alert.hasFinished": "This trip has ended",
+    "carpool.status.alert.yourTripHasFinished": "You have completed the trip",
 
 
     "department.title":"Select department",

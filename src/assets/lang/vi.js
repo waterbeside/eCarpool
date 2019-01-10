@@ -405,6 +405,7 @@ message: {
   "carpool.detail.btn.riding" : "Tham gia",
   "carpool.detail.btn.cancel" : "hủy bỏ",
   "carpool.detail.btn.finish" : "Kết thúc",
+  "carpool.detail.btn.getOn"  : "Đã ở trong xe",
   "carpool.detail.addComment" : "Đưa ra bình luận",
   "carpool.detail.EstimatedDistance" : "Khoảng cách",
   "carpool.detail.status" : "Tình trạng",
@@ -435,6 +436,8 @@ message: {
   "carpool.confirm.cancel" : "Bạn có chắc chắn hủy chuyến đi này không?",
   "carpool.cancelSuccess" : "Thành công",
   "carpool.confirm.cancelPassenger" : "Bạn có chắc chắn muốn hủy hành khách này?",
+  "carpool.getOnSuccess" : "Thành công",
+  "carpool.confirm.getOn" : "Bạn có chắc là bạn đang ở trên xe?",
 
   "carpool.status.waitingCar": "Đang chờ xe",
   "carpool.status.waitingDriver": "Chờ xe đến",
@@ -446,6 +449,8 @@ message: {
   "carpool.status.alert.hasCanceled": "Đã hủy chuyến đi",
   "carpool.status.hasFinished": "Nó đã kết thúc",
   "carpool.status.alert.hasFinished": "Cuộc hành trình đã kết thúc",
+  "carpool.status.alert.yourTripHasFinished": "Bạn đã hoàn thành chuyến đi",
+
   "department.title":"Chọn bộ phận",
   "department.noData":"Không cần phải chọn, xin vui lòng quay trở lại.",
   "user.avatar.title":"Thay đổi hình đại diện",
