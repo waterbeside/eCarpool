@@ -57,27 +57,12 @@ export default {
       if(this.$router.history.current.name=='login'){
         return false;
       }
-
-      // this.$tokenAxios.get(config.urls.checkLogin,{params:{more:1}}).then(res => {
-      this.$http.get(config.urls.passport,{params:{type:1}}).then(res => {
-         // 登录成功
-          if(res.data.code === 0 ) {
-            let userDatas = res.data.data;
-            userDatas.loginname = userDatas.loginname.toLowerCase()
-            localStorage.setItem('CP_loginname',userDatas.loginname);
-            // _this.$store.commit('setUserBaseData',userDatas);
-            this.$store.commit('setUserData',userDatas);
-            // console.log(config.avatarBasePath + userDatas.avatar)
-            if(userDatas.avatar.trim()!=''){
-              this.$store.commit('setUserAvatar',config.avatarBasePath + userDatas.avatar);
-            }
-          }else{
-            this.$router.push({ name: 'login'})
-          }
-        })
-        .catch(error => {
-
-        })
+      this.$store.dispatch('getUserInfo').then(data=>{
+        console.log('Get user data successful')
+      }).catch(error=>{
+        console.log(error)
+        this.$router.push({ name: 'login'})
+      })
     },
   },
   mounted () {
