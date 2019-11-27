@@ -35,6 +35,7 @@
 <script>
 
 import config from '../config'
+import attachmentApi from '@/api/attachment'
 import VueCropper from 'vue-cropper'
 
 export default {
@@ -93,8 +94,10 @@ export default {
         let loginname = userData.loginname;
 
         let param = new FormData(); //创建form对象
-        param.append('upload',data);//通过append向form对象添加数据
-        param.append('loginname',loginname);//添加form表单中其他数据
+        param.append('file',data);//通过append向form对象添加数据
+        param.append('title',loginname);//添加form表单中其他数据
+        param.append('module','user/avatar');
+        param.append('type','image');
 
         // console.log(param.get('upload')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
 
@@ -103,26 +106,31 @@ export default {
               qs:false,
             };  //添加请求头
         this.isSubmiting = true;
-        this.$http.post(config.urls.uploadAvatar,param,httpConfig).then(res => {
 
-          this.isSubmiting = false;
-          let picname = res.data ;
-          let picname_l = picname.toLowerCase() ;
-
-          if( picname.length > 0 && (picname_l.indexOf('jpg') > 0 || picname_l.indexOf('jpeg') > 0 || picname_l.indexOf('png') > 0 || picname_l.indexOf('gif') > 0 ) ){
+        attachmentApi.upload(param,httpConfig).then(res => {
+          console.log(res);
+          if(res.code === 0 ){
+            this.isSubmiting = false;
+            const data = res.data ;
+            userData.avatar  = data.filepath;
+            userData.imgpath  = data.filepath;
+            this.$store.commit('setUserData',userData);
             this.$refs.cropper.getCropData((data) => {
               this.$store.commit('setUserAvatar',data);
             })
-            userData.avatar  = picname;
-            userData.imgpath = picname;
-            this.$store.commit('setUserData',userData);
-          }else{
-            this.$vux.toast.text(this.$t("message['user.avatar.failed']"));
+
+          } else {
+            // this.$vux.toast.text(this.$t("message['user.avatar.failed']"));
           }
+          
+
           this.$router.back();
         }).catch(error => {
+          // console.log(error)
           this.isSubmiting = false;
           this.$vux.toast.text(this.$t("message['user.avatar.failed']"));
+          // this.$vux.toast.text(error.data.desc);
+          return false;
           this.$router.back();
           return false;
         })
