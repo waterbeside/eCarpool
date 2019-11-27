@@ -4,7 +4,7 @@ let lang = cFuns.getLanguage();
 var cModel = {
     config:{
       serverName : 'carpool_u'+ uid+ "_"+lang,
-      version: 2
+      version: 3
     },
     supports: function(){
       var indexedDB       = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || null;
@@ -68,6 +68,7 @@ var cModel = {
           store.createIndex("addressname", "addressname", { unique: false });
           store.createIndex("latitude", "latitude", { unique: false });
           store.createIndex("longitude", "longitude", { unique: false });
+          store.createIndex("district", "district", { unique: false });
           store.createIndex("address", "address", { unique: false });
           // console.log('创建对象仓库成功');
       }
