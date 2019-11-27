@@ -10,7 +10,7 @@
         <div class="container">
           <div class="cp-login-wrap" id="login">
             <div class="cp-form-wrap">
-              <form class="form form-login form-horizontal"　 method="post"  @submit.prevent="login">
+              <form class="form form-login form-horizontal" method="post"  @submit.prevent="login">
                 <group class="cp-form-group">
                   <x-input   title="<i class='fa fa-id-card'></i>" :placeholder="$t('message[\'placeholder.username\']')"  name="username"  v-model="username"   novalidate  @on-change="resetError"></x-input>
                 </group>
