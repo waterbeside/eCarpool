@@ -2,9 +2,9 @@
   <div class="cp-all">
     <div id="app">
       <!-- 如果是在微信里打开则显示 -->
-      <div class="wx-tips-wrap" v-show="isShowWxTips" style="">
-  		    <img class="arrow-pic" src="../../assets/images/arrow-topright-s.png" >
-  		    <h3>{{$t("message['carpool.detail.openInBrowser']")}}</h3>
+      <div class="wx-tips-wrap" v-show="isShowWxTips">
+        <img class="arrow-pic" src="../../assets/images/arrow-topright-s.png" />
+        <h3>{{$t("message['carpool.detail.openInBrowser']")}}</h3>
       </div>
       <cp-view-box>
         <div class="container ">
@@ -53,12 +53,12 @@
                   <div class="cp-bar-tab-label">{{ $t("message['downloadapp.ios']" )}}</div>
                 </a>
               </div>
-              <div   class="router-link cp-bar-tab-item" >
+              <!-- <div   class="router-link cp-bar-tab-item" >
                 <a :href="h5Url">
                   <i class="cp-iconfont fa fa-html5"></i>
                   <div class="cp-bar-tab-label">{{ $t("message['launchH5']" )}}</div>
                 </a>
-              </div>
+              </div> -->
               <div   class="router-link cp-bar-tab-item cp-btn-go" >
                 <a @click="launchApp" >
                   <i class="cp-iconfont fa fa-caret-right"></i>
@@ -237,7 +237,7 @@ export default {
             this.isShowWxTips = true;
           } else {
               timer = setTimeout(()=>{
-                 this.isLoading = false;
+                this.isLoading = false;
                   // window.location.href = "ios下载的链接";
               }, timeout);
               /*
