@@ -425,7 +425,7 @@ export default  {
     "carpool.detail.clickLike" : "点赞",
 
     "carpool.detail.openInBrowser" : "如果您无法启动或下载APP，请在右上角的按钮，选择【在浏览器中打开】。",
-    "carpool.detail.autoStartTips" : "您已打开分享页面，App将会自动启动， 如果没有安装【溢起拼车】，可点击底部的下载按钮安装使用，你亦可使用H5使进行体验。",
+    "carpool.detail.autoStartTips" : "您已打开分享页面，App将会自动启动， 如果没有安装【溢起拼车】，可点击底部的下载按钮安装使用。",
 
     "carpool.detail.noPhone" : "该用户没有设置联系电话",
 

@@ -417,7 +417,7 @@ export default  {
     "carpool.detail.clickLike" : "Click Like",
 
     "carpool.detail.openInBrowser" : "If you can't start or download the app, please select [Open in Browser] in the upper right corner of the button.",
-    "carpool.detail.autoStartTips" : "You have opened the sharing page and the app will start automatically. If you don't have [Filling Carpooling] installed, you can click the download button at the bottom to install it. You can also use H5 to experience it.",
+    "carpool.detail.autoStartTips" : "You have opened the sharing page and the app will start automatically. If you don't have [Filling Carpooling] installed, you can click the download button at the bottom to install it.",
     "carpool.detail.noPhone" : "The user has not set a contact number",
 
 
