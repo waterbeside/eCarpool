@@ -10,7 +10,7 @@
     <div class="page-view-main " >
       <cp-scroller :position="{top:'46px'}"  :on-refresh="onRefresh"   :dataList="scrollData" :enableInfinite="false">
         <ul id="J-getAddress" class="cp-list-wrap cp-list-points " :class="{'doSearch':isSearching}"  >
-          <li v-for="(item,index) in listDatas" class="cp-item" :class="'cp-type-'+item.address_type"  @click="onSelectAddress(index,0)" v-show="item.is_show">
+          <li v-for="(item,index) in listDatas" :key="index" class="cp-item" :class="'cp-type-'+item.address_type"  @click="onSelectAddress(index,0)" v-show="item.is_show">
             <template v-if="item.address_type=='Home'">
               <i class="fa fa-home"></i><h6>{{$t("message['user.profile.label.home']")}}</h6>
             </template>
@@ -25,25 +25,25 @@
           </li>
         </ul>
         <ul id="J-list-mapAddress" class="cp-list-wrap cp-list-points"   >
-          <li v-for="(item,index) in smListDatas" class="cp-item cp-type-frommap"   @click="onSelectAddress(index,1)" >
-          <i class="fa fa-map-marker"></i>
-          <b class="name">{{item.addressname}}</b>
-          <p class="address">{{typeof(item.address)=="string" ? item.address : item.district}}</p>
+          <li v-for="(item,index) in smListDatas"  :key="index" class="cp-item cp-type-frommap"   @click="onSelectAddress(index,1)" >
+            <i class="fa fa-map-marker"></i>
+            <b class="name">{{item.addressname}}</b>
+            <p class="address">{{typeof(item.address)=="string" ? item.address : item.district}}</p>
           </li>
         </ul>
 
 
-       <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
-       <div class="text-center">
-         <div class="cp-nodata-tips" v-show="noData">
-           {{$t("message['scroller.noData']")}} ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
-         </div>
-         <spinner type="dots" size="60px" v-show="isLoading"></spinner>
-       </div>
-       <div class="cp-createAddress-box" @click="goCreateAddress" v-show="isShowCreateBtn">
-         <p> {{$t("message['address.noAddress']")}}</p>
-         <p><i class="fa fa-plus"></i> {{$t("message['address.createAddress']")}}: <b class="cp-keyword"></b></p>
-       </div>
+        <span slot="loading-text"><spinner type="dots" size="60px"></spinner></span>
+        <div class="text-center">
+          <div class="cp-nodata-tips" v-show="noData">
+            {{$t("message['scroller.noData']")}} ⁽⁽ƪ(ᵕ᷄≀ ̠˘᷅ )ʃ⁾⁾
+          </div>
+          <spinner type="dots" size="60px" v-show="isLoading"></spinner>
+        </div>
+        <div class="cp-createAddress-box" @click="goCreateAddress" v-show="isShowCreateBtn">
+          <p> {{$t("message['address.noAddress']")}}</p>
+          <p><i class="fa fa-plus"></i> {{$t("message['address.createAddress']")}}: <b class="cp-keyword"></b></p>
+        </div>
       </cp-scroller>
 
     </div>
@@ -168,15 +168,15 @@ export default {
      * [getCity 通过高德地图定位到当前城市]
      */
     getCity(){
-       cAmap.showMap('cp-map-hidden', {}).then(map=>{
-         if(!this.$store.state.localCity){
-           cAmap.getCity(mapObj).then((data)=> {
-             if (data['province'] && typeof data['province'] === 'string') {
-               this.$store.commit('setLocalCity',data);
-             }
-           });
-         }
-       })
+      cAmap.showMap('cp-map-hidden', {}).then(map=>{
+        if(!this.$store.state.localCity){
+          cAmap.getCity(mapObj).then((data)=> {
+            if (data['province'] && typeof data['province'] === 'string') {
+              this.$store.commit('setLocalCity',data);
+            }
+          });
+        }
+      })
     },
     /**
      * 通过接口取地址列表数据
@@ -199,8 +199,6 @@ export default {
             window.localStorage.setItem('CP_'+this.uid+'_addressOverTime',nowTimestamp);
             this.listDatas = data.lists.map((value,key,arr)=>{
               value.listorder = key;
-              value.address = '';
-              let address;
               if(value.address_type!='Home' && value.address_type!='Work'){
                 if(value.addressid==arr[0].addressid || value.addressid==arr[1].addressid){
                   return value;
@@ -211,29 +209,32 @@ export default {
               return value;
             })
             //通高德地图以地坐标取得地址信息，并写入本地数据库
-              cAmap.getGeocoder({
-                   radius: 1000,
-                   extensions: "all"
-               }).then((geocoder)=>{
-                 this.listDatas.forEach((value,key,arr)=>{
-                   // console.log(value)
-                   // console.log(value.address_type)
-                   if(value.address_type!='Home' && value.address_type!='Work'){
-                     if(value.addressid==arr[0].addressid || value.addressid==arr[1].addressid){
-                       return ;
-                     }
-                   }
-                   geocoder.getAddress([value.longitude,value.latitude], (status, result)=>{
-                       if (status === 'complete' && result.info === 'OK') {
-                         value.listorder = key;
-                         value.address = result.regeocode.formattedAddress;
-                         cModel.myAddress('update',{data:value});
-                         // server.my_address.update(item);
-                       }else{
-                       }
-                   });
-                 })
-               })
+            cAmap.getGeocoder({
+                radius: 1000,
+                extensions: "all"
+            }).then((geocoder)=>{
+              this.listDatas.forEach((value,key,arr)=>{
+                // console.log(value)
+                // console.log(value.address_type)
+                if(value.address_type!='Home' && value.address_type!='Work'){
+                  if(value.addressid==arr[0].addressid || value.addressid==arr[1].addressid){
+                    return ;
+                  }
+                }
+                if (!value.address) {
+                  geocoder.getAddress([value.longitude,value.latitude], (status, result)=>{
+                    if (status === 'complete' && result.info === 'OK') {
+                      value.listorder = key;
+                      const addressComponent = result.regeocode.addressComponent;
+                      value.address = result.regeocode.formattedAddress;
+                      value.district = addressComponent.province + addressComponent.city + addressComponent.district;
+                      cModel.myAddress('update',{data:value});
+                      // server.my_address.update(item);
+                    }
+                  });
+                }
+              })
+            })
           }else{
           }
           if(typeof(success)==="function"){
@@ -266,8 +267,7 @@ export default {
         if(status == 'complete'){
           this.smListDatas = [];
           // console.log(result.tips);
-           result.tips.forEach((value,index,arr)=>{
-
+          result.tips.forEach((value,index,arr)=>{
             if(value.location.lat && value.location.lng){
               let itemValue =  {
                 addressid:0,

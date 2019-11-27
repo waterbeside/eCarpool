@@ -12,9 +12,9 @@
         <div slot="route-middle" class="cp-center-wrap"><div class="inner"> </div></div>
     </cp-trip-box>
     <div class="cp-btns-bar">
-      <a href="javascript:void(0);" class="btn" @click.preventDefault @click="clickPhone"><i class="fa fa-phone"></i> {{$t("message['contact']")}}</a>
-      <a href="javascript:void(0);" class="btn" @click.preventDefault @click="onClickPosition(id,uid,$event)"><i class="fa fa-map-marker"></i> {{$t("message['position']")}}</a>
-      <a href="javascript:void(0);" class="btn" @click.preventDefault @click="onClickCancel(id,uid,$event)"><i class="fa fa-times"></i> {{$t("message['cancel']")}}</a>
+      <a href="javascript:void(0);" class="btn"  @click.prevent="clickPhone"><i class="fa fa-phone"></i> {{$t("message['contact']")}}</a>
+      <!-- <a href="javascript:void(0);" class="btn" @click.preventDefault @click="onClickPosition(id,uid,$event)"><i class="fa fa-map-marker"></i> {{$t("message['position']")}}</a> -->
+      <a href="javascript:void(0);" class="btn" @click.prevent="onClickCancel(id,uid,$event)"><i class="fa fa-times"></i> {{$t("message['cancel']")}}</a>
     </div>
   </div>
 </template>

@@ -25,9 +25,9 @@
                   <div class="cp-name">
                     <h3>{{user.name}}</h3>
                   </div>
-                  <div class="btns-bar">
+                  <!-- <div class="btns-bar">
                     <a class="btn" @click="goPosition" href="javascript:void(0);"><i class="fa fa-map-marker"></i></a>
-                  </div>
+                  </div> -->
               </div>
 
             </div>
@@ -47,7 +47,7 @@
               <statis-item class="cp-statis-item col-xs-4 cp-time" :title="$t('message[\'label.startTime\']')"   icon="fa fa-clock-o" :duration="1"><b slot="num"  class="num" ><p class="date">{{detailData.time_format.split(' ')[0]}}</p>{{detailData.time_format.split(' ')[1]}}</b></statis-item>
               <statis-item class="cp-statis-item col-xs-4 cp-distance" :title="$t('message[\'carpool.detail.EstimatedDistance\']')"   :num="statis.distance" :unit="statis.distance_unit" icon="fa fa-map-signs" :duration="1"></statis-item>
               <statis-item class="cp-statis-item col-xs-4" v-if="type=='wall'"  :title="$t('message[\'carpool.detail.seatsLeft\']')"   :num="statis.surplus_count" icon="fa fa-car" :duration="1"></statis-item>
-              <statis-item class="cp-statis-item col-xs-4 cp-status" v-if="type=='info'" :title="$t('message[\'carpool.detail.status\']')"     :icon="statusIcon" ><b slot="num"  class="num">{{statusText}}</b></b></statis-item>
+              <statis-item class="cp-statis-item col-xs-4 cp-status" v-if="type=='info'" :title="$t('message[\'carpool.detail.status\']')"     :icon="statusIcon" ><b slot="num"  class="num">{{statusText}}</b></statis-item>
             </div>
 
           </group>
@@ -56,8 +56,8 @@
           <group class="cp-group" v-if="type=='wall'">
             <group-title class="cp-group-title" slot="title">
               {{$t("message['carpool.passengers']")}}
-               <badge :text="statis.took_count" v-show="statis.took_count > 0"></badge>
-               <div class="cp-refresh pull-right" @click="loadPassengers"><i class="fa fa-refresh " :class="{'fa-spin':isLoading_pss}"></i></div>
+              <badge :text="statis.took_count" v-show="statis.took_count > 0"></badge>
+              <div class="cp-refresh pull-right" @click="loadPassengers"><i class="fa fa-refresh " :class="{'fa-spin':isLoading_pss}"></i></div>
             </group-title>
             <div class="text-center"  v-show="isLoading_pss">
               <spinner type="dots" size="60px"></spinner>
@@ -79,13 +79,13 @@
               :data = "item"
               >
               </passenger-item>
-           </div>
+            </div>
             <p class="cp-nodata-tips" v-else v-show="!isLoading_pss">{{$t("message['carpool.detail.noPassenger']")}}</p>
             <div class="blank10"> </div>
           </group>
           <!-- /乘客 -->
 
-          <group class="cp-group" v-if="type=='wall'">
+          <!-- <group class="cp-group" v-if="type=='wall'">
             <group-title class="cp-group-title" slot="title">
               {{$t("message['carpool.leaveMessage']")}}
               <badge :text="comments_total" v-show="comments_total > 0"></badge>
@@ -113,7 +113,7 @@
             <div class="text-center"><router-link class="btn btn-default"  :to="{ name:'carpool_rides_comments', params: {id: id} }"><i class="fa fa-edit"></i> {{$t("message['carpool.detail.addComment']")}}</router-link></div>
             <div class="blank20"> </div>
 
-          </group>
+          </group> -->
           <!-- /留言 -->
 
         </div>
@@ -535,72 +535,72 @@ export default {
     },
 
     /**
-      * 取得评论总数
-      */
-     getCommentsCount (){
-       let params = { getcount:1}
-       this.$http.get(config.urls.trips+"/wall/"+this.id+"/comments",{params:params}).then(res => {
-         if(res.data.code == 0){
-           var data = res.data.data;
-           this.comments_total = data.total;
-           // console.log(this.comments_total)
-         }
-       });
-     },
+    * 取得评论总数
+    */
+    getCommentsCount (){
+      let params = { getcount:1}
+      this.$http.get(config.urls.trips+"/wall/"+this.id+"/comments",{params:params}).then(res => {
+        if(res.data.code == 0){
+          var data = res.data.data;
+          this.comments_total = data.total;
+          // console.log(this.comments_total)
+        }
+      });
+    },
 
-     /**
+    /**
      * 取得评论列表数据
      */
-     getCommentLists (){
-       var nowTimestamp = new Date().getTime();
-       if(this.comments.length > 3  || nowTimestamp - this.comments_time < 60*1000){
-         return false;
-       }
-       this.isLoading_comments = true;
+    getCommentLists (){
+      var nowTimestamp = new Date().getTime();
+      if(this.comments.length > 3  || nowTimestamp - this.comments_time < 60*1000){
+        return false;
+      }
+      this.isLoading_comments = true;
 
-       let params = {wid:this.id,num:3}
-       this.$http.get(config.urls.trips+"/wall/"+this.id+"/comments",{params:params}).then(res => {
-         // console.log(res);
-         this.isLoading_comments = false;
-         if(res.data.code == 0){
-           var data = res.data.data;
-           data.lists.forEach((value,index,arr)=>{
-             value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : this.defaultAvatar;
-             value.format_time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
-           })
-           this.comments_total = data.total ? data.total : 0;
-           this.comments = data.lists;
-           this.comments_time = nowTimestamp;
-         }
-       }).catch(error => {
-         this.isLoading_comments = false;
-         console.log(error)
-       });
-     },
+      let params = {wid:this.id,num:3}
+      this.$http.get(config.urls.trips+"/wall/"+this.id+"/comments",{params:params}).then(res => {
+        // console.log(res);
+        this.isLoading_comments = false;
+        if(res.data.code == 0){
+          var data = res.data.data;
+          data.lists.forEach((value,index,arr)=>{
+            value.avatar = value.imgpath ? config.avatarBasePath + value.imgpath : this.defaultAvatar;
+            value.format_time = cFuns.formatDate((new Date(value.time*1000)),"yyyy-mm-dd hh:ii");
+          })
+          this.comments_total = data.total ? data.total : 0;
+          this.comments = data.lists;
+          this.comments_time = nowTimestamp;
+        }
+      }).catch(error => {
+        this.isLoading_comments = false;
+        console.log(error)
+      });
+    },
 
 
-     /**
-      * 滚动事件
-      */
-     onScroll(e){
-       let sTop = e.target.scrollTop;
-       this.mapTop    =  sTop;
-       this.mapHeight =  this.mapDefaultHeight -  sTop ;
-       if(sTop > this.mapHeight){
-         this.isSticky = true;
-       }else{
-         this.isSticky = false;
-       }
-       this.$store.commit('setCarpoolDetailScrollTop',sTop);
-     },
+    /**
+    * 滚动事件
+    */
+    onScroll(e){
+      let sTop = e.target.scrollTop;
+      this.mapTop    =  sTop;
+      this.mapHeight =  this.mapDefaultHeight -  sTop ;
+      if(sTop > this.mapHeight){
+        this.isSticky = true;
+      }else{
+        this.isSticky = false;
+      }
+      this.$store.commit('setCarpoolDetailScrollTop',sTop);
+    },
 
-     /**
-      * 路到位置页
-      */
-     goPosition(){
-       this.$router.push({name:'carpool_position',params:{from:this.type,id:this.id,uid:this.user.uid}})
+    /**
+    * 路到位置页
+    */
+    goPosition(){
+      this.$router.push({name:'carpool_position',params:{from:this.type,id:this.id,uid:this.user.uid}})
 
-     }
+    }
 
 
   },
@@ -658,7 +658,7 @@ export default {
 
       if(this.type=="wall"){
         // this.getCommentsCount();
-        this.getCommentLists();
+        // this.getCommentLists();
         this.showPassengers();
       }
 
